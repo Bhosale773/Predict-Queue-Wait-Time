@@ -1,0 +1,20 @@
+{
+  "name": "predict-queue-wait-time",
+  "version": "1.0.0",
+  "description": "Web application to predict wait time of each and every patient in multistage queue at hospital",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "PQT10",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.1",
+    "eslint": "^6.7.2",
+    "express": "^4.17.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.7.13"
+  }
+}
