@@ -1,9 +1,40 @@
 <%- include ('./partials/header') %>
-
-<h4>Design landing page here</h4>
-
-<!-- Landing page code will go here -->
-<!-- Use same template for all other ejs files -->
-
+	
+<title>HelthCare Hospital</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/landing.css" />
+    
+<section id="home">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="fb-body">
+                <div id="intro1">HealthCare Cares For your Health <br>
+                    and your fit life.</div>    
+                <div id="img2"><img src="images/world.png" /></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form action="/" method="POST" class="fb-body">
+                <div id="intro2" >Create an Account</div>
+                <input placeholder="First Name*" type="text" id="user-fname" class="namebox" name="fname" required/>
+                <input placeholder="Last Name*" type="text" class="namebox" name="lname" required/> <br>
+                <input placeholder="Age*" type="number" class="namebox" name="age" required/>
+                <select name="gender" class="selectbox">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select><br>
+                <input placeholder="Contact No*" type="text" class="inputbox" name="contact" required/><br>
+                <input placeholder="Email Id*" type="email" class="inputbox" name="email" required/><br>
+                <input placeholder="Address*" type="text" class="inputbox" name="address" required/><br>
+                <input placeholder="Create Username*" type="text" class="inputbox" required/><br>
+                <input placeholder="Create Password*" type="password" class="inputbox" required/><br><br>
+                <p id="intro4">By clicking Sign Up, you agree to our Terms and that 
+                you have read our Data Policy, including our Cookie Use.</p>
+                <input type="submit" class="button2" value="Sign Up" />
+                <br><hr>
+            </form>	
+        </div>
+    </div>
+</section>
 
 <%- include ('./partials/footer') %>

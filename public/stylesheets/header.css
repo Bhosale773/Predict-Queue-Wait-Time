@@ -1,0 +1,25 @@
+/* style the navbar */
+
+.navbar{
+    background-color: #3d5b99;
+}
+
+nav a{
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+nav a:hover{
+    color: #fff;
+}
+
+nav .navbar-brand{
+    font-style: italic;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+nav i{
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
