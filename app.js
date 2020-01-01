@@ -56,17 +56,17 @@ app.get("/",function(req, res){
     res.render("landing");
 });
 
-app.get("/login-using-username",function(req, res){
-    res.render("login-using-username");
-});
+// app.get("/login-using-username",function(req, res){
+//     res.render("login-using-username");
+// });
 
-app.get("/login-using-id",function(req, res){
-    res.render("login-using-id");
-});
+// app.get("/login-using-id",function(req, res){
+//     res.render("login-using-id");
+// });
 
-app.get("/register",function(req, res){
-    res.render("register");
-});
+// app.get("/register",function(req, res){
+//     res.render("register");
+// });
 
 app.get("/patient/dashboard",function(req, res){
     res.render("patient/dashboard");
