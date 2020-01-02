@@ -1,0 +1,28 @@
+<%- include ('./partials/header') %>
+
+<title>Sign In</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/login.css" />
+
+<div class="form">
+    <div class="border">
+        <h3>Sign In</h3>
+        <form action="/login" method="POST">
+            <i class="fas fa-check-circle"></i>
+            <select name="type" id="type">
+                <option value="patient">A/C Type - Patient</option>
+                <option value="hse">A/C Type - HSE</option>
+            </select>
+            <i class="fas fa-user-circle"></i> 
+            <input type="text" name="username" placeholder="Username*" required>
+            <i class="fas fa-lock"></i>
+            <i class="eyeicon d-none far fa-eye"></i>
+            <input id="passinput" type="password" name="password" placeholder="Password*" required>
+            <button class="btn btn-primary">Sign In <i class="fas fa-sign-in-alt"></i></button>
+        </form>
+    </div>
+    <div class="quote">
+        <p>Don't have an account? <a href="/#patient-signup">Sign Up</a> </p>
+    </div>
+</div>
+
+<%- include ('./partials/footer') %>

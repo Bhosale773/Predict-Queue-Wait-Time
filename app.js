@@ -12,13 +12,33 @@ mongoose.set('useFindAndModify', false);
 
 // database schemas
 
-// var hseSchema = new mongoose.Schema({
-//     username: String,
-//     password: String
-// });
+var hseSchema = new mongoose.Schema({
+    username: String,
+    password: String
+});
 
-// hseSchema.plugin(passportLocalMongoose);
-// var HSE = mongoose.model("HSE", hseSchema);
+var HSE = mongoose.model("HSE", hseSchema);
+
+var UserSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    fname: String,
+    lname: String,
+    contact: String,
+    email: String,
+    addressl1: String,
+    addressl2: String,
+    history: [
+        historySchema
+    ],
+    comments: [
+        commentSchema
+    ]
+});
+
+UserSchema.plugin(passportLocalMongoose);
+
+var User = mongoose.model("User", UserSchema);
 
 app.set("view engine", "ejs");
 
@@ -56,9 +76,9 @@ app.get("/",function(req, res){
     res.render("landing");
 });
 
-// app.get("/login-using-username",function(req, res){
-//     res.render("login-using-username");
-// });
+app.get("/login",function(req, res){
+    res.render("login");
+});
 
 // app.get("/login-using-id",function(req, res){
 //     res.render("login-using-id");
@@ -106,7 +126,7 @@ app.get("/HSE/login",function(req, res){
     res.render("HSE/login");
 });
 
-// app.post("/HSE/login",passport.authenticate("hse-login", {
+// app.post("/HSE/login",passport.authenticate("local", {
 //     successRedirect: "/HSE",
 //     failureRedirect: "/HSE/login",
 //     successFlash: "You have Sign In successfully.",
