@@ -1,1 +1,0 @@
-$("#home form #user-fname").focus();
