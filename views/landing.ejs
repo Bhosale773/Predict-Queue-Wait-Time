@@ -17,14 +17,14 @@
                 <div id="intro2" >Create an Account</div>
                 <input placeholder="First Name*" type="text" id="user-fname" class="namebox" name="fname" required/>
                 <input placeholder="Last Name*" type="text" class="namebox" name="lname" required/> <br>
-                <input placeholder="Age*" type="number" class="namebox" name="age" required/>
+                <input placeholder="Age*" type="number" class="namebox" name="age" min="1" max="150" title="Please enter valid age" required/>
                 <select name="gender" class="selectbox">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select><br>
-                <input placeholder="Contact No*" type="text" class="inputbox" name="contact" required/><br>
-                <input placeholder="Email Id*" type="email" class="inputbox" name="email" required/><br>
+                <input placeholder="Contact No*" type="text" class="inputbox" name="contact" pattern="[7-9]{1}[0-9]{9}" title="Please enter valid 10 digit contact number" required/><br>
+                <input placeholder="Email Id*" type="email" class="inputbox" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter valid email address" required/><br>
                 <input placeholder="Address*" type="text" class="inputbox" name="address" required/><br>
                 <input placeholder="Create Username*" type="text" class="inputbox" name="username" required/><br>
                 <input placeholder="Create Password*" type="password" class="inputbox" name="password" required/><br><br>

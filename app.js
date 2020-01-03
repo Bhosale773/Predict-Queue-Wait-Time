@@ -147,7 +147,7 @@ app.get("/",function(req, res){
     res.render("landing");
 });
 
-app.get("/login",function(req, res){
+app.get("/login", isLoginPermitted, function(req, res){
     res.render("login");
 });
 
@@ -207,7 +207,7 @@ app.post("/register", function(req, res){
                 req.flash("error", "Something Went Wrong, Try Again");
                 res.redirect("/");
             }
-            if(patients){
+            if(patients==[]){
                 req.flash("error", "Username Already Exists, Try Again");
                 res.redirect("/");
             }else{
@@ -259,7 +259,7 @@ app.post("/HSE/login",passport.authenticate("hse", {
 }) ,function(req,res){
 });
 
-app.get("/logout", function(req, res){
+app.get("/logout", isLogoutPermitted, function(req, res){
     if(req.user){
         req.logout();
         req.flash("success", "You have Log Out Successfully.");
@@ -280,7 +280,7 @@ function isHsePermitted(req, res, next){
             return next();
         }else{
             req.flash("error", "You dont have permission to do that");
-            res.redirect("/");
+            res.redirect("back");
         }
     }else{
         req.flash("error", "You must be Sign In first.");
@@ -294,12 +294,28 @@ function isPatientPermitted(req, res, next){
             return next();
         }else{
             req.flash("error", "You dont have permission to do that");
-            res.redirect("/");
+            res.redirect("back");
         }
     }else{
         req.flash("error", "You must be Sign In first.");
         res.redirect("/login");
     }
+}
+
+function isLoginPermitted(req, res, next){
+    if(!req.isAuthenticated()){
+        return next();
+    }
+    req.flash("error", "You are already login");
+    res.redirect("back");
+}
+
+function isLogoutPermitted(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    req.flash("error", "You are already log out");
+    res.redirect("back");
 }
 
 

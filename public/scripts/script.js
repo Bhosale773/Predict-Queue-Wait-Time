@@ -1,11 +1,18 @@
 // animate eye icon
 
 $(document).ready(function() {
-    $("#passinput").on("keyup", function(){
-        if($("#passinput").val()){
-            $(".eyeicon").removeClass("d-none");
+    $("#passinput1").on("keyup", function(){
+        if($("#passinput1").val()){
+            $(".form1 .eyeicon").removeClass("d-none");
         }else{
-            $(".eyeicon").addClass("d-none");
+            $(".form1 .eyeicon").addClass("d-none");
+        }
+    });
+    $("#passinput2").on("keyup", function(){
+        if($("#passinput2").val()){
+            $(".form2 .eyeicon").removeClass("d-none");
+        }else{
+            $(".form2 .eyeicon").addClass("d-none");
         }
     });
 });
@@ -14,17 +21,17 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     var time = 0, timeOut = 0;  
-    var x = document.getElementById("passinput");
-    // var y = document.getElementById("passinput2");
+    var x = document.getElementById("passinput1");
+    var y = document.getElementById("passinput2");
     $("form .eyeicon").on('mousedown touchstart', function(e) {
         x.type = "text"; 
-        // y.type = "text"; 
+        y.type = "text"; 
         timeOut = setInterval(function(){
             console.log(time++);
         }, 100);
     }).bind('mouseup mouseleave touchend', function() {
         x.type = "password"; 
-        // y.type = "password"; 
+        y.type = "password"; 
         clearInterval(timeOut);
     });
 });
