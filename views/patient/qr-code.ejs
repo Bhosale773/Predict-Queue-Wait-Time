@@ -1,9 +1,18 @@
 <%- include ('../partials/header') %>
 
-<h4>Design qr-code page here</h4>
+<title>QR code</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/qr-code.css" />
 
-<!-- qr code page code will go here -->
-<!-- Use same template for all other ejs files -->
+<section id="qr-code">
+    <div id="qr-box">
+        <h3 id="intro1"><%= currentUser.fname + " " + currentUser.lname %></h3>
+        <div id="intro2"><%= currentUser._id %></div>
+        <div id="qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data=<%=currentUser._id%>&size=200x200" alt="" title="" />
+        </div>
+        <div id="intro3">Your personal Patient ID QR,<br>Show this QR at Hospital Registration Desk<br> and save your waiting time</div>
+    </div>
+</section>
 
 
 <%- include ('../partials/footer') %>
