@@ -21,16 +21,16 @@
 }
 
 .form form{
-    width: 90%;
+    /* width: 90%; */
     margin: auto;
 }
 
-.form form input, .form form select{
+.form form input, .form select{
     font-size: 1.2rem;
     font-weight: 400;
     display: block;
-    width: 100%;
-    margin: 10px 10px;
+    width: 90%;
+    margin: 10px 10px 10px 5%;
     height: 40px;
     padding-left: 55px;
     height: 2.7rem;
@@ -39,11 +39,11 @@
     border-radius: 5px;
 }
 
-.form form>i{
+.form i{
     color: gray;
     font-size: 1.7rem;
     position: absolute;
-    padding: 8px 25px; 
+    padding: 8px 25px 8px 35px; 
     min-width: 40px; 
 }
 
@@ -64,11 +64,16 @@
 }
 
 .form form .btn{
-    width: 100%;
+    width: 90%;
     font-size: 1.4rem;
     font-weight: 700;
     color: #fff;
-    margin: 10px 10px;
+    margin: 10px 10px 10px 5%;
+}
+
+.form form .btn i{
+    color: #fff;
+    padding: 4px 25px 8px 15px; 
 }
 
 .form .quote p{
