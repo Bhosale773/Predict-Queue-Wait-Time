@@ -233,8 +233,13 @@ app.post("/register", function(req, res){
                                 req.flash("error", "Something Went Wrong, Try Again");
                                 res.redirect("/");
                             }
-                            req.flash("success", "You have registered successfully, Proceed with login");
-                            res.redirect("/login");
+                            if(req.user){
+                                req.flash("success", "Another account created successfully");
+                                res.redirect("/");
+                            }else{
+                                req.flash("success", "Account created successfully, Proceed with login");
+                                res.redirect("/login");
+                            }
                         });
                     });
                 });
