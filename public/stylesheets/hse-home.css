@@ -1,3 +1,7 @@
+body{
+    background-color: rgba(0,0,0,0.03);
+}
+
 #stage, #select-way{
     width: 500px;
     margin: 25px auto;
@@ -17,7 +21,7 @@
     border: 1px solid #10A881;
     display: inline-block;
     cursor: pointer;
-    background-color: rgba(16, 168, 117, 0.03);
+    background-color: #fff;
 }
 
 #stage .round:hover, #stage .active-tab{
@@ -38,7 +42,6 @@
     cursor: pointer;
     border: 1px solid rgb(151, 154, 156);
     border-radius: 5px;
-    background-color: rgba(16, 168, 117, 0.03);
 }
 
 #qr-scanner #canvas, #qr-scanner{
@@ -47,6 +50,7 @@
     margin: auto;
     border-radius: 5px;
     border: 1px solid #10A881;
+    background-color: #fff;
 }
 
 #qr-scanner #loadingMessage{
@@ -68,7 +72,7 @@
     height: 2.5rem;
     border: 1px solid rgb(151, 154, 156);
     border-radius: 5px;
-    background-color: rgba(16, 168, 117, 0.03);
+    background-color: #fff;
 }
 
 #patient-id{
@@ -76,6 +80,7 @@
     margin: auto;
     border-radius: 5px;
     border: 1px solid #10A881;
+    background-color: #fff;
 }
 
 #patient-id input{
@@ -90,7 +95,6 @@
     border: none;
     border: 1px solid rgb(151, 154, 156);
     border-radius: 5px;
-    background-color: rgba(16, 168, 117, 0.03);
 }
 
 #patient-id button{

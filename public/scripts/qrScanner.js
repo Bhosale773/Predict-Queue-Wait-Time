@@ -33,6 +33,11 @@ function stopMediaTracks(stream) {
   });
 }
 
+function getConfirmationModal(data){
+  $("#confirmation-modal #patient_id").val(data);
+  $("#confirmation-modal .modal").modal({"aria-hidden":"true"});
+}
+
 $(document).ready(function(){
   $("#select-way select#registration-option").change(function(){
     var way= $(this).children("option:selected").val();
@@ -41,8 +46,14 @@ $(document).ready(function(){
         stopMediaTracks(currentStream);
       }
     }else{
-      startMediaTracks(currentStream);
+      startMediaTracks();
     }
+  });
+});
+
+$(document).ready(function(){
+  $('#confirmation-modal .modal').on('hidden.bs.modal', function (e) {
+    startMediaTracks();
   });
 });
 
@@ -69,13 +80,13 @@ function tick() {
       outputMessage.hidden = true;
       outputData.parentElement.hidden = false;
       outputData.innerText = code.data;
-      // alert(code.data);
+      getConfirmationModal(code.data);
     } else {
       outputMessage.hidden = false;
       outputData.parentElement.hidden = true;
     }
   }
-  if(!code || code.data.length==0){
+  if(!code || code.data==""){
     requestAnimationFrame(tick);
   }
 }
