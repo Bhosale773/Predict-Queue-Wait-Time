@@ -8,7 +8,9 @@ var passport              = require("passport");
 var LocalStrategy         = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 var flash                 = require("connect-flash");
-const bcrypt              = require('bcrypt');
+var bcrypt                = require("bcrypt");
+var HSE                   = require("./models/hse");
+var Patient               = require("./models/patient");
 
 
 // database connection url
@@ -16,35 +18,6 @@ const bcrypt              = require('bcrypt');
 mongoose.set('useCreateIndex', true);
 mongoose.connect("mongodb://localhost:27017/pqt_db",{useNewUrlParser:true, useUnifiedTopology: true});
 mongoose.set('useFindAndModify', false);
-
-
-// database schemas
-
-var HseSchema = new mongoose.Schema({
-    username: { type : String , index: { unique: true }, required : true},
-    password: String
-});
-
-HseSchema.plugin(passportLocalMongoose);
-
-var HSE = mongoose.model("HSE", HseSchema);
-
-
-var PatientSchema = new mongoose.Schema({
-    username: { type : String , index: { unique: true }, required : true},
-    password: String,
-    fname: String,
-    lname: String,
-    age: Number,
-    gender: String,
-    contact: String,
-    email: String,
-    address: String
-});
-
-PatientSchema.plugin(passportLocalMongoose);
-
-var Patient = mongoose.model("Patient", PatientSchema);
 
 
 // server runtime properties
