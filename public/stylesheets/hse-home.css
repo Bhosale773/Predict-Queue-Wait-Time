@@ -1,0 +1,110 @@
+#stage, #select-way{
+    width: 500px;
+    margin: 25px auto;
+    text-align: center;
+}
+
+#stage .round{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #10A881;
+    width: 75px;
+    height: 75px;
+    text-align: center;
+    margin: 0 10px;
+    border-radius: 100%;
+    padding: 25px 0px;
+    border: 1px solid #10A881;
+    display: inline-block;
+    cursor: pointer;
+    background-color: rgba(16, 168, 117, 0.03);
+}
+
+#stage .round:hover, #stage .active-tab{
+    color: #fff;
+    background-color: #10A881;
+    transition: 0.2s all ease-in-out;
+
+}
+
+#select-way select{
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: block;
+    width: 100%;
+    padding-left: 15px;
+    height: 2.6rem;
+    border: none;
+    cursor: pointer;
+    border: 1px solid rgb(151, 154, 156);
+    border-radius: 5px;
+    background-color: rgba(16, 168, 117, 0.03);
+}
+
+#qr-scanner #canvas, #qr-scanner{
+    width: 500px;
+    height: 400px;
+    margin: auto;
+    border-radius: 5px;
+    border: 1px solid #10A881;
+}
+
+#qr-scanner #loadingMessage{
+    font-family:verdana;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 20px 3px;
+}
+
+#qr-scanner #output{
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333945;
+    display: block;
+    width: 100%;
+    padding-top: 5px;
+    padding-left: 15px;
+    height: 2.5rem;
+    border: 1px solid rgb(151, 154, 156);
+    border-radius: 5px;
+    background-color: rgba(16, 168, 117, 0.03);
+}
+
+#patient-id{
+    width: 500px;
+    margin: auto;
+    border-radius: 5px;
+    border: 1px solid #10A881;
+}
+
+#patient-id input{
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: block;
+    width: 90%;
+    padding-left: 15px;
+    margin: 10px auto;
+    margin-top: 0px;
+    height: 2.6rem;
+    border: none;
+    border: 1px solid rgb(151, 154, 156);
+    border-radius: 5px;
+    background-color: rgba(16, 168, 117, 0.03);
+}
+
+#patient-id button{
+    width: 90%;
+    height: 2.7rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #fff;
+    margin: 10px 10px 25px 5%;
+}
+
+#patient-id .intro{
+    margin: 5% 0px 10px 5%;
+    color: #333945;
+    font-size: 1rem;
+    font-family:verdana;
+}

@@ -36,7 +36,7 @@ $(document).ready(function() {
     });
 });
 
-// toggle d-none class for sign up quote in login form
+// toggle d-none class for sign in forms and sign up quote in login form
 
 $(document).ready(function(){
     $(".form select#type").change(function(){
@@ -49,6 +49,28 @@ $(document).ready(function(){
             $(".form .form1").removeClass("d-none");
             $(".form .form2").addClass("d-none");
             $(".form .quote").removeClass("d-none");
+        }
+    });
+});
+
+// select stage
+
+$("#stage .round").on("click",function(){
+    $("#stage .round").removeClass("active-tab");
+    $(this).toggleClass("active-tab");
+});
+
+// toggle d-none class for selection ways of patient registration
+
+$(document).ready(function(){
+    $("#select-way select#registration-option").change(function(){
+        var way= $(this).children("option:selected").val();
+        if(way=="qr"){
+            $("#qr-scanner").removeClass("d-none");
+            $("#patient-id").addClass("d-none");
+        }else{
+            $("#qr-scanner").addClass("d-none");
+            $("#patient-id").removeClass("d-none");
         }
     });
 });

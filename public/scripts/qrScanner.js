@@ -5,6 +5,7 @@ var loadingMessage = document.getElementById("loadingMessage");
 var outputContainer = document.getElementById("output");
 var outputMessage = document.getElementById("outputMessage");
 var outputData = document.getElementById("outputData");
+var currentStream;
 
 function drawLine(begin, end, color) {
   canvas.beginPath();
@@ -15,16 +16,40 @@ function drawLine(begin, end, color) {
   canvas.stroke();
 }
 
-// Use facingMode: environment to attemt to get the front camera on phones
-navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-  video.srcObject = stream;
-  video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-  video.play();
-  requestAnimationFrame(tick);
+function startMediaTracks(){
+  // Use facingMode: environment to attemt to get the front camera on phones
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+    video.srcObject = stream;
+    currentStream = stream;
+    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+    video.play();
+    requestAnimationFrame(tick);
+  });
+}
+
+function stopMediaTracks(stream) {
+  stream.getTracks().forEach(track => {
+    track.stop();
+  });
+}
+
+$(document).ready(function(){
+  $("#select-way select#registration-option").change(function(){
+    var way= $(this).children("option:selected").val();
+    if(way=="patient-id"){
+      if (typeof currentStream !== 'undefined') {
+        stopMediaTracks(currentStream);
+      }
+    }else{
+      startMediaTracks(currentStream);
+    }
+  });
 });
 
+startMediaTracks();
+
 function tick() {
-  loadingMessage.innerText = "⌛ Loading video..."
+  loadingMessage.innerText = "⌛ Loading Video..."
   if (video.readyState === video.HAVE_ENOUGH_DATA) {
     loadingMessage.hidden = true;
     canvasElement.hidden = false;
@@ -44,11 +69,13 @@ function tick() {
       outputMessage.hidden = true;
       outputData.parentElement.hidden = false;
       outputData.innerText = code.data;
-      alert(code.data);
+      // alert(code.data);
     } else {
       outputMessage.hidden = false;
       outputData.parentElement.hidden = true;
     }
   }
-  requestAnimationFrame(tick);
+  if(!code || code.data.length==0){
+    requestAnimationFrame(tick);
+  }
 }
