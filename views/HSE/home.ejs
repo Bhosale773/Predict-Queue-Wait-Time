@@ -18,6 +18,10 @@
         <form action="/HSE/patient-registration" method="POST">
           <div class="modal-body">
             <div class="form-group">
+              <label for="stage_no" class="col-form-label">Stage:</label>
+              <input type="number" min="1" max="4" class="form-control" id="stage_no" required>
+            </div>
+            <div class="form-group">
               <label for="patient_id" class="col-form-label">Patient ID:</label>
               <input type="text" class="form-control" id="patient_id" required>
             </div>
@@ -32,36 +36,109 @@
   </div>
 </div>
 
-<div id="stage">
-  <span class="round active-tab">Stage 1</span>
-  <span class="round">Stage 2</span>
-  <span class="round">Stage 3</span>
-  <span class="round">Stage 4</span>
-</div>
 
-<div id="select-way">
-  <select id="registration-option">
-    <option value="qr">Patient Registration using QR Code</option>
-    <option value="patient-id">Patient Registration using Patient ID</option>
-  </select>
-</div>
+<div class="row">
+  <div class="col col-lg-4">
+      <ul class="list-group">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+        <br>
+        <ul class="list-group">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+  </div>
+  <div class="col col-lg-4">
+      <div id="stage">
+          <span id="1" class="round active-tab">Stage 1</span>
+          <span id="2" class="round">Stage 2</span>
+          <span id="3" class="round">Stage 3</span>
+          <span id="4" class="round">Stage 4</span>
+        </div>
+        
+        <div id="select-way">
+          <select id="registration-option">
+            <option value="qr">Patient Registration using QR Code</option>
+            <option value="patient-id">Patient Registration using Patient ID</option>
+          </select>
+        </div>
 
-<div id="qr-scanner">
-  <div id="loadingMessage">🎥 Unable to access video stream (Please make sure you have a webcam enabled)</div>
-  <canvas id="canvas" hidden></canvas>
-  <div id="output" hidden>
-    <div id="outputMessage">Output : No QR Code Detected...</div>
-    <div hidden><b>Output : </b> <span id="outputData"></span></div>
+      <div id="qr-scanner">
+          <div id="loadingMessage">🎥 Unable to access video stream (Please make sure you have a webcam enabled)</div>
+          <canvas id="canvas" hidden></canvas>
+          <div id="output" hidden>
+            <div id="outputMessage">Output : No QR Code Detected...</div>
+            <div hidden><b>Output : </b> <span id="outputData"></span></div>
+          </div>
+        </div>
+        
+        <div class="d-none" id="patient-id">
+          <form>
+            <label class="intro" for="p_id">Enter Patient ID: </label>
+            <input id="p_id" type="text" placeholder="Patient ID" data-toggle="popover" data-placement="top" data-content="Please fill out this field" required>
+            <button onclick="getConfirmationModal(document.getElementById('p_id').value)" class="btn btn-primary" type="button">Submit</button>
+          </form>
+        </div>
+  </div>
+  <div class="col col-lg-4">
+      <ul class="list-group">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+        <br>
+        <ul class="list-group">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+        
   </div>
 </div>
 
-<div class="d-none" id="patient-id">
-  <form>
-    <label class="intro" for="p_id">Enter Patient ID: </label>
-    <input id="p_id" type="text" placeholder="Patient ID" required>
-    <button class="btn btn-primary" type="submit">Submit</button>
-  </form>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <%- include ('../partials/footer') %>

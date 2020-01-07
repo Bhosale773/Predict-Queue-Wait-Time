@@ -34,8 +34,14 @@ function stopMediaTracks(stream) {
 }
 
 function getConfirmationModal(data){
-  $("#confirmation-modal #patient_id").val(data);
-  $("#confirmation-modal .modal").modal({"aria-hidden":"true"});
+  if(data===""){
+    $("#patient-id #p_id").focus();
+    $('#patient-id #p_id').popover('show');
+  }else{
+    $("#confirmation-modal #patient_id").val(data);
+    $("#confirmation-modal .modal").modal({"aria-hidden":"true"});
+    $('#patient-id #p_id').popover('dispose');
+  }
 }
 
 $(document).ready(function(){
@@ -53,7 +59,9 @@ $(document).ready(function(){
 
 $(document).ready(function(){
   $('#confirmation-modal .modal').on('hidden.bs.modal', function (e) {
-    startMediaTracks();
+    if($("#select-way select#registration-option").children("option:selected").val()==="qr"){
+      startMediaTracks();
+    }
   });
 });
 
@@ -80,7 +88,10 @@ function tick() {
       outputMessage.hidden = true;
       outputData.parentElement.hidden = false;
       outputData.innerText = code.data;
-      getConfirmationModal(code.data);
+      console.log(code.data);
+      if(code.data!=""){
+        getConfirmationModal(code.data);
+      }
     } else {
       outputMessage.hidden = false;
       outputData.parentElement.hidden = true;

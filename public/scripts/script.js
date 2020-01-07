@@ -55,9 +55,11 @@ $(document).ready(function(){
 
 // select stage
 
-$("#stage .round").on("click",function(){
-    $("#stage .round").removeClass("active-tab");
-    $(this).toggleClass("active-tab");
+$(document).ready(function(){
+    $("#stage .round").on("click",function(){
+        $("#stage .round").removeClass("active-tab");
+        $(this).addClass("active-tab");
+    });
 });
 
 // toggle d-none class for selection ways of patient registration
@@ -73,5 +75,22 @@ $(document).ready(function(){
             $("#patient-id").removeClass("d-none");
         }
     });
+});
+
+// select stage no while patient registration
+
+$(document).ready(function(){
+    function selectStageNo(){
+        if($("#1").hasClass("active-tab")){
+            $("#confirmation-modal #stage_no").val(1);
+        }else if($("#2").hasClass("active-tab")){
+            $("#confirmation-modal #stage_no").val(2);
+        }else if($("#3").hasClass("active-tab")){
+            $("#confirmation-modal #stage_no").val(3);
+        }else if($("#4").hasClass("active-tab")){
+            $("#confirmation-modal #stage_no").val(4);
+        }
+    }
+    setInterval(selectStageNo, 100);
 });
 
