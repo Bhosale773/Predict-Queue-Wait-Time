@@ -44,8 +44,13 @@ body{
     border-radius: 5px;
 }
 
-#qr-scanner #canvas, #qr-scanner{
-    width: 500px;
+#qr-scanner{
+    max-width: 502px;
+    margin: auto;
+}
+
+#qr-scanner #canvas{
+    max-width: 500px;
     height: 400px;
     margin: auto;
     border-radius: 5px;
@@ -66,7 +71,7 @@ body{
     font-weight: 500;
     color: #333945;
     display: block;
-    width: 100%;
+    width: 99.7%;
     padding-top: 5px;
     padding-left: 15px;
     height: 2.5rem;
@@ -121,13 +126,24 @@ body{
 .list-group{
     max-width: 400px;
     margin: auto;
-    height: 300px;
+    height: 270px;
     overflow:scroll;
     -webkit-overflow-scrolling: touch;
     border: none;
-    border: 1px solid #10A881;
+    border: 1px solid #0A3D62;
+    border-radius: 2px;
 }
 
 .list-group-item{
     padding: 6px 20px;
+}
+
+.list-head{
+    font-family: 'Raleway', sans-serif;
+    max-width: 400px;
+    margin: auto;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #192A56;
 }
