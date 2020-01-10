@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 
 var RegPatientSchema = new mongoose.Schema({
     pid: {type: mongoose.Schema.Types.ObjectId, ref: "Patient"},
+    name: String,
     date: {type: Date, default: Date.now()},
     stage1: {
         date: {type: Date, default: Date.now()},

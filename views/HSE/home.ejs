@@ -42,14 +42,19 @@
     <h3 class="list-head">Registered Patients List</h3>
     <ul class="list-group">
       <% regPatients.forEach(function(patient){ %>
-        <li class="list-group-item"><%= patient.fname + " " + patient.lname %></li>
+          <li class="list-group-item"><%= patient.name %></li>
       <% }); %>
     </ul>
     <br>
     <h3 class="list-head">Doctor Consultation Queue</h3>
     <ul class="list-group">
-      <% consultationQueue.forEach(function(patient){ %>
-        <li class="list-group-item"><%= patient.fname + " " + patient.lname %></li>
+      <% regPatients.forEach(function(patient){ %>
+        <% if(patient.stage1.isGone==true && patient.stage2.inTime.isGone==false){ %>
+          <li class="list-group-item"><%= patient.name %></li>
+        <% } %>
+        <% if(patient.stage2.inTime.isGone==true && patient.stage2.outTime.isGone==false){ %>
+          <li class="list-group-item"><%= patient.name + "   ------   IN CABIN" %></li>
+        <% } %>
       <% }); %>
     </ul>
   </div>
@@ -88,15 +93,19 @@
   <div class="col col-lg-4">
     <h3 class="list-head">Billing Counter Queue</h3>
     <ul class="list-group">
-      <% billingQueue.forEach(function(patient){ %>
-        <li class="list-group-item"><%= patient.fname + " " + patient.lname %></li>
+      <% regPatients.forEach(function(patient){ %>
+        <% if(patient.stage2.outTime.isGone==true && patient.stage3.isGone==false){ %>
+          <li class="list-group-item"><%= patient.name %></li>
+        <% } %>
       <% }); %>
     </ul>
     <br>
     <h3 class="list-head">Medicine Counter Queue</h3>
     <ul class="list-group">
-      <% medicineQueue.forEach(function(patient){ %>
-        <li class="list-group-item"><%= patient.fname + " " + patient.lname %></li>
+      <% regPatients.forEach(function(patient){ %>
+        <% if(patient.stage3.isGone==true && patient.stage4.isGone==false){ %>
+          <li class="list-group-item"><%= patient.name %></li>
+        <% } %>
       <% }); %>
     </ul>
   </div>

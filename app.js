@@ -8,7 +8,7 @@ var passport              = require("passport");
 var LocalStrategy         = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 var flash                 = require("connect-flash");
-var bcrypt                = require("bcrypt");
+var bcrypt                = require("bcryptjs");
 var HSE                   = require("./models/hse");
 var Patient               = require("./models/patient");
 var RegPatient            = require("./models/regPatient");
@@ -147,34 +147,45 @@ app.get("/HSE/home", isHsePermitted, function(req, res){
     var consultationQueue = [];
     var billingQueue = [];
     var medicineQueue = [];
+    var loopCount = 0;
     RegPatient.find({}, function(err, foundPatients){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
-            res.redirect("back");
+            return res.redirect("back");
         }else{
+            res.render("HSE/home", {regPatients: foundPatients});
 
-            foundPatients.forEach(function(patient1){
-                Patient.findById(patient1.pid, function(err, patient2){
-                    if(err){
-                        req.flash("error", "Something Went Wrong, Try Again.");
-                        res.redirect("back");
-                    }else{
-                        regPatientsList.push(patient2);
-                        if(patient1.stage1.isGone == true){
-                            consultationQueue.push(patient2);
-                        }
-                        if(patient1.stage2.outTime.isGone == true){
-                            consultationQueue.splice(consultationQueue.indexOf(patient2), 1);
-                            billingQueue.push(patient2);
-                        }
-                        if(patient1.stage3.isGone == true){
-                            billingQueue.splice(billingQueue.indexOf(patient2), 1);
-                            medicineQueue.push(patient2);
-                        }
-                        res.render("HSE/home",{regPatients:regPatientsList, consultationQueue:consultationQueue, billingQueue:billingQueue, medicineQueue:medicineQueue});
-                    }
-                });
-            });
+
+            // if(foundPatients.length==0){
+            //     res.render("HSE/home",{regPatients:regPatientsList, consultationQueue:consultationQueue, billingQueue:billingQueue, medicineQueue:medicineQueue});
+            // }else{
+            //     foundPatients.forEach(function(patient1){
+            //         loopCount++;
+            //         Patient.findById(patient1.pid, function(err, patient2){
+            //             if(err){
+            //                 req.flash("error", "Something Went Wrong, Try Again.");
+            //                 return res.redirect("back");
+            //             }else{
+            //                 regPatientsList.push(patient2);
+            //                 if(patient1.stage1.isGone == true){
+            //                     consultationQueue.push(patient2);
+            //                 }
+            //                 if(patient1.stage2.outTime.isGone == true){
+            //                     consultationQueue.splice(consultationQueue.indexOf(patient2), 1);
+            //                     billingQueue.push(patient2);
+            //                 }
+            //                 if(patient1.stage3.isGone == true){
+            //                     billingQueue.splice(billingQueue.indexOf(patient2), 1);
+            //                     medicineQueue.push(patient2);
+            //                 }
+            //             }
+            //             if(loopCount==foundPatients.length){
+            //                 loopCount=0;
+            //                 res.render("HSE/home",{regPatients:regPatientsList, consultationQueue:consultationQueue, billingQueue:billingQueue, medicineQueue:medicineQueue});
+            //             }
+            //         });
+            //     });
+            // }
         }
     });
 });
@@ -208,16 +219,16 @@ HSE.find({"username" : "hse"},function(err, hses){
 app.post("/register", function(req, res){
     if(req.body.username=="hse"){
         req.flash("error", "Username Already Exists, Try Again");
-        res.redirect("/");
+        return res.redirect("/");
     }else{
         Patient.find({"username": req.body.username},function(err, patients){
             if(err){
                 req.flash("error", "Something Went Wrong, Try Again");
-                res.redirect("/");
+                return res.redirect("/");
             }
-            if(patients==[]){
+            if(patients.length!=0){
                 req.flash("error", "Username Already Exists, Try Again");
-                res.redirect("/");
+                return res.redirect("/");
             }else{
                 var newPatient = new Patient({
                     fname: req.body.fname,
@@ -239,14 +250,14 @@ app.post("/register", function(req, res){
                         newPatient.save(function(err){
                             if(err){
                                 req.flash("error", "Something Went Wrong, Try Again");
-                                res.redirect("/");
+                                return res.redirect("/");
                             }
                             if(req.user){
                                 req.flash("success", "Another account created successfully");
-                                res.redirect("/");
+                                return res.redirect("/");
                             }else{
                                 req.flash("success", "Account created successfully, Proceed with login");
-                                res.redirect("/login");
+                                return res.redirect("/login");
                             }
                         });
                     });
@@ -277,119 +288,133 @@ app.get("/logout", isLogoutPermitted, function(req, res){
         req.logout();
         req.flash("success", "You have Log Out Successfully.");
     }
-    res.redirect("/");
+    return res.redirect("/");
 });
 
 app.post("/HSE/patient-registration", function(req, res){
     Patient.findById(req.body.pid, function(err, patient){
         if(err){
             req.flash("error", "Invalid Patient Id, Try Again");
-            res.redirect("back");
+            return res.redirect("back");
         }else{
-            if(req.body.stage==1){
-                RegPatient.find({"pid": patient._id, "stage1.isGone": true},function(err, foundPatients){
-                    if(err){
-                        req.flash("error", "Something Went Wrong, Try Again.");
-                        res.redirect("back");
-                    }else{
-                        if(foundPatients.length==0){
-                            RegPatient.create({
-                                pid: patient._id,
-                                stage1: {
-                                    date: Date.now(),
-                                    isGone: true
-                                }
-                            },function(err, regPatient){
-                                if(err){
-                                    req.flash("error", "Something Went Wrong, Try Again.");
-                                    res.redirect("back");
-                                }else{
-                                    res.redirect("/HSE/home");
-                                }
-                            });
+            if(patient==null){
+                req.flash("error", "Invalid Patient Id, Try Again");
+                return res.redirect("back");
+            }else{
+                if(req.body.stage==1){
+                    RegPatient.find({"pid": patient._id, "stage1.isGone": true},function(err, foundPatients){
+                        if(err){
+                            req.flash("error", "Something Went Wrong, Try Again.");
+                            return res.redirect("back");
                         }else{
-                            req.flash("error", "Patient already gone through this stage, Try Again");
-                            res.redirect("back");
+                            if(foundPatients.length==0){
+                                RegPatient.create({
+                                    pid: patient._id,
+                                    name: patient.fname + " " + patient.lname,
+                                    stage1: {
+                                        date: Date.now(),
+                                        isGone: true
+                                    }
+                                },function(err, regPatient){
+                                    if(err){
+                                        req.flash("error", "Something Went Wrong, Try Again.");
+                                        return res.redirect("back");
+                                    }else{
+                                        return res.redirect("/HSE/home");
+                                    }
+                                });
+                            }else{
+                                req.flash("error", "Patient already gone through this stage, Try Again");
+                                return res.redirect("back");
+                            }
                         }
-                    }
-                });                
-            }else if(req.body.stage==2){
-                RegPatient.findOne({"pid": patient._id, "stage1.isGone": true}, function(err, foundPatient){
-                    if(err){
-                        req.flash("error", "Something Went Wrong, Try Again.");
-                        res.redirect("back");
-                    }else{
-                        if(foundPatient==null){
-                            req.flash("error", "You cant jump directly to this stage, Try Again.");
-                            res.redirect("back");
-                        }else if(foundPatient.stage2.inTime.isGone==false){
-                            // collection.update({_id:"123"}, {$set: {author:"Jessica"}});
-                            // RegPatient.update({_id:foundPatient._id}, {$set: {"stage2.isGone": true}});
-                            console.log(foundPatient.stage2.inTime.isGone);
-                            foundPatient.stage2.inTime.isGone=true;
-                            foundPatient.stage2.inTime.date=Date.now();
-                            foundPatient.save(function(err){
-                                console.log(err);
-                            });
-                            console.log(foundPatient.stage2.inTime.isGone);
-                            res.redirect("/HSE/home");
-                        }else if(foundPatient.stage2.outTime.isGone==false){
-                            foundPatient.stage2.outTime.isGone=true;
-                            foundPatient.stage2.outTime.date=Date.now();
-                            foundPatient.save(function(err){
-                                console.log(err);
-                            });
-                            res.redirect("/HSE/home");
+                    });                
+                }else if(req.body.stage==2){
+                    RegPatient.findOne({"pid": patient._id, "stage1.isGone": true}, function(err, foundPatient){
+                        if(err){
+                            req.flash("error", "Something Went Wrong, Try Again.");
+                            return res.redirect("back");
                         }else{
-                            req.flash("error", "Patient already gone through this stage, Try Again");
-                            res.redirect("back");
+                            if(foundPatient==null){
+                                req.flash("error", "You cant jump directly to this stage, Try Again.");
+                                return res.redirect("back");
+                            }else if(foundPatient.stage2.inTime.isGone==false){
+                                // collection.update({_id:"123"}, {$set: {author:"Jessica"}});
+                                // RegPatient.update({_id:foundPatient._id}, {$set: {"stage2.isGone": true}});
+                                console.log(foundPatient.stage2.inTime.isGone);
+                                foundPatient.stage2.inTime.isGone=true;
+                                foundPatient.stage2.inTime.date=Date.now();
+                                foundPatient.save(function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                });
+                                console.log(foundPatient.stage2.inTime.isGone);
+                                return res.redirect("/HSE/home");
+                            }else if(foundPatient.stage2.outTime.isGone==false){
+                                foundPatient.stage2.outTime.isGone=true;
+                                foundPatient.stage2.outTime.date=Date.now();
+                                foundPatient.save(function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                });
+                                return res.redirect("/HSE/home");
+                            }else{
+                                req.flash("error", "Patient already gone through this stage, Try Again");
+                                return res.redirect("back");
+                            }
                         }
-                    }
-                });
-            }else if(req.body.stage==3){
-                RegPatient.findOne({"pid": patient._id, "stage2.outTime.isGone": true}, function(err, foundPatient){
-                    if(err){
-                        req.flash("error", "Something Went Wrong, Try Again.");
-                        res.redirect("back");
-                    }else{
-                        if(foundPatient==null){
-                            req.flash("error", "You cant jump directly to this stage, Try Again.");
-                            res.redirect("back");
-                        }else if(foundPatient.stage3.isGone==false){
-                            foundPatient.stage3.isGone=true;
-                            foundPatient.stage3.date=Date.now();
-                            foundPatient.save(function(err){
-                                console.log(err);
-                            });
-                            res.redirect("/HSE/home");
+                    });
+                }else if(req.body.stage==3){
+                    RegPatient.findOne({"pid": patient._id, "stage2.outTime.isGone": true}, function(err, foundPatient){
+                        if(err){
+                            req.flash("error", "Something Went Wrong, Try Again.");
+                            return res.redirect("back");
                         }else{
-                            req.flash("error", "Patient already gone through this stage, Try Again");
-                            res.redirect("back");
+                            if(foundPatient==null){
+                                req.flash("error", "You cant jump directly to this stage, Try Again.");
+                                return res.redirect("back");
+                            }else if(foundPatient.stage3.isGone==false){
+                                foundPatient.stage3.isGone=true;
+                                foundPatient.stage3.date=Date.now();
+                                foundPatient.save(function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                });
+                                return res.redirect("/HSE/home");
+                            }else{
+                                req.flash("error", "Patient already gone through this stage, Try Again");
+                                return res.redirect("back");
+                            }
                         }
-                    }
-                });
-            }else if(req.body.stage==4){
-                RegPatient.findOne({"pid": patient._id, "stage3.isGone": true}, function(err, foundPatient){
-                    if(err){
-                        req.flash("error", "Something Went Wrong, Try Again.");
-                        res.redirect("back");
-                    }else{
-                        if(foundPatient==null){
-                            req.flash("error", "You cant jump directly to this stage, Try Again.");
-                            res.redirect("back");
-                        }else if(foundPatient.stage4.isGone==false){
-                            foundPatient.stage4.date=Date.now();
-                            foundPatient.stage1.isGone=false;
-                            foundPatient.stage2.inTime.isGone=false;
-                            foundPatient.stage2.outTime.isGone=false;
-                            foundPatient.stage3.isGone=false;
-                            foundPatient.save(function(err){
-                                console.log(err);
-                            });
-                            res.redirect("/HSE/home");
+                    });
+                }else if(req.body.stage==4){
+                    RegPatient.findOne({"pid": patient._id, "stage3.isGone": true}, function(err, foundPatient){
+                        if(err){
+                            req.flash("error", "Something Went Wrong, Try Again.");
+                            return res.redirect("back");
+                        }else{
+                            if(foundPatient==null){
+                                req.flash("error", "You cant jump directly to this stage, Try Again.");
+                                return res.redirect("back");
+                            }else if(foundPatient.stage4.isGone==false){
+                                foundPatient.stage4.date=Date.now();
+                                foundPatient.stage1.isGone=false;
+                                foundPatient.stage2.inTime.isGone=false;
+                                foundPatient.stage2.outTime.isGone=false;
+                                foundPatient.stage3.isGone=false;
+                                foundPatient.save(function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                });
+                                return res.redirect("/HSE/home");
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     });
@@ -408,11 +433,11 @@ function isHsePermitted(req, res, next){
             return next();
         }else{
             req.flash("error", "You dont have permission to do that");
-            res.redirect("back");
+            return res.redirect("back");
         }
     }else{
         req.flash("error", "You must be Sign In first.");
-        res.redirect("/login");
+        return res.redirect("/login");
     }
 }
 
@@ -422,11 +447,11 @@ function isPatientPermitted(req, res, next){
             return next();
         }else{
             req.flash("error", "You dont have permission to do that");
-            res.redirect("back");
+            return res.redirect("back");
         }
     }else{
         req.flash("error", "You must be Sign In first.");
-        res.redirect("/login");
+        return res.redirect("/login");
     }
 }
 
@@ -435,7 +460,7 @@ function isLoginPermitted(req, res, next){
         return next();
     }
     req.flash("error", "You are already login");
-    res.redirect("back");
+    return res.redirect("back");
 }
 
 function isLogoutPermitted(req, res, next){
@@ -443,7 +468,7 @@ function isLogoutPermitted(req, res, next){
         return next();
     }
     req.flash("error", "You are already log out");
-    res.redirect("back");
+    return res.redirect("back");
 }
 
 
