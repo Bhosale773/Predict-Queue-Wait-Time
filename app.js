@@ -162,11 +162,13 @@ app.get("/HSE/home", isHsePermitted, function(req, res){
                         regPatientsList.push(patient2);
                         if(patient1.stage1.isGone == true){
                             consultationQueue.push(patient2);
-                        }else if(patient1.stage2.inTime.isGone == true){
-                            consultationQueue.pop(patient2);
+                        }
+                        if(patient1.stage2.outTime.isGone == true){
+                            consultationQueue.splice(consultationQueue.indexOf(patient2), 1);
                             billingQueue.push(patient2);
-                        }else if(patient1.stage3.isGone == true){
-                            billingQueue.pop(patient2);
+                        }
+                        if(patient1.stage3.isGone == true){
+                            billingQueue.splice(billingQueue.indexOf(patient2), 1);
                             medicineQueue.push(patient2);
                         }
                         res.render("HSE/home",{regPatients:regPatientsList, consultationQueue:consultationQueue, billingQueue:billingQueue, medicineQueue:medicineQueue});
@@ -317,20 +319,26 @@ app.post("/HSE/patient-registration", function(req, res){
                         req.flash("error", "Something Went Wrong, Try Again.");
                         res.redirect("back");
                     }else{
-                        console.log(foundPatient.stage2.inTime.isGone);
                         if(foundPatient==null){
                             req.flash("error", "You cant jump directly to this stage, Try Again.");
                             res.redirect("back");
                         }else if(foundPatient.stage2.inTime.isGone==false){
                             // collection.update({_id:"123"}, {$set: {author:"Jessica"}});
-                            RegPatient.update({_id:foundPatient._id}, {$set: {"stage2.isGone": true}});
+                            // RegPatient.update({_id:foundPatient._id}, {$set: {"stage2.isGone": true}});
                             console.log(foundPatient.stage2.inTime.isGone);
                             foundPatient.stage2.inTime.isGone=true;
                             foundPatient.stage2.inTime.date=Date.now();
+                            foundPatient.save(function(err){
+                                console.log(err);
+                            });
+                            console.log(foundPatient.stage2.inTime.isGone);
                             res.redirect("/HSE/home");
                         }else if(foundPatient.stage2.outTime.isGone==false){
                             foundPatient.stage2.outTime.isGone=true;
                             foundPatient.stage2.outTime.date=Date.now();
+                            foundPatient.save(function(err){
+                                console.log(err);
+                            });
                             res.redirect("/HSE/home");
                         }else{
                             req.flash("error", "Patient already gone through this stage, Try Again");
@@ -350,6 +358,9 @@ app.post("/HSE/patient-registration", function(req, res){
                         }else if(foundPatient.stage3.isGone==false){
                             foundPatient.stage3.isGone=true;
                             foundPatient.stage3.date=Date.now();
+                            foundPatient.save(function(err){
+                                console.log(err);
+                            });
                             res.redirect("/HSE/home");
                         }else{
                             req.flash("error", "Patient already gone through this stage, Try Again");
@@ -372,6 +383,9 @@ app.post("/HSE/patient-registration", function(req, res){
                             foundPatient.stage2.inTime.isGone=false;
                             foundPatient.stage2.outTime.isGone=false;
                             foundPatient.stage3.isGone=false;
+                            foundPatient.save(function(err){
+                                console.log(err);
+                            });
                             res.redirect("/HSE/home");
                         }
                     }
