@@ -12,7 +12,9 @@ var bcrypt                = require("bcryptjs");
 var HSE                   = require("./models/hse");
 var Patient               = require("./models/patient");
 var RegPatient            = require("./models/regPatient");
-var ConsultationQueue     = require("./models/consultationQueue");
+var DecisionDate          = require("./models/date");
+var token_no;
+var curr_date;
 
 
 // database connection url
@@ -21,6 +23,29 @@ mongoose.set('useCreateIndex', true);
 mongoose.connect("mongodb://localhost:27017/pqt_db",{useNewUrlParser:true, useUnifiedTopology: true});
 mongoose.set('useFindAndModify', false);
 
+
+
+
+function decideDate(){
+    curr_date = new Date();
+    console.log(curr_date.getUTCDate());
+    DecisionDate.findOne({},function(err, foundDate){
+        if(foundDate==null){
+            token_no=1;
+            DecisionDate.create({decisionDate: Date.now(), token: 1},function(err, date){});
+        }else if(curr_date.getDate()-foundDate.decisionDate.getDate() == 1){
+            token_no=1;
+            foundDate.decisionDate= Date.now();
+            foundDate.token=1;
+            foundDate.save(function(err){});
+        }else{
+            token_no = foundDate.token;
+        }
+    });
+}
+
+setInterval(decideDate, 1000);
+curr_date = new Date();
 
 // server runtime properties
 
@@ -311,6 +336,7 @@ app.post("/HSE/patient-registration", function(req, res){
                                 RegPatient.create({
                                     pid: patient._id,
                                     name: patient.fname + " " + patient.lname,
+                                    token: token_no,
                                     stage1: {
                                         date: Date.now(),
                                         isGone: true
@@ -322,6 +348,11 @@ app.post("/HSE/patient-registration", function(req, res){
                                     }else{
                                         return res.redirect("/HSE/home");
                                     }
+                                });
+                                token_no++;
+                                DecisionDate.findOne({},function(err, foundDate){
+                                    foundDate.token=token_no;
+                                    foundDate.save(function(err){});
                                 });
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
