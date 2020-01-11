@@ -140,6 +140,7 @@ body{
 
 .list-group-item{
     padding: 4px 20px;
+    background-color: #FFFFCC;
 }
 
 .list-head{
@@ -150,4 +151,8 @@ body{
     font-size: 1.2rem;
     font-weight: 500;
     color: #192A56;
+}
+
+.active-list-item{
+    background-color: #99FFCC;
 }

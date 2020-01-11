@@ -15,6 +15,27 @@ var RegPatient            = require("./models/regPatient");
 var DecisionDate          = require("./models/date");
 var token_no;
 var curr_date;
+// var regPatientsList = [];
+// var consultationQueue = [];
+// var billingQueue = [];
+// var medicineQueue = [];
+
+
+// var d = new Date();
+// console.log(d);
+
+// var d1 = d.getDate(); 
+// var d2 = d.getMonth();
+// var d3 = d.getFullYear();
+// var d4 = d.getDay();
+// var d5 = d.getHours();
+// var d6 = d.getMinutes();
+// var d7 = d.getSeconds();
+// var d8 = d.getMilliseconds();
+
+// console.log(d1+" "+d2+" "+d3+" "+d4+" "+d5+" "+d6+" "+d7+" "+d8);
+
+// console.log(d.toString());
 
 
 // database connection url
@@ -23,29 +44,6 @@ mongoose.set('useCreateIndex', true);
 mongoose.connect("mongodb://localhost:27017/pqt_db",{useNewUrlParser:true, useUnifiedTopology: true});
 mongoose.set('useFindAndModify', false);
 
-
-
-
-function decideDate(){
-    curr_date = new Date();
-    console.log(curr_date.getUTCDate());
-    DecisionDate.findOne({},function(err, foundDate){
-        if(foundDate==null){
-            token_no=1;
-            DecisionDate.create({decisionDate: Date.now(), token: 1},function(err, date){});
-        }else if(curr_date.getDate()-foundDate.decisionDate.getDate() == 1){
-            token_no=1;
-            foundDate.decisionDate= Date.now();
-            foundDate.token=1;
-            foundDate.save(function(err){});
-        }else{
-            token_no = foundDate.token;
-        }
-    });
-}
-
-setInterval(decideDate, 1000);
-curr_date = new Date();
 
 // server runtime properties
 
@@ -168,50 +166,53 @@ app.get("/patient/history", isPatientPermitted, function(req, res){
 });
 
 app.get("/HSE/home", isHsePermitted, function(req, res){
-    var regPatientsList = [];
-    var consultationQueue = [];
-    var billingQueue = [];
-    var medicineQueue = [];
-    var loopCount = 0;
+    regPatientsList = [];
+    consultationQueue = [];
+    billingQueue = [];
+    medicineQueue = [];
+
     RegPatient.find({}, function(err, foundPatients){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
             return res.redirect("back");
         }else{
             res.render("HSE/home", {regPatients: foundPatients});
-
-
-            // if(foundPatients.length==0){
-            //     res.render("HSE/home",{regPatients:regPatientsList, consultationQueue:consultationQueue, billingQueue:billingQueue, medicineQueue:medicineQueue});
-            // }else{
-            //     foundPatients.forEach(function(patient1){
-            //         loopCount++;
-            //         Patient.findById(patient1.pid, function(err, patient2){
-            //             if(err){
-            //                 req.flash("error", "Something Went Wrong, Try Again.");
-            //                 return res.redirect("back");
-            //             }else{
-            //                 regPatientsList.push(patient2);
-            //                 if(patient1.stage1.isGone == true){
-            //                     consultationQueue.push(patient2);
-            //                 }
-            //                 if(patient1.stage2.outTime.isGone == true){
-            //                     consultationQueue.splice(consultationQueue.indexOf(patient2), 1);
-            //                     billingQueue.push(patient2);
-            //                 }
-            //                 if(patient1.stage3.isGone == true){
-            //                     billingQueue.splice(billingQueue.indexOf(patient2), 1);
-            //                     medicineQueue.push(patient2);
-            //                 }
-            //             }
-            //             if(loopCount==foundPatients.length){
-            //                 loopCount=0;
-            //                 res.render("HSE/home",{regPatients:regPatientsList, consultationQueue:consultationQueue, billingQueue:billingQueue, medicineQueue:medicineQueue});
-            //             }
-            //         });
-            //     });
-            // }
         }
+
+
+
+        //     if(foundPatients.length!=0){
+        //         foundPatients.forEach(function(patient1){
+        //             Patient.findById(patient1.pid, function(err, patient2){
+        //                 if(err){
+        //                     console.log(err);
+        //                 }else{
+        //                     regPatientsList.push(patient2);
+        //                     if(patient1.stage1.isGone == true){
+        //                         consultationQueue.push(patient2);
+        //                     }
+        //                     if(patient1.stage2.outTime.isGone == true){
+        //                         consultationQueue.splice(consultationQueue.indexOf(patient2), 1);
+        //                         billingQueue.push(patient2);
+        //                     }
+        //                     if(patient1.stage3.isGone == true){
+        //                         billingQueue.splice(billingQueue.indexOf(patient2), 1);
+        //                         medicineQueue.push(patient2);
+        //                     }
+        //                     if(patient1.stage1.isGone == false){
+        //                         if(medicineQueue.indexOf(patient2)>-1){
+        //                             medicineQueue.splice(medicineQueue.indexOf(patient2), 1);
+        //                         }
+        //                     }
+        //                 }
+        //             });
+        //         });
+        //     }
+        
+        // console.log(regPatientsList);
+        // console.log(consultationQueue);
+        // console.log(billingQueue);
+        // console.log(medicineQueue);
     });
 });
 
@@ -338,6 +339,7 @@ app.post("/HSE/patient-registration", function(req, res){
                                     name: patient.fname + " " + patient.lname,
                                     token: token_no,
                                     stage1: {
+                                        isInQueue: true,
                                         date: Date.now(),
                                         isGone: true
                                     }
@@ -346,13 +348,14 @@ app.post("/HSE/patient-registration", function(req, res){
                                         req.flash("error", "Something Went Wrong, Try Again.");
                                         return res.redirect("back");
                                     }else{
+                                        token_no++;
+                                        DecisionDate.findOne({},function(err, foundDate){
+                                            foundDate.token=token_no;
+                                            foundDate.decisionDate = Date.now();
+                                            foundDate.save(function(err){});
+                                        });
                                         return res.redirect("/HSE/home");
                                     }
-                                });
-                                token_no++;
-                                DecisionDate.findOne({},function(err, foundDate){
-                                    foundDate.token=token_no;
-                                    foundDate.save(function(err){});
                                 });
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
@@ -370,27 +373,48 @@ app.post("/HSE/patient-registration", function(req, res){
                                 req.flash("error", "You cant jump directly to this stage, Try Again.");
                                 return res.redirect("back");
                             }else if(foundPatient.stage2.inTime.isGone==false){
-                                // collection.update({_id:"123"}, {$set: {author:"Jessica"}});
-                                // RegPatient.update({_id:foundPatient._id}, {$set: {"stage2.isGone": true}});
-                                console.log(foundPatient.stage2.inTime.isGone);
-                                foundPatient.stage2.inTime.isGone=true;
-                                foundPatient.stage2.inTime.date=Date.now();
-                                foundPatient.save(function(err){
-                                    if(err){
-                                        console.log(err);
-                                    }
+                                RegPatient.countDocuments({"stage2.isActive": true},function(err, count){
+                                    if(count==0){
+                                        foundPatient.stage2.isActive=true;
+                                        foundPatient.stage2.inTime.isGone=true;
+                                        foundPatient.stage2.inTime.date=Date.now();
+                                        foundPatient.save(function(err){
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                        });
+                                        return res.redirect("/HSE/home");
+                                    }else{
+                                        req.flash("error", "There is patient ahead.");
+                                        return res.redirect("back");
+                                    }                             
                                 });
-                                console.log(foundPatient.stage2.inTime.isGone);
-                                return res.redirect("/HSE/home");
+
+                                
                             }else if(foundPatient.stage2.outTime.isGone==false){
-                                foundPatient.stage2.outTime.isGone=true;
-                                foundPatient.stage2.outTime.date=Date.now();
-                                foundPatient.save(function(err){
-                                    if(err){
-                                        console.log(err);
-                                    }
-                                });
-                                return res.redirect("/HSE/home");
+                                if(foundPatient.stage2.isActive==true){
+                                    foundPatient.stage2.isActive=false;
+                                    foundPatient.stage2.outTime.isGone=true;
+                                    foundPatient.stage2.outTime.date=Date.now();
+
+                                    RegPatient.countDocuments({"stage2.outTime.isGone": true, "stage3.isGone": false},function(err, count){
+                                        if(count==0){
+                                            foundPatient.stage3.isActive=true;
+                                        }      
+                                        foundPatient.save(function(err){
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                        });
+                                        return res.redirect("/HSE/home");                         
+                                    });
+                                }else{
+                                    req.flash("error", "There is patient ahead.");
+                                    return res.redirect("back");
+                                }
+                                
+
+                                
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
                                 return res.redirect("back");
@@ -407,14 +431,38 @@ app.post("/HSE/patient-registration", function(req, res){
                                 req.flash("error", "You cant jump directly to this stage, Try Again.");
                                 return res.redirect("back");
                             }else if(foundPatient.stage3.isGone==false){
-                                foundPatient.stage3.isGone=true;
-                                foundPatient.stage3.date=Date.now();
-                                foundPatient.save(function(err){
-                                    if(err){
-                                        console.log(err);
-                                    }
-                                });
-                                return res.redirect("/HSE/home");
+                                if(foundPatient.stage3.isActive==true){
+
+                                    foundPatient.stage3.isActive=false;
+                                    foundPatient.stage3.isGone=true;
+                                    foundPatient.stage3.date=Date.now();
+    
+                                    RegPatient.countDocuments({"stage3.isGone": true, "stage4.isGone": false},function(err, count){
+                                        if(count==0){
+                                            foundPatient.stage4.isActive=true;
+                                        }      
+                                        foundPatient.save(function(err){
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                        });
+                                        RegPatient.findOne({"stage2.outTime.isGone": true, "stage3.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                                            if(oldestPatient!=null){
+                                                oldestPatient.stage3.isActive=true;
+                                                oldestPatient.save(function(err){
+                                                    if(err){
+                                                        console.log(err);
+                                                    }
+                                                });
+                                            }
+                                            return res.redirect("/HSE/home");
+                                        });
+                                    });
+    
+                                }else{
+                                    req.flash("error", "There is patient ahead.");
+                                    return res.redirect("back");
+                                }
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
                                 return res.redirect("back");
@@ -431,17 +479,35 @@ app.post("/HSE/patient-registration", function(req, res){
                                 req.flash("error", "You cant jump directly to this stage, Try Again.");
                                 return res.redirect("back");
                             }else if(foundPatient.stage4.isGone==false){
-                                foundPatient.stage4.date=Date.now();
-                                foundPatient.stage1.isGone=false;
-                                foundPatient.stage2.inTime.isGone=false;
-                                foundPatient.stage2.outTime.isGone=false;
-                                foundPatient.stage3.isGone=false;
-                                foundPatient.save(function(err){
-                                    if(err){
-                                        console.log(err);
-                                    }
-                                });
-                                return res.redirect("/HSE/home");
+                                if(foundPatient.stage4.isActive==true){
+
+                                    foundPatient.stage4.date=Date.now();
+                                    foundPatient.stage4.isActive=false;
+                                    foundPatient.stage1.isInQueue=false;
+                                    foundPatient.stage1.isGone=false;
+                                    foundPatient.stage2.inTime.isGone=false;
+                                    foundPatient.stage2.outTime.isGone=false;
+                                    foundPatient.stage3.isGone=false;
+                                    foundPatient.save(function(err){
+                                        if(err){
+                                            console.log(err);
+                                        }
+                                    });
+                                    RegPatient.findOne({"stage3.isGone": true, "stage4.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                                        if(oldestPatient!=null){
+                                            oldestPatient.stage4.isActive=true;
+                                            oldestPatient.save(function(err){
+                                                if(err){
+                                                    console.log(err);
+                                                }
+                                            });
+                                        }
+                                        return res.redirect("/HSE/home");
+                                    });
+                                }else{
+                                    req.flash("error", "There is patient ahead.");
+                                    return res.redirect("back");
+                                }
                             }
                         }
                     });
@@ -501,6 +567,75 @@ function isLogoutPermitted(req, res, next){
     req.flash("error", "You are already log out");
     return res.redirect("back");
 }
+
+
+// function to detect date change and hence set token to 1
+
+function decideDate(){
+    curr_date = new Date();
+    DecisionDate.findOne({},function(err, foundDate){
+        if(foundDate==null){
+            token_no=1;
+            DecisionDate.create({decisionDate: Date.now(), token: 1},function(err, date){});
+        }else if(curr_date.getDate()-foundDate.decisionDate.getDate() != 0){
+            token_no=1;
+            foundDate.decisionDate= Date.now();
+            foundDate.token=1;
+            foundDate.save(function(err){});
+        }else{
+            token_no = foundDate.token;
+        }
+    });
+}
+
+setInterval(decideDate, 1000);
+
+
+// function to create queue arrays
+
+// function createQueues(){
+//     regPatientsList = [];
+//     consultationQueue = [];
+//     billingQueue = [];
+//     medicineQueue = [];
+
+//     RegPatient.find({}, function(err, foundPatients){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             if(foundPatients.length!=0){
+//                 foundPatients.forEach(function(patient1){
+//                     Patient.findById(patient1.pid, function(err, patient2){
+//                         if(err){
+//                             console.log(err);
+//                         }else{
+//                             regPatientsList.push(patient2);
+//                             if(patient1.stage1.isGone == true){
+//                                 consultationQueue.push(patient2);
+//                             }
+//                             if(patient1.stage2.outTime.isGone == true){
+//                                 consultationQueue.splice(consultationQueue.indexOf(patient2), 1);
+//                                 billingQueue.push(patient2);
+//                             }
+//                             if(patient1.stage3.isGone == true){
+//                                 billingQueue.splice(billingQueue.indexOf(patient2), 1);
+//                                 medicineQueue.push(patient2);
+//                             }
+//                             if(patient1.stage1.isGone == false){
+//                                 if(medicineQueue.indexOf(patient2)>-1){
+//                                     medicineQueue.splice(medicineQueue.indexOf(patient2), 1);
+//                                 }
+//                             }
+//                         }
+//                     });
+//                 });
+//             }
+//         }
+//     });
+// }
+
+// setInterval(createQueues, 10);
+
 
 
 app.listen(process.env.PORT || 1000, function(){

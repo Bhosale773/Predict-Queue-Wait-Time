@@ -5,10 +5,12 @@ var RegPatientSchema = new mongoose.Schema({
     name: String,
     token: Number,
     stage1: {
+        isInQueue: {type: Boolean, default: false},
         date: {type: Date, default: undefined},
         isGone: {type: Boolean, default: false}
     },
     stage2: {
+        isActive: {type: Boolean, default: false},
         inTime: {
             date: {type: Date, default: undefined},
             isGone: {type: Boolean, default: false}
@@ -19,10 +21,12 @@ var RegPatientSchema = new mongoose.Schema({
         }
     },
     stage3: {
+        isActive: {type: Boolean, default: false},
         date: {type: Date, default: undefined},
         isGone: {type: Boolean, default: false}
     },
     stage4: {
+        isActive: {type: Boolean, default: false},
         date: {type: Date, default: undefined},
         isGone: {type: Boolean, default: false}
     }
