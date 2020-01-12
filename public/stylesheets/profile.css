@@ -1,0 +1,20 @@
+h1{
+    font-family: 'Girassol', cursive;
+}
+
+.profile-pic{
+    border-radius: 50%;
+    border: 2px solid black;
+    width: 100px;
+}
+
+.profile-container{
+    max-width: 900px;
+    margin: auto;
+}
+
+@media(max-width: 500px){
+    .profile-container{
+        width: 95%;
+    }
+}

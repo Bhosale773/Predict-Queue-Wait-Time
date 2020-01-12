@@ -1,9 +1,57 @@
 <%- include ('../partials/header') %>
 
-<h4>Design profile page here</h4>
+<title>Profile</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/profile.css" />
 
-<!-- profile page code will go here -->
-<!-- Use same template for all other ejs files -->
+<div class="profile-container">
+    <div>
+        <h1 class="text-center mt-3">Patient Profile</h1>
+    </div>
+    
+    <section>
+        <div class="container border bg-light">
+            <div class="row">
+                <div class="col-md-12 mt-2">
+                    <p><strong>Personal Details</strong></p>
+                    <hr>
+                </div>
+                <div class="mb-4 col-md-2">
+                    <% if(currentUser.gender=="male"){ %>
+                        <img class="profile-pic" src="../images/male-avatar.png">
+                    <% }else if(currentUser.gender=="female"){ %>
+                        <img class="profile-pic" src="../images/female-avatar.png">
+                    <% } %>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Patient Name: </strong><span><%= currentUser.fname + " " + currentUser.lname %></span></p>
+                    <p><strong>Age: </strong><span><%= currentUser.age %></span></p>
+                    <p><strong>Gender: </strong><span><%= currentUser.gender %></span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="my-3">
+        <div class="container border bg-light">
+            <div class="row">
+                <div class="col-md-12 mt-2">
+                    <p><strong>Contact Details</strong> </p>
+                    <hr>
+                </div>
+                <div class="col-md-12">
+                    <p><strong>Address </strong></p>
+                    <span><%= currentUser.address %></span>
+                    <hr>
+                    <p><strong>Phone</strong></p>
+                    <span><%= currentUser.contact %></span>
+                    <hr>
+                    <p><strong>Email</strong></p>
+                    <span><%= currentUser.email %></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
 
 <%- include ('../partials/footer') %>
