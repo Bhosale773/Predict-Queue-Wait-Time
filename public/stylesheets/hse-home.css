@@ -214,38 +214,31 @@ body{
     #qr-scanner{
         width: 95%;
     }
-    
     #qr-scanner #canvas{
         width: 100%;
         height: 285px;
     }
-    
     #qr-scanner #loadingMessage{
         font-family:verdana;
         text-align: center;
     }
-    
     #qr-scanner #output{
         width: 99.7%;
     }
-
     .list-group{
         width: 95%;
         margin: auto;
         height: 235px;
     }
-
     .list-head{
         width: 95%;
         margin-bottom: 15px;
         padding-top: 15px;
         border-top: 1px solid rgba(0,0,0,0.1)
     }    
-
     #patient-id, #patient-id button, #patient-id input{
         width: 95%;
     }
-
     #confirmation-modal{
         width: 90%;
     }

@@ -40,7 +40,7 @@
             <% if(currentUser.username=="hse"){ %>
               <li class="nav-item dropdown">
                 <a class="nav-link mx-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <%= currentUser.username.toUpperCase() %>
+                  <img src="../images/male-avatar.png" alt="avatar" class="avatar"> <%= currentUser.username.toUpperCase() %>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item" href="/HSE/home">HSE Home</a>
@@ -49,9 +49,15 @@
               </li>
             <% } else{ %>
               <li class="nav-item dropdown">
-                <a class="nav-link mx-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <%= currentUser.username.toUpperCase() %>
-                </a>
+                <% if(currentUser.gender=="male"){ %>
+                  <a class="nav-link mx-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="../images/male-avatar.png" alt="avatar" class="avatar"> <%= currentUser.username.toUpperCase() %>
+                  </a>
+                <% }else if(currentUser.gender=="female"){ %>
+                  <a class="nav-link mx-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="../images/female-avatar.png" alt="avatar" class="avatar"> <%= currentUser.username.toUpperCase() %>
+                  </a>
+                <% } %>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item" href="/patient/dashboard">Dashboard</a>
                   <a class="dropdown-item" href="/patient/profile">Profile</a>

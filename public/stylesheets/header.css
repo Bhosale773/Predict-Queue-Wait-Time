@@ -24,6 +24,12 @@ nav i{
     font-size: 1.2rem;
 }
 
+nav .avatar{
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+}
+
 .alert{
     font-weight: 500;
 }
