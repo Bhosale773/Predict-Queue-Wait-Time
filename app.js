@@ -2,6 +2,8 @@
 
 var express               = require("express");
 var app                   = express();
+var fs                    = require('fs')
+var https                 = require('https')
 var mongoose              = require("mongoose");
 var bodyParser            = require("body-parser");
 var passport              = require("passport");
@@ -638,6 +640,9 @@ setInterval(decideDate, 1000);
 
 
 
-app.listen(process.env.PORT || 1000, function(){
-    console.log("Server started...");
-});
+https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+}, app).listen(process.env.PORT || 1000, function () {
+    console.log('Server Started and it is listening on port 1000! Go to https://localhost:1000/')
+})
