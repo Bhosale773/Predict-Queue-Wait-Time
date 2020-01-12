@@ -38,7 +38,7 @@
 
 
 <div class="row">
-  <div class="col col-lg-4">
+  <div class="second-container col col-lg-4">
     <h3 class="list-head">Registered Patients List</h3>
     <ul class="list-group">
       <% var count=0 %>
@@ -82,7 +82,7 @@
       <% } %>
     </ul>
   </div>
-  <div class="col col-lg-4">
+  <div class="first-container col col-lg-4">
     <div id="stage">
       <span id="1" class="round active-tab">Stage 1</span>
       <span id="2" class="round">Stage 2</span>
@@ -110,11 +110,13 @@
       <form>
         <label class="intro" for="p_id">Enter Patient ID: </label>
         <input id="p_id" type="text" placeholder="Patient ID" data-toggle="popover" data-placement="top" data-content="Please fill out this field" required>
-        <button onclick="getConfirmationModal(document.getElementById('p_id').value)" class="btn btn-primary" type="button">Submit</button>
+        <div class="text-center">
+          <button onclick="getConfirmationModal(document.getElementById('p_id').value)" class="btn btn-primary" type="button">Submit</button>
+        </div>
       </form>
     </div>
   </div>
-  <div class="col col-lg-4">
+  <div class="third-container col col-lg-4">
     <h3 class="list-head">Billing Counter Queue</h3>
     <ul class="list-group">
       <% var count=0 %>
