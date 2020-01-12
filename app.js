@@ -376,23 +376,31 @@ app.post("/HSE/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }else if(foundPatient.stage2.inTime.isGone==false){
                                 RegPatient.countDocuments({"stage2.isActive": true},function(err, count){
-                                    if(count==0){
-                                        foundPatient.stage2.isActive=true;
-                                        foundPatient.stage2.inTime.isGone=true;
-                                        foundPatient.stage2.inTime.date=Date.now();
-                                        foundPatient.save(function(err){
-                                            if(err){
-                                                console.log(err);
-                                            }
-                                        });
-                                        return res.redirect("/HSE/home");
-                                    }else{
-                                        req.flash("error", "There is patient ahead.");
-                                        return res.redirect("back");
-                                    }                             
+                                    RegPatient.findOne({"stage1.isGone": true, "stage2.inTime.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                                        if(oldestPatient!=null){
+                                            // console.log(oldestPatient._id);
+                                            // console.log(foundPatient._id);
+                                            // console.log(count);
+                                            // console.log(count==0);
+                                            // console.log(oldestPatient._id.equals(foundPatient._id));
+                                            if(count==0 && oldestPatient._id.equals(foundPatient._id)){ 
+                                                foundPatient.stage2.isActive=true;
+                                                foundPatient.stage2.inTime.isGone=true;
+                                                foundPatient.stage2.inTime.date=Date.now();
+                                                foundPatient.save(function(err){
+                                                    if(err){
+                                                        console.log(err);
+                                                    }
+                                                    return res.redirect("/HSE/home");
+                                                });
+                                            }else{
+                                                req.flash("error", "There is patient ahead.");
+                                                return res.redirect("back");
+                                            }      
+                                        }
+                                    });
+                                                           
                                 });
-
-                                
                             }else if(foundPatient.stage2.outTime.isGone==false){
                                 if(foundPatient.stage2.isActive==true){
                                     foundPatient.stage2.isActive=false;
@@ -407,16 +415,13 @@ app.post("/HSE/patient-registration", function(req, res){
                                             if(err){
                                                 console.log(err);
                                             }
+                                            return res.redirect("/HSE/home");                         
                                         });
-                                        return res.redirect("/HSE/home");                         
                                     });
                                 }else{
                                     req.flash("error", "There is patient ahead.");
                                     return res.redirect("back");
                                 }
-                                
-
-                                
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
                                 return res.redirect("back");
@@ -447,17 +452,17 @@ app.post("/HSE/patient-registration", function(req, res){
                                             if(err){
                                                 console.log(err);
                                             }
-                                        });
-                                        RegPatient.findOne({"stage2.outTime.isGone": true, "stage3.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
-                                            if(oldestPatient!=null){
-                                                oldestPatient.stage3.isActive=true;
-                                                oldestPatient.save(function(err){
-                                                    if(err){
-                                                        console.log(err);
-                                                    }
-                                                });
-                                            }
-                                            return res.redirect("/HSE/home");
+                                            RegPatient.findOne({"stage2.outTime.isGone": true, "stage3.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                                                if(oldestPatient!=null){
+                                                    oldestPatient.stage3.isActive=true;
+                                                    oldestPatient.save(function(err){
+                                                        if(err){
+                                                            console.log(err);
+                                                        }
+                                                    });
+                                                }
+                                                return res.redirect("/HSE/home");
+                                            });
                                         });
                                     });
     
@@ -494,17 +499,17 @@ app.post("/HSE/patient-registration", function(req, res){
                                         if(err){
                                             console.log(err);
                                         }
-                                    });
-                                    RegPatient.findOne({"stage3.isGone": true, "stage4.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
-                                        if(oldestPatient!=null){
-                                            oldestPatient.stage4.isActive=true;
-                                            oldestPatient.save(function(err){
-                                                if(err){
-                                                    console.log(err);
-                                                }
-                                            });
-                                        }
-                                        return res.redirect("/HSE/home");
+                                        RegPatient.findOne({"stage3.isGone": true, "stage4.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                                            if(oldestPatient!=null){
+                                                oldestPatient.stage4.isActive=true;
+                                                oldestPatient.save(function(err){
+                                                    if(err){
+                                                        console.log(err);
+                                                    }
+                                                });
+                                            }
+                                            return res.redirect("/HSE/home");
+                                        });
                                     });
                                 }else{
                                     req.flash("error", "There is patient ahead.");

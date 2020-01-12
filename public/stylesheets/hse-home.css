@@ -140,7 +140,12 @@ body{
 
 .list-group-item{
     padding: 4px 20px;
+    cursor: pointer;
     background-color: #FFFFCC;
+}
+
+.list-group-item:hover{
+    background-color: #FFFFBA;
 }
 
 .list-head{
@@ -154,5 +159,13 @@ body{
 }
 
 .active-list-item{
-    background-color: #99FFCC;
+    background-color: #a9ffa9;
+}
+
+.active-list-item:hover{
+    background-color: #8fff8f;
+}
+
+.disabled-item{
+    color: gray;
 }

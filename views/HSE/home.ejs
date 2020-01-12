@@ -44,8 +44,12 @@
       <% var count=0 %>
       <% regPatients.forEach(function(patient){ %>
         <% count=count+1 %>
-        <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+paient.token:patient.token) %>
-        <li class="list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+        <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
+        <% if(patient.stage1.isInQueue==true){ %>
+          <li class="list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+        <% }else{ %>
+          <li class="list-group-item disabled-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+        <% } %>
       <% }); %>
 
       <% if(count < 10){ %>
@@ -61,12 +65,12 @@
       <% regPatients.forEach(function(patient){ %>
         <% if(patient.stage1.isGone==true && patient.stage2.inTime.isGone==false){ %>
           <% count=count+1 %>
-          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+paient.token:patient.token) %>
+          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
           <li class="list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
         <% } %>
         <% if(patient.stage2.inTime.isGone==true && patient.stage2.outTime.isGone==false){ %>
           <% count=count+1 %>
-          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+paient.token:patient.token) %>
+          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
           <li class="active-list-item list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
         <% } %>
       <% }); %>
@@ -117,7 +121,7 @@
       <% regPatients.forEach(function(patient){ %>
         <% if(patient.stage2.outTime.isGone==true && patient.stage3.isGone==false){ %>
           <% count=count+1 %>
-          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+paient.token:patient.token) %>
+          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
           <% if(patient.stage3.isActive==true){ %>
             <li class="active-list-item list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
           <% }else{ %>
@@ -139,7 +143,7 @@
       <% regPatients.forEach(function(patient){ %>
         <% if(patient.stage3.isGone==true && patient.stage4.isGone==false){ %>
           <% count=count+1 %>
-          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+paient.token:patient.token) %>
+          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
           <% if(patient.stage4.isActive==true){ %>
             <li class="active-list-item list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
           <% }else{ %>
