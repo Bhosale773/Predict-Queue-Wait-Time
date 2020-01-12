@@ -164,7 +164,13 @@ app.get("/patient/qr-code", isPatientPermitted, function(req, res){
 });
 
 app.get("/patient/history", isPatientPermitted, function(req, res){
-    res.render("patient/history");
+    if(req.user){
+        RegPatient.find({"pid": req.user._id}, function(err, foundHistory){
+            res.render("patient/history", {foundHistory: foundHistory});
+        });
+    }else{
+        res.render("patient/history", {foundHistory: []});
+    }
 });
 
 app.get("/HSE/home", isHsePermitted, function(req, res){

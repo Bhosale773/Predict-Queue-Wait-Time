@@ -1,9 +1,40 @@
 <%- include ('../partials/header') %>
 
-<h4>Design history page here</h4>
+<title>Profile</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/history.css" />
 
-<!-- history page code will go here -->
-<!-- Use same template for all other ejs files -->
+
+<h1 class="text-center mt-3">Patient History</h1>
+<section id="history">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date Of Visit</th>
+                <th scope="col">Token No</th>
+                <th scope="col">Hospital In Time</th>
+                <th scope="col">Hospital Out Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% var count=0 %>
+            <% foundHistory.forEach(function(history){ %>
+                <% if(history.stage1.isInQueue==false){ %> 
+                    <% count = count+1 %>
+                    <% var token = (history.token < 10)?'00'+history.token:((history.token < 100)?'0'+history.token:history.token) %>
+                    <tr>
+                        <th scope="row"><%= count %></th>
+                        <td><%= history.stage1.date.getDate() + "/" + (history.stage1.date.getMonth()+1) + "/" + history.stage1.date.getFullYear() %></td>
+                        <td><%= "T" + token %></td>
+                        <td><%= history.stage1.date.getHours() + ":" + history.stage1.date.getMinutes() + ":" + history.stage1.date.getSeconds() + ":" + history.stage1.date.getMilliseconds() %></td>
+                        <td><%= history.stage4.date.getHours() + ":" + history.stage4.date.getMinutes() + ":" + history.stage4.date.getSeconds() + ":" + history.stage4.date.getMilliseconds() %></td>
+                    </tr>
+                <% } %>
+            <% }); %>
+        </tbody>
+    </table>
+</section>
+
 
 
 <%- include ('../partials/footer') %>

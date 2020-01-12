@@ -1,0 +1,17 @@
+h1{
+    font-family: 'Girassol', cursive;
+    margin-bottom: 20px;
+}
+
+#history{
+    max-width: 1000px;
+    margin: auto;
+}
+
+@media(max-width: 500px){
+    #history{
+        width: 95%;
+        overflow:scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+}
