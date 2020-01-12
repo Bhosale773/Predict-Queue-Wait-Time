@@ -230,6 +230,17 @@ app.get("/HSE/home", isHsePermitted, function(req, res){
     });
 });
 
+app.get("/HSE/patient-list", function(req, res){
+    RegPatient.find({}, function(err, foundPatients){
+        if(err){
+            req.flash("error", "Something Went Wrong, Try Again.");
+            return res.redirect("back");
+        }else{
+            res.render("HSE/patient-list", {regPatients: foundPatients});
+        }
+    });
+});
+
 HSE.find({"username" : "hse"},function(err, hses){
     if(err){
         console.log(err);

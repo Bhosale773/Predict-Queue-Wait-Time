@@ -1,0 +1,17 @@
+<%- include ('../partials/header') %>
+
+<title>Patient List</title>
+
+<% var i=-1 %>
+<% regPatients.forEach(function(patient){ %>
+    <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
+    <% if(patient.stage1.date.getDate()!=i){ %>
+        <% i=patient.stage1.date.getDate() %>
+        <br>
+        <p><%= patient.stage1.date.toString() %></p>
+    <% } %>
+    <div><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name  %></div>
+<% }); %>
+
+
+<%- include ('../partials/footer') %>
