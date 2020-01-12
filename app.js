@@ -152,7 +152,13 @@ app.get("/login", isLoginPermitted, function(req, res){
 });
 
 app.get("/patient/dashboard", isPatientPermitted, function(req, res){
-    res.render("patient/dashboard");
+    if(req.user){
+        RegPatient.findOne({"pid": req.user._id, "stage1.isInQueue": true}, function(err, foundHistory){
+            res.render("patient/dashboard", {currentUserStatus: foundHistory});
+        });
+    }else{
+        res.render("patient/dashboard", {currentUserStatus: null});
+    }
 });
 
 app.get("/patient/profile", isPatientPermitted, function(req, res){

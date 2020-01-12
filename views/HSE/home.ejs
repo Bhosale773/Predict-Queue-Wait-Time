@@ -43,12 +43,14 @@
     <ul class="list-group">
       <% var count=0 %>
       <% regPatients.forEach(function(patient){ %>
-        <% count=count+1 %>
-        <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-        <% if(patient.stage1.isInQueue==true){ %>
-          <li class="list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
-        <% }else{ %>
-          <li class="list-group-item disabled-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+        <% if(patient.stage1.date.getDate()==(new Date()).getDate()){ %>
+          <% count=count+1 %>
+          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
+          <% if(patient.stage1.isInQueue==true){ %>
+            <li class="list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+          <% }else{ %>
+            <li class="list-group-item disabled-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+          <% } %>
         <% } %>
       <% }); %>
 
