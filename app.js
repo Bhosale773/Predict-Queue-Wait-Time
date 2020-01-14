@@ -230,7 +230,7 @@ app.get("/HSE/home", isHsePermitted, function(req, res){
     });
 });
 
-app.get("/HSE/patient-list", function(req, res){
+app.get("/HSE/patient-list", isHsePermitted, function(req, res){
     RegPatient.find({}, function(err, foundPatients){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
@@ -544,6 +544,83 @@ app.post("/HSE/patient-registration", function(req, res){
                 }
             }
         }
+    });
+});
+
+app.post("/HSE/remove-patient-from-queue", function(req, res){
+    RegPatient.findOne({"_id":req.body.pid, "stage1.isInQueue":true}, function(err, patient){
+        
+        if(patient.stage3.isActive==true){
+            patient.stage1.isInQueue=false;
+            patient.stage1.isGone=false;
+            patient.stage2.isActive=false;
+            patient.stage2.inTime.isGone=false;
+            patient.stage2.outTime.isGone=false;
+            patient.stage3.isActive=false;
+            patient.stage3.isGone=false;
+            patient.stage4.isActive=false;
+            patient.stage4.isGone=false;
+            patient.save(function(err){
+                if(err){
+                    console.log(err);
+                }
+                RegPatient.findOne({"stage2.outTime.isGone": true, "stage3.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                    if(oldestPatient!=null){
+                        oldestPatient.stage3.isActive=true;
+                        oldestPatient.save(function(err){
+                            if(err){
+                                console.log(err);
+                            }
+                        });
+                    }
+                    res.redirect("/HSE/home");
+                });
+            });
+        }else if(patient.stage4.isActive==true){
+            patient.stage1.isInQueue=false;
+            patient.stage1.isGone=false;
+            patient.stage2.isActive=false;
+            patient.stage2.inTime.isGone=false;
+            patient.stage2.outTime.isGone=false;
+            patient.stage3.isActive=false;
+            patient.stage3.isGone=false;
+            patient.stage4.isActive=false;
+            patient.stage4.isGone=false;
+            patient.save(function(err){
+                if(err){
+                    console.log(err);
+                }
+                RegPatient.findOne({"stage3.isGone": true, "stage4.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                    if(oldestPatient!=null){
+                        oldestPatient.stage4.isActive=true;
+                        oldestPatient.save(function(err){
+                            if(err){
+                                console.log(err);
+                            }
+                            
+                        });
+                    }
+                    res.redirect("/HSE/home");
+                });
+            });
+        }else{
+            patient.stage1.isInQueue=false;
+            patient.stage1.isGone=false;
+            patient.stage2.isActive=false;
+            patient.stage2.inTime.isGone=false;
+            patient.stage2.outTime.isGone=false;
+            patient.stage3.isActive=false;
+            patient.stage3.isGone=false;
+            patient.stage4.isActive=false;
+            patient.stage4.isGone=false;
+            patient.save(function(err){
+                if(err){
+                    console.log(err);
+                }
+                res.redirect("/HSE/home");
+            });
+        }
+
     });
 });
 

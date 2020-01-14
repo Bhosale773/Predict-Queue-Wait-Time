@@ -44,6 +44,11 @@ function getConfirmationModal(data){
   }
 }
 
+function getConfirmationModal2(data){
+    $("#confirmation-modal2 #patient_id").val(data);
+    $("#confirmation-modal2 .modal").modal({"aria-hidden":"true"});
+}
+
 $(document).ready(function(){
   $("#select-way select#registration-option").change(function(){
     var way= $(this).children("option:selected").val();

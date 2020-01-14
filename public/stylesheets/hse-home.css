@@ -140,7 +140,6 @@ body{
 
 .list-group-item{
     padding: 4px 20px;
-    cursor: pointer;
     background-color: #FFFFCC;
 }
 
@@ -168,6 +167,27 @@ body{
 
 .disabled-item{
     color: gray;
+}
+
+.trash-btn{
+    color: red;
+    width: 0;
+    text-align: center;    
+    opacity: 0;
+    float: right;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.list-li:hover .trash-btn{
+    width: 10px;
+    transition: 0.2s ease-in-out all;
+    opacity: 1.0;
+    cursor: pointer;
+}
+
+.trash-btn:hover{
+    transform: rotate(360deg);
 }
 
 
