@@ -5,6 +5,7 @@ var passport              = require("passport");
 var Patient               = require("../models/patient");
 var RegPatient            = require("../models/regPatient");
 var DecisionDate          = require("../models/date");
+var calculate             = require("../calculations");
 
 
 // route to login patient
@@ -22,8 +23,9 @@ router.post("/login",passport.authenticate("patient", {
 
 router.get("/dashboard", middleware.isPatientPermitted, function(req, res){
     if(req.user){
-        RegPatient.findOne({"pid": req.user._id, "stage1.isInQueue": true}, function(err, foundHistory){
-            res.render("patient/dashboard", {currentUserStatus: foundHistory});
+        RegPatient.findOne({"pid": req.user._id, "stage1.isInQueue": true}, function(err, foundStatus){
+            var currentUserStatus = calculate(req.user, foundStatus);
+            res.render("patient/dashboard", {currentUserStatus: currentUserStatus});
         });
     }else{
         res.render("patient/dashboard", {currentUserStatus: null});

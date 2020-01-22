@@ -6,38 +6,15 @@
     <% var token = (currentUserStatus.token < 10)?'00'+currentUserStatus.token:((currentUserStatus.token < 100)?'0'+currentUserStatus.token:currentUserStatus.token) %>
     <p>Name : <%= currentUserStatus.name %></p>
     <p>Token No : <%= "T" + token %></p>
-    <% if(currentUserStatus.stage1.isGone==true){ %>
-        <p>Registration Time : <%= currentUserStatus.stage1.date.toString() %></p>
-    <% }else{ %>
-        <p>Registration Time : Not Available</p>
-    <% } %>
-    <% if(currentUserStatus.stage2.inTime.isGone==true){ %>
-        <p>Consultation Queue In Time : <%= currentUserStatus.stage2.inTime.date.toString() %></p>
-    <% }else{ %>
-        <p>Consultation Queue In Time : Not Available</p>
-    <% } %>
-    <% if(currentUserStatus.stage2.outTime.isGone==true){ %>
-        <p>Consultation Queue Out Time : <%= currentUserStatus.stage2.outTime.date.toString() %></p>
-    <% }else{ %>
-        <p>Consultation Queue Out Time : Not Available</p>
-    <% } %>
-    <% if(currentUserStatus.stage3.isGone==true){ %>
-        <p>Billing Queue Out Time : <%= currentUserStatus.stage3.date.toString() %></p>
-    <% }else{ %>
-        <p>Billing Queue Out Time : Not Available</p>
-    <% } %>
-    <% if(currentUserStatus.stage4.isGone==true){ %>
-        <p>Medicine Queue Out Time : <%= currentUserStatus.stage4.date.toString() %></p>
-    <% }else{ %>
-        <p>Medicine Queue Out Time : Not Available</p>
-    <% } %>
+    <p>Registration Time : <%= currentUserStatus.registrationTime %></p>
+    <p>Consultation Queue In Time : <%= currentUserStatus.consultationInTime %></p>
+    <p>Consultation Queue Out Time : <%= currentUserStatus.consultationOutTime %></p>
+    <p>Billing Queue Out Time : <%= currentUserStatus.billingInTime %></p>
+    <p>Billing Queue Out Time : <%= currentUserStatus.billingOutTime %></p>
+    <p>Medicine Queue Out Time : <%= currentUserStatus.medicineInTime %></p>
+    <p>Medicine Queue Out Time : <%= currentUserStatus.medicineOutTime %></p>
 <% }else{ %>
-    <p>Registration Time : Not Available</p>
-    <p>Consultation Queue In Time : Not Available</p>
-    <p>Consultation Queue Out Time : Not Available</p>
-    <p>Billing Queue Out Time : Not Available</p>
-    <p>Medicine Queue Out Time : Not Available</p>
+    <p>Patient in not in hospital now</p>
 <% } %>
-
 
 <%- include ('../partials/footer') %>
