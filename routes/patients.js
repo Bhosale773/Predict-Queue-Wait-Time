@@ -23,8 +23,8 @@ router.post("/login",passport.authenticate("patient", {
 
 router.get("/dashboard", middleware.isPatientPermitted, function(req, res){
     if(req.user){
-        RegPatient.findOne({"pid": req.user._id, "stage1.isInQueue": true}, function(err, foundStatus){
-            var currentUserStatus = calculate(req.user, foundStatus);
+        RegPatient.findOne({"pid": req.user._id, "stage1.isInQueue": true}, async function(err, foundStatus){
+            var currentUserStatus = await calculate(req.user, foundStatus);
             res.render("patient/dashboard", {currentUserStatus: currentUserStatus});
         });
     }else{
