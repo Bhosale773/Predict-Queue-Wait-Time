@@ -11,6 +11,9 @@ var LocalStrategy         = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 var flash                 = require("connect-flash");
 var bcrypt                = require("bcryptjs");
+var dotenv                = require("dotenv");
+
+dotenv.config();
 
 
 // importing database models
@@ -37,6 +40,7 @@ var curr_date;
 
 mongoose.set('useCreateIndex', true);
 mongoose.connect("mongodb://localhost:27017/pqt_db",{useNewUrlParser:true, useUnifiedTopology: true});
+// mongoose.connect(process.env.DATABASEURL, {useNewUrlParser:true, useUnifiedTopology: true});
 mongoose.set('useFindAndModify', false);
 
 
@@ -104,7 +108,7 @@ passport.serializeUser(function (entity, done) {
 });
 
 passport.deserializeUser(function (obj, done) {
-    if(obj.username=='hse') {
+    if(obj.username==process.env.hseUSERNAME) {
         HSE.findById(obj.id)
             .then(device => {
                 if (device) {
@@ -129,14 +133,14 @@ passport.deserializeUser(function (obj, done) {
 
 // register hse details manually
 
-HSE.find({"username" : "hse"},function(err, hses){
+HSE.find({"username" : process.env.hseUSERNAME},function(err, hses){
     if(err){
         console.log(err);
     }else{
         if(hses.length==0){
             var newHSE = new HSE({
-                username: "hse",
-                password: "hse"
+                username: process.env.hseUSERNAME,
+                password: process.env.hsePASSWORD
             });
         
             bcrypt.genSalt(10, function(err,  salt){
