@@ -25,6 +25,13 @@
               <label for="patient_id" class="col-form-label">Patient ID:</label>
               <input type="text" name="pid" class="form-control" id="patient_id" required>
             </div>
+            <div class="form-group">
+              <label for="visit_type" class="col-form-label">Visit Type:</label>
+              <select name="visit_type" id="visit_type" class="form-control" required>
+                <option value="consultation">Consultation</option>
+                <option value="appointment">Appointment</option>
+              </select>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -72,13 +79,20 @@
     <ul class="list-group">
       <% var count=0 %>
       <% regPatients.forEach(function(patient){ %>
-        <% if(patient.stage1.date.getDate()==(new Date()).getDate()){ %>
-          <% count=count+1 %>
-          <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-          <% if(patient.stage1.isInQueue==true){ %>
-            <li class="list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
-          <% }else{ %>
-            <li class="list-group-item disabled-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+        <% if(patient.stage1.date != undefined){ %>
+          <% if(patient.stage1.date.getDate()==(new Date()).getDate()){ %>
+            <% count=count+1 %>
+            <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
+            <% if(patient.visit_type == 'appointment'){ %>
+              <% var token = "A" + token %>
+            <% }else{ %>
+              <% var token = "T" + token %>
+            <% } %>
+            <% if(patient.stage1.isInQueue==true){ %>
+              <li class="list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+            <% }else{ %>
+              <li class="list-group-item disabled-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name%></li>
+            <% } %>
           <% } %>
         <% } %>
       <% }); %>
@@ -97,12 +111,22 @@
         <% if(patient.stage1.isGone==true && patient.stage2.inTime.isGone==false){ %>
           <% count=count+1 %>
           <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-          <li id=<%= patient._id %> class="li1 list-li list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#consultation-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+          <% if(patient.visit_type == 'appointment'){ %>
+            <% var token = "A" + token %>
+          <% }else{ %>
+            <% var token = "T" + token %>
+          <% } %>
+          <li id=<%= patient._id %> class="li1 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#consultation-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
         <% } %>
         <% if(patient.stage2.inTime.isGone==true && patient.stage2.outTime.isGone==false){ %>
           <% count=count+1 %>
           <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-          <li id=<%= patient._id %> class="li2 list-li active-list-item list-group-item"><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#consultation-ul .li2').id)" class="far fa-trash-alt"></i> </span><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
+          <% if(patient.visit_type == 'appointment'){ %>
+            <% var token = "A" + token %>
+          <% }else{ %>
+            <% var token = "T" + token %>
+          <% } %>
+          <li id=<%= patient._id %> class="li2 list-li active-list-item list-group-item"><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#consultation-ul .li2').id)" class="far fa-trash-alt"></i> </span><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
         <% } %>
       <% }); %>
 
@@ -155,10 +179,15 @@
         <% if(patient.stage2.outTime.isGone==true && patient.stage3.isGone==false){ %>
           <% count=count+1 %>
           <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-          <% if(patient.stage3.isActive==true){ %>
-            <li id=<%= patient._id %> class="li1 list-li active-list-item list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#billing-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+          <% if(patient.visit_type == 'appointment'){ %>
+            <% var token = "A" + token %>
           <% }else{ %>
-            <li id=<%= patient._id %> class="li2 list-li list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#billing-ul .li2').id)" class="far fa-trash-alt"></i> </span></li>
+            <% var token = "T" + token %>
+          <% } %>
+          <% if(patient.stage3.isActive==true){ %>
+            <li id=<%= patient._id %> class="li1 list-li active-list-item list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#billing-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+          <% }else{ %>
+            <li id=<%= patient._id %> class="li2 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#billing-ul .li2').id)" class="far fa-trash-alt"></i> </span></li>
             <% } %>
         <% } %>
       <% }); %>
@@ -177,10 +206,15 @@
         <% if(patient.stage3.isGone==true && patient.stage4.isGone==false){ %>
           <% count=count+1 %>
           <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-          <% if(patient.stage4.isActive==true){ %>
-            <li id=<%= patient._id %> class="li1 list-li active-list-item list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#medicine-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+          <% if(patient.visit_type == 'appointment'){ %>
+            <% var token = "A" + token %>
           <% }else{ %>
-            <li id=<%= patient._id %> class="li2 list-li list-group-item"><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#medicine-ul .li2').id)" class="far fa-trash-alt"></i> </span></li>
+            <% var token = "T" + token %>
+          <% } %>
+          <% if(patient.stage4.isActive==true){ %>
+            <li id=<%= patient._id %> class="li1 list-li active-list-item list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#medicine-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+          <% }else{ %>
+            <li id=<%= patient._id %> class="li2 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#medicine-ul .li2').id)" class="far fa-trash-alt"></i> </span></li>
           <% } %>
         <% } %>
       <% }); %>

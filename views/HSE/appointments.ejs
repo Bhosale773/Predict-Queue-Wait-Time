@@ -1,0 +1,29 @@
+<%- include ('../partials/header') %>
+
+<title>Book Appointments</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/appointments.css" />
+
+<div id="appointment-booking">
+    <form action="/HSE/bookingconfirm" method="POST">
+        <h4>Book An Appointment : </h4>
+        <label for="p_id">Enter Patient ID: </label>
+        <input id="p_id" type="text" name="pid" placeholder="Patient ID" required>
+        <br>
+        <label for="a_time">Time of Appointment: </label>
+        <input id="a_time" type="time" name="a_time" placeholder="Appointment Time" required>
+        <br>
+        <label for="a_type">Type of Appointment: </label>
+        <select id="a_type" name="a_type">
+            <option value="apt_A">Reason A</option>
+            <option value="apt_B">Reason B</option>
+            <option value="apt_C">Reason C</option>
+            <option value="apt_D">Reason D</option>
+        </select>
+        <br>
+        <button type="submit">Book</button>
+    </form>
+</div>
+
+
+
+<%- include ('../partials/footer') %>

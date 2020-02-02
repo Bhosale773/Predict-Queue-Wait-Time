@@ -2,6 +2,8 @@ var mongoose = require("mongoose");
 
 var RegPatientSchema = new mongoose.Schema({
     pid: {type: mongoose.Schema.Types.ObjectId, ref: "Patient"},
+    visit_type: {type: String, default: "consultation"},
+    reason : {type: String, default: "general"},
     name: String,
     token: Number,
     stage1: {

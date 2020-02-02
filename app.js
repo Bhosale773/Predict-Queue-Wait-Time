@@ -166,10 +166,11 @@ function decideDate(){
     curr_date = new Date();
     DecisionDate.findOne({},function(err, foundDate){
         if(foundDate==null){
-            DecisionDate.create({decisionDate: Date.now(), token: 1},function(err, date){});
+            DecisionDate.create({decisionDate: Date.now(), token: 1, apt_token: 1},function(err, date){});
         }else if(curr_date.getDate()-foundDate.decisionDate.getDate() != 0){
             foundDate.decisionDate= Date.now();
             foundDate.token=1;
+            foundDate.apt_token=1;
             foundDate.save(function(err){});
         }
     });
