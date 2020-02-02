@@ -1,16 +1,34 @@
 <%- include ('../partials/header') %>
 
 <title>Patient List</title>
+<link type="text/css" rel="stylesheet" href="/stylesheets/patient-list.css" />
 
-<% var i=-1 %>
+
+<form action="/HSE/filter-patient-list" method="POST">
+    <input type="date" name="date" required>
+    <button type="submit">Search</button>
+</form>
+
+<% var isNewDate = true %>
+
 <% regPatients.forEach(function(patient){ %>
     <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-    <% if(patient.stage1.date.getDate()!=i){ %>
-        <% i=patient.stage1.date.getDate() %>
+    <% var p_date = patient.stage1.date %>
+    <% var p_dateD = (p_date.getDate() < 10)?'0'+p_date.getDate():p_date.getDate() %>
+    <% var p_dateM = ((p_date.getMonth()+1) < 10)?'0'+(p_date.getMonth()+1):(p_date.getMonth()+1) %>
+    <% var p_dateY = p_date.getFullYear() %>
+    <% var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD %>
+
+    <% if(isNewDate){ %>
+        <br><br>
+        <h5>Patients on date <%= date %></h5>
         <br>
-        <p><%= patient.stage1.date.toString() %></p>
+        <% isNewDate = false %>
     <% } %>
-    <div><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name  %></div>
+
+    <% if(date == p_dateFull){ %>
+        <div><%= "T" + token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name  %></div>
+    <% } %>
 <% }); %>
 
 

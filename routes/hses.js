@@ -36,16 +36,35 @@ router.get("/home", middleware.isHsePermitted, function(req, res){
 // route to retrive and show all patient data from database
 
 router.get("/patient-list", middleware.isHsePermitted, function(req, res){
+    var p_date = new Date();
+    var p_dateD = (p_date.getDate() < 10)?'0'+p_date.getDate():p_date.getDate();
+    var p_dateM = ((p_date.getMonth()+1) < 10)?'0'+(p_date.getMonth()+1):(p_date.getMonth()+1);
+    var p_dateY = p_date.getFullYear();
+    var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD;
+    
     RegPatient.find({}, function(err, foundPatients){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
             return res.redirect("back");
         }else{
-            res.render("HSE/patient-list", {regPatients: foundPatients});
+            res.render("HSE/patient-list", {regPatients: foundPatients, date: p_dateFull});
         }
     });
 });
 
+
+// filter patient data according to date from database
+
+router.post("/filter-patient-list", middleware.isHsePermitted, function(req, res){
+    RegPatient.find({}, function(err, foundPatients){
+        if(err){
+            req.flash("error", "Something Went Wrong, Try Again.");
+            return res.redirect("back");
+        }else{
+            res.render("HSE/patient-list", {regPatients: foundPatients, date: req.body.date});
+        }
+    });
+});
 
 // route to register patient by hse
 
