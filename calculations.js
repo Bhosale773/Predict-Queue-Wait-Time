@@ -82,7 +82,11 @@ async function calculate(patient, patientStatus){
             currentUserStatus.mediAvg = count * algoData.mediAvg;
         });
 
-        currentUserStatus.registrationTime = patientStatus.stage1.date.toString();
+        if(currentUserStatus.registrationTime != null){
+            currentUserStatus.registrationTime = currentUserStatus.registrationTime.toString();
+        }else{
+            currentUserStatus.registrationTime = "Not Available";
+        }
 
         if(currentUserStatus.consultationInTime != null){
             currentUserStatus.consultationInTime = currentUserStatus.consultationInTime.toString();
