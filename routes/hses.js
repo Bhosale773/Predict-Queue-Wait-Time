@@ -37,7 +37,14 @@ router.get("/home", middleware.isHsePermitted, function(req, res){
 // route to form for booking apointments
 
 router.get("/book-appointments", middleware.isHsePermitted, function(req, res){
-    res.render("HSE/appointments");
+    Appointment.find({}, function(err, foundAppointments){
+        if(err){
+            req.flash("error", "Something Went Wrong, Try Again.");
+            return res.redirect("back");
+        }else{
+            res.render("HSE/appointments", {appointments: foundAppointments});
+        }
+    });
 });
 
 
@@ -429,6 +436,7 @@ router.post("/bookingconfirm", function(req, res){
 
                                         Appointment.create({
                                             pid: patient._id,
+                                            name: patient.fname + " " + patient.lname,
                                             date: reqDate,
                                             type: req.body.a_type,
                                             token: foundDate.apt_token
@@ -463,7 +471,7 @@ router.post("/bookingconfirm", function(req, res){
                                 }
                             });
                         }else{
-                            req.flash("error", "Patient is already in queue now");
+                            req.flash("error", "Patient is in queue or Appointment is already booked");
                             return res.redirect("back");
                         }
                     }

@@ -1,0 +1,73 @@
+.row, .col{
+    margin: 0px;
+}
+
+#appointment-booking{
+    width: 500px;
+    margin: auto;
+}
+
+#appointment-booking .head, #curr_appointments_table .head{
+	font-family:verdana;
+	font-size:30px;
+    color:#000;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+#appointment-booking form{
+    width: 500px;
+    margin: auto;
+    border-radius: 5px;
+    border: 1px solid #10A881;
+    background-color: rgba(0,0,0,0.02);
+}
+
+#appointment-booking input, #appointment-booking select{
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: block;
+    width: 90%;
+    padding-left: 15px;
+    margin: auto;
+    height: 2.6rem;
+    border: none;
+    border: 1px solid rgb(151, 154, 156);
+    border-radius: 5px;
+}
+
+#appointment-booking button{
+    width: 90%;
+    height: 2.7rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #fff;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#appointment-booking .intro{
+    margin: 2% 0px 10px 5%;
+    color: #333945;
+    font-size: 1rem;
+    font-family:verdana;
+}
+
+
+@media(max-width: 500px){
+    #appointment-booking{
+        width: 100%;
+    }
+    #curr_appointments_table, #appointment-booking form{
+        width: 95%;
+        overflow:scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    #appointment-booking .head, #curr_appointments_table .head{
+        font-size:22px;
+        margin-top: 10px;
+    }
+    #curr_appointments_table .head{
+        margin-top: 30px;
+    }
+}

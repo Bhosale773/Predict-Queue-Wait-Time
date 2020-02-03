@@ -3,29 +3,64 @@
 <title>Book Appointments</title>
 <link type="text/css" rel="stylesheet" href="/stylesheets/appointments.css" />
 
-<div id="appointment-booking">
-    <form action="/HSE/bookingconfirm" method="POST">
-        <h4>Book An Appointment : </h4>
-        <label for="p_id">Enter Patient ID: </label>
-        <input id="p_id" type="text" name="pid" placeholder="Patient ID" required>
-        <br>
-        <label for="a_time">Time of Appointment: </label>
-        <input id="a_time" type="time" name="a_time" placeholder="Appointment Time" required>
-        <br>
-        <label for="a_date">Date of Appointment: </label>
-        <input id="a_date" type="date" name="a_date" placeholder="Appointment Date" required>
-        <br>
-        <label for="a_type">Type of Appointment: </label>
-        <select id="a_type" name="a_type">
-            <option value="apt_A">Reason A</option>
-            <option value="apt_B">Reason B</option>
-            <option value="apt_C">Reason C</option>
-            <option value="apt_D">Reason D</option>
-        </select>
-        <br>
-        <button type="submit">Book</button>
-    </form>
+<div class="row">
+    <div class="col-lg-6">
+        <div id="appointment-booking">
+            <h4 class="head">Book An Appointment : </h4>
+            <form action="/HSE/bookingconfirm" method="POST">
+                <label class="intro" for="p_id">Enter Patient ID: </label>
+                <input id="p_id" type="text" name="pid" placeholder="Patient ID" required>
+                <label class="intro" for="a_time">Time of Appointment: </label>
+                <input id="a_time" type="time" name="a_time" placeholder="Appointment Time" required>
+                <label class="intro" for="a_date">Date of Appointment: </label>
+                <input id="a_date" type="date" name="a_date" placeholder="Appointment Date" required>
+                <label class="intro" for="a_type">Type of Appointment: </label>
+                <select id="a_type" name="a_type">
+                    <option value="apt_A">Reason A</option>
+                    <option value="apt_B">Reason B</option>
+                    <option value="apt_C">Reason C</option>
+                    <option value="apt_D">Reason D</option>
+                </select>
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">Book</button>
+                </div>
+            </form>
+        </div>        
+    </div>
+    <div class="col-lg-6">
+        <div id="curr_appointments_table">
+            <h4 class="head">Current Appointments : </h4>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Token No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% var count=0 %>
+                    <% appointments.forEach(function(appointment){ %>
+                        <% var token = (appointment.token < 10)?'00'+appointment.token:((appointment.token < 100)?'0'+appointment.token:appointment.token) %>
+                        <% count = count+1 %>
+                        <tr>
+                            <th scope="row"><%= count %></th>
+                            <td><%= "A"+token %></td>
+                            <td><%= appointment.name %></td>
+                            <td><%= appointment.date.getDate()+"-"+(appointment.date.getMonth()+1) + "-" + appointment.date.getFullYear() %></td>
+                            <td><%= appointment.date.getHours()+":"+appointment.date.getSeconds() %></td>
+                            <td><%= appointment.type %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
 
 
 
