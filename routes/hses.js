@@ -260,6 +260,16 @@ router.post("/patient-registration", function(req, res){
                             }else if(foundPatient.stage4.isGone==false){
                                 if(foundPatient.stage4.isActive==true){
 
+                                    Appointment.findOne({"pid": patient._id}, function(err, foundAppointment){
+                                        if(foundAppointment!=null){
+                                            Appointment.deleteOne({"_id": foundAppointment._id}, function(err){
+                                                if(err){
+                                                    console.log(err);
+                                                }
+                                            });
+                                        }
+                                    });
+
                                     foundPatient.stage4.date=Date.now();
                                     foundPatient.stage4.isActive=false;
                                     foundPatient.stage1.isInQueue=false;
@@ -301,6 +311,17 @@ router.post("/patient-registration", function(req, res){
 
 router.post("/remove-patient-from-queue", function(req, res){
     RegPatient.findOne({"_id":req.body.pid, "stage1.isInQueue":true}, function(err, patient){
+
+        Appointment.findOne({"pid": patient.pid}, function(err, foundAppointment){
+            if(foundAppointment!=null){
+                Appointment.deleteOne({"_id": foundAppointment._id}, function(err){
+                    if(err){
+                        console.log(err);
+                    }
+                });
+            }
+        });
+
         if(patient.stage3.isActive==true){
             patient.stage1.isInQueue=false;
             patient.stage1.isGone=false;

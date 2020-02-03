@@ -22,6 +22,7 @@ var HSE                   = require("./models/hse");
 var Patient               = require("./models/patient");
 var RegPatient            = require("./models/regPatient");
 var DecisionDate          = require("./models/date");
+var Appointment           = require("./models/appointment");
 
 
 // importing routes
@@ -176,6 +177,36 @@ function decideDate(){
 }
 
 setInterval(decideDate, 1000);
+
+
+// function to remove appointment if patient is late
+
+function removeAppointment(){
+    curr_date = new Date();
+    Appointment.find({}, function(err, foundAppointments){
+        if(err){
+            console.log(err);
+        }else if(foundAppointments.length != 0){
+            foundAppointments.forEach(function(apt){
+                if(curr_date.getTime() - apt.date.getTime() > 30*60*1000){
+                    RegPatient.findOne({"pid": apt.pid, "stage1.isInQueue": true}, function(err, foundPatient){
+                        if(foundPatient!=null){
+                            foundPatient.stage1.isInQueue = false;
+                            foundPatient.save(function(err){});
+                        }
+                    });
+                    Appointment.deleteOne({"_id": apt._id}, function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+setInterval(removeAppointment, 60000);
 
 
 

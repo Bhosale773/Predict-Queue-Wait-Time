@@ -15,14 +15,16 @@
     <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
     <% if(patient.visit_type == 'appointment'){ %>
         <% var token = "A" + token %>
-      <% }else{ %>
+    <% }else{ %>
         <% var token = "T" + token %>
-      <% } %>
+    <% } %>
     <% var p_date = patient.stage1.date %>
-    <% var p_dateD = (p_date.getDate() < 10)?'0'+p_date.getDate():p_date.getDate() %>
-    <% var p_dateM = ((p_date.getMonth()+1) < 10)?'0'+(p_date.getMonth()+1):(p_date.getMonth()+1) %>
-    <% var p_dateY = p_date.getFullYear() %>
-    <% var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD %>
+    <% if(p_date!=null){ %>
+        <% var p_dateD = (p_date.getDate() < 10)?'0'+p_date.getDate():p_date.getDate() %>
+        <% var p_dateM = ((p_date.getMonth()+1) < 10)?'0'+(p_date.getMonth()+1):(p_date.getMonth()+1) %>
+        <% var p_dateY = p_date.getFullYear() %>
+        <% var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD %>
+    <% } %>
 
     <% if(isNewDate){ %>
         <br><br>
