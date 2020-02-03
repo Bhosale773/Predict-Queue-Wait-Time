@@ -425,13 +425,14 @@ router.post("/bookingconfirm", function(req, res){
                                         var d = req.body.a_date;
                                         var tArray = t.split(":");
                                         var dArray = d.split("-");
-                                        var reqDate = new Date(dArray[0], dArray[1]-1, dArray[2], tArray[0], tArray[1]);
+                                        var reqDate = new Date(dArray[0], dArray[1], dArray[2], tArray[0], tArray[1]);
 
                                         Appointment.create({
                                             pid: patient._id,
                                             date: reqDate,
                                             type: req.body.a_type,
-                                            token: foundDate.apt_token
+                                            token: foundDate.apt_token,
+                                            time : 600
                                         },function(err, appointment){
                                         });
                                         RegPatient.create({

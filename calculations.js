@@ -54,22 +54,28 @@ async function calculate(patient, patientStatus){
             currentUserStatus.consultAhead= count;
             currentUserStatus.consultAvg = count * algoData.consultAvg;
             var flag = 1;
-            while(flag==1){
-                var miliTemp = currentUserStatus.consultAvg*1000;
-                var timeDate = new Date(miliTemp); 
-                var sDt = Date.now();
-                var eDt = new Date(sDt.getTime()+miliTemp);
-                var id = 1;
-                if(id==1)
+            var id = 1;
+            var miliTemp = currentUserStatus.consultAvg*1000;
+            var timeDate = new Date(miliTemp); 
+            var sDt = new Date(Date.now());
+            console.log(sDt);
+            var eDt = new Date(sDt.getTime()+miliTemp);
+            console.log("under await consultation");
+            for(;flag==1;){
+                
+                if(id==1){
                     await Appointment.findOne({"date" : {$gte : sDt ,$lte : eDt}},function(err,gotOne){
                         if(gotOne!=null){
+                            console.log("i am not null");
                             miliTemp = miliTemp + gotOne.time*1000;
                             id = gotOne._id;
                         }
                         else{
+                            console.log("i m null");
                             flag = 0;
                         }
                     });
+                }
                 else{
                     await Appointment.findOne({"_id" : {$gt : id}, "date" : {$gte : sDt ,$lte : eDt}},function(err,gotOne){
                         if(gotOne!=null){
@@ -85,6 +91,7 @@ async function calculate(patient, patientStatus){
                     flag = 0;
             }
             currentUserStatus.consultAvg = Math.round(miliTemp/1000);
+            console.log(currentUserStatus.consultAvg+"   "+ miliTemp);
 
             await RegPatient.findOne({"stage2.isActive" : true,"stage1.isInQueue":true,"stage2.outTime.isGone" : false},async function(err, foundOne){
                 if(foundOne){
@@ -151,7 +158,6 @@ async function calculate(patient, patientStatus){
     }else{
         currentUserStatus = null;
     }
-
     return currentUserStatus;
 }
 
