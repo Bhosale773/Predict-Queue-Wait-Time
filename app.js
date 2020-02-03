@@ -142,7 +142,6 @@ HSE.find({"username" : process.env.hseUSERNAME},function(err, hses){
                 username: process.env.hseUSERNAME,
                 password: process.env.hsePASSWORD
             });
-        
             bcrypt.genSalt(10, function(err,  salt){
                 bcrypt.hash(newHSE.password, salt, function(err, hash){
                     if(!err){

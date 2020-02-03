@@ -1,6 +1,7 @@
 var Patient               = require("./models/patient");
 var RegPatient            = require("./models/regPatient");
 var AlgoData              = require("./models/algoData");
+var Appointment          = require("./models/appointment");
 var timespan              = require("timespan");
 
 
@@ -52,6 +53,39 @@ async function calculate(patient, patientStatus){
         await RegPatient.countDocuments({"stage1.isInQueue" : true, "stage2.outTime.isGone" : false , "stage1.date":{$lt : patientStatus.stage1.date}},async function(err,count){
             currentUserStatus.consultAhead= count;
             currentUserStatus.consultAvg = count * algoData.consultAvg;
+            var flag = 1;
+            while(flag==1){
+                var miliTemp = currentUserStatus.consultAvg*1000;
+                var timeDate = new Date(miliTemp); 
+                var sDt = Date.now();
+                var eDt = new Date(sDt.getTime()+miliTemp);
+                var id = 1;
+                if(id==1)
+                    await Appointment.findOne({"date" : {$gte : sDt ,$lte : eDt}},function(err,gotOne){
+                        if(gotOne!=null){
+                            miliTemp = miliTemp + gotOne.time*1000;
+                            id = gotOne._id;
+                        }
+                        else{
+                            flag = 0;
+                        }
+                    });
+                else{
+                    await Appointment.findOne({"_id" : {$gt : id}, "date" : {$gte : sDt ,$lte : eDt}},function(err,gotOne){
+                        if(gotOne!=null){
+                            miliTemp = miliTemp + gotOne.time*1000;
+                            id = gotOne._id;
+                        }
+                        else{
+                            flag=0;
+                        }
+                    });
+                }
+                if(miliTemp>5*60*60*1000)
+                    flag = 0;
+            }
+            currentUserStatus.consultAvg = Math.round(miliTemp/1000);
+
             await RegPatient.findOne({"stage2.isActive" : true,"stage1.isInQueue":true,"stage2.outTime.isGone" : false},async function(err, foundOne){
                 if(foundOne){
                     var currentDate = new Date(Date.now());

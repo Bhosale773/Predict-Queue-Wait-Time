@@ -4,7 +4,8 @@ var AppointmentSchema = new mongoose.Schema({
     pid: {type: mongoose.Schema.Types.ObjectId, ref: "Patient"},
     date: Date,
     type: String,
-    token: Number
+    token: Number,
+    time : Number
 });
 
 
