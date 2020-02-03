@@ -93,47 +93,49 @@ router.post("/patient-registration", function(req, res){
                             return res.redirect("back");
                         }else{
                             if(foundPatients.length==0){
-                                if(req.body.visit_type == 'appointment'){
-                                    RegPatient.findOne({"pid": patient._id, "stage1.isInQueue": true}, function(err, foundPatient){
-                                        if(foundPatient==null){
-                                            req.flash("error", "Appointment does not exist");
-                                            return res.redirect("back");
-                                        }else{
-                                            foundPatient.stage1.date=Date.now();
-                                            foundPatient.stage1.isGone=true;
-                                            foundPatient.save(function(err){
-                                                if(err){
-                                                    console.log(err);
-                                                }
-                                                return res.redirect("/HSE/home");
-                                            });
-                                        }
-                                    });
-                                }else{
-                                    DecisionDate.findOne({},function(err, foundDate){
-                                        RegPatient.create({
-                                            pid: patient._id,
-                                            name: patient.fname + " " + patient.lname,
-                                            token: foundDate.token,
-                                            stage1: {
-                                                isInQueue: true,
-                                                date: Date.now(),
-                                                isGone: true
-                                            }
-                                        },function(err, regPatient){
-                                            if(err){
-                                                req.flash("error", "Something Went Wrong, Try Again.");
+                                Appointment.findOne({"pid":req.body.pid}, function(err, foundAppointment){
+                                    if(foundAppointment!=null){
+                                        RegPatient.findOne({"pid": patient._id, "stage1.isInQueue": true}, function(err, foundPatient){
+                                            if(foundPatient==null){
+                                                req.flash("error", "Appointment does not exist");
                                                 return res.redirect("back");
                                             }else{
-                                                foundDate.token+=1;
-                                                foundDate.decisionDate = Date.now();
-                                                foundDate.save(function(err){
+                                                foundPatient.stage1.date=Date.now();
+                                                foundPatient.stage1.isGone=true;
+                                                foundPatient.save(function(err){
+                                                    if(err){
+                                                        console.log(err);
+                                                    }
                                                     return res.redirect("/HSE/home");
                                                 });
                                             }
                                         });
-                                    });
-                                }
+                                    }else{
+                                        DecisionDate.findOne({},function(err, foundDate){
+                                            RegPatient.create({
+                                                pid: patient._id,
+                                                name: patient.fname + " " + patient.lname,
+                                                token: foundDate.token,
+                                                stage1: {
+                                                    isInQueue: true,
+                                                    date: Date.now(),
+                                                    isGone: true
+                                                }
+                                            },function(err, regPatient){
+                                                if(err){
+                                                    req.flash("error", "Something Went Wrong, Try Again.");
+                                                    return res.redirect("back");
+                                                }else{
+                                                    foundDate.token+=1;
+                                                    foundDate.decisionDate = Date.now();
+                                                    foundDate.save(function(err){
+                                                        return res.redirect("/HSE/home");
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
                                 return res.redirect("back");
@@ -398,9 +400,15 @@ router.post("/bookingconfirm", function(req, res){
                                 }
                                 if(foundAppointment == null){
                                     DecisionDate.findOne({},function(err, foundDate){
+                                        var t = req.body.a_time;
+                                        var d = req.body.a_date;
+                                        var tArray = t.split(":");
+                                        var dArray = d.split("-");
+                                        var reqDate = new Date(dArray[0], dArray[1]-1, dArray[2], tArray[0], tArray[1]);
+
                                         Appointment.create({
                                             pid: patient._id,
-                                            time: req.body.a_time,
+                                            date: reqDate,
                                             type: req.body.a_type,
                                             token: foundDate.apt_token
                                         },function(err, appointment){
