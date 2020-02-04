@@ -58,13 +58,15 @@ async function calculate(patient, patientStatus){
             var miliTemp = currentUserStatus.consultAvg*1000;
             var timeDate = new Date(miliTemp); 
             var sDt = new Date(Date.now());
-            console.log(sDt);
             var eDt = new Date(sDt.getTime()+miliTemp);
+            var psDt = new Date(sDt.getTime()-30*60*1000);
+            var peDt = new Date(eDt.getTime()-30*60*1000);
+            console.log(sDt,eDt,psDt,peDt);
             console.log("under await consultation");
             for(;flag==1;){
-                
+                //,{"date" : {$gte : sDt ,$lte : eDt}},{"date" :{$gte : psDt ,$lte : peDt}}]
                 if(id==1){
-                    await Appointment.findOne({"date" : {$gte : sDt ,$lte : eDt}},function(err,gotOne){
+                    await Appointment.findOne({$or :[{"date" :{$lte : sDt ,$gte : peDt}},{"date" : {$gte : sDt ,$lte : eDt}},{"date" :{$gte : psDt ,$lte : peDt}}]},function(err,gotOne){
                         if(gotOne!=null){
                             console.log("i am not null");
                             miliTemp = miliTemp + gotOne.time*1000;
