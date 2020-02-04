@@ -45,13 +45,22 @@
                     <% var count=0 %>
                     <% appointments.forEach(function(appointment){ %>
                         <% var token = (appointment.token < 10)?'00'+appointment.token:((appointment.token < 100)?'0'+appointment.token:appointment.token) %>
+                        <% var h = appointment.date.getHours() %>
+                        <% var m = appointment.date.getMinutes() %>
+                        <% var hh = (h < 10)?'0'+h:h %>
+                        <% var mm = (m < 10)?'0'+m:m %>
+                        <% var d = appointment.date.getDate() %>
+                        <% var month = appointment.date.getMonth()+1 %>
+                        <% var yy = appointment.date.getFullYear() %>
+                        <% var dd = (d < 10)?'0'+d:d %>
+                        <% var mmonth = (month < 10)?'0'+month:month %>
                         <% count = count+1 %>
                         <tr>
                             <th scope="row"><%= count %></th>
                             <td><%= "A"+token %></td>
                             <td><%= appointment.name %></td>
-                            <td><%= appointment.date.getDate()+"-"+(appointment.date.getMonth()+1) + "-" + appointment.date.getFullYear() %></td>
-                            <td><%= appointment.date.getHours()+":"+appointment.date.getSeconds() %></td>
+                            <td><%= dd+"-"+mmonth + "-" + yy %></td>
+                            <td><%= hh+":"+mm %></td>
                             <td><%= appointment.type %></td>
                         </tr>
                     <% }); %>

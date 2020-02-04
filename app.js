@@ -189,7 +189,7 @@ function removeAppointment(){
         }else if(foundAppointments.length != 0){
             foundAppointments.forEach(function(apt){
                 if(curr_date.getTime() - apt.date.getTime() > 30*60*1000){
-                    RegPatient.findOne({"pid": apt.pid, "stage1.isInQueue": true}, function(err, foundPatient){
+                    RegPatient.findOne({"pid": apt.pid, "stage1.isGone": false, "stage1.isInQueue": true}, function(err, foundPatient){
                         if(foundPatient!=null){
                             foundPatient.stage1.isInQueue = false;
                             foundPatient.save(function(err){});
