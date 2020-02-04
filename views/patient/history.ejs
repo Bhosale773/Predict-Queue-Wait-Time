@@ -1,6 +1,6 @@
 <%- include ('../partials/header') %>
 
-<title>Profile</title>
+<title>History</title>
 <link type="text/css" rel="stylesheet" href="/stylesheets/history.css" />
 
 
@@ -12,8 +12,9 @@
                 <th scope="col">#</th>
                 <th scope="col">Date Of Visit</th>
                 <th scope="col">Token No</th>
-                <th scope="col">Hospital In Time</th>
-                <th scope="col">Hospital Out Time</th>
+                <th scope="col">In Time</th>
+                <th scope="col">Out Time</th>
+                <th scope="col">Total Wait Time</th>
             </tr>
         </thead>
         <tbody>
@@ -22,21 +23,144 @@
                 <% if(history.stage1.isInQueue==false){ %> 
                     <% count = count+1 %>
                     <% var token = (history.token < 10)?'00'+history.token:((history.token < 100)?'0'+history.token:history.token) %>
+                    <% if(history.visit_type == 'appointment'){ %>
+                        <% var token = "A" + token %>
+                    <% }else{ %>
+                        <% var token = "T" + token %>
+                    <% } %>
+
+                    <% if(history.stage1.date!=undefined){ %>
+                        <% var rem1 = history.stage1.date.getTime() %>
+                        <% var h1 = history.stage1.date.getHours() %>
+                        <% var m1 = history.stage1.date.getMinutes() %>
+                        <% var s1 = history.stage1.date.getSeconds() %>
+                        <% var hh1 = (h1 < 10)?'0'+h1:h1 %>
+                        <% var mm1 = (m1 < 10)?'0'+m1:m1 %>
+                        <% var ss1 = (s1 < 10)?'0'+s1:s1 %>
+                        <% var d1 = history.stage1.date.getDate() %>
+                        <% var month1 = history.stage1.date.getMonth()+1 %>
+                        <% var yy1 = history.stage1.date.getFullYear() %>
+                        <% var dd1 = (d1 < 10)?'0'+d1:d1 %>
+                        <% var mmonth1 = (month1 < 10)?'0'+month1:month1 %>
+                    <% } %>
+
+                    <% if(history.stage4.date!=undefined){ %>
+                        <% var rem4 = history.stage4.date.getTime() %>
+                        <% var h4 = history.stage4.date.getHours() %>
+                        <% var m4 = history.stage4.date.getMinutes() %>
+                        <% var s4 = history.stage4.date.getSeconds() %>
+                        <% var hh4 = (h4 < 10)?'0'+h4:h4 %>
+                        <% var mm4 = (m4 < 10)?'0'+m4:m4 %>
+                        <% var ss4 = (s4 < 10)?'0'+s4:s4 %>
+                        <% var d4 = history.stage4.date.getDate() %>
+                        <% var month4 = history.stage4.date.getMonth()+1 %>
+                        <% var yy4 = history.stage4.date.getFullYear() %>
+                        <% var dd4 = (d4 < 10)?'0'+d4:d4 %>
+                        <% var mmonth4 = (month4 < 10)?'0'+month4:month4 %>
+                    <% } %>
+
+                    <% if(history.stage3.date!=undefined){ %>
+                        <% var rem3 = history.stage3.date.getTime() %>
+                        <% var h3 = history.stage3.date.getHours() %>
+                        <% var m3 = history.stage3.date.getMinutes() %>
+                        <% var s3 = history.stage3.date.getSeconds() %>
+                        <% var hh3 = (h3 < 10)?'0'+h3:h3 %>
+                        <% var mm3 = (m3 < 10)?'0'+m3:m3 %>
+                        <% var ss3 = (s3 < 10)?'0'+s3:s3 %>
+                        <% var d3 = history.stage3.date.getDate() %>
+                        <% var month3 = history.stage3.date.getMonth()+1 %>
+                        <% var yy3 = history.stage3.date.getFullYear() %>
+                        <% var dd3 = (d3 < 10)?'0'+d3:d3 %>
+                        <% var mmonth3 = (month3 < 10)?'0'+month3:month3 %>
+                    <% } %>
+
+                    <% if(history.stage2.inTime.date!=undefined){ %>
+                        <% var rem2i = history.stage2.inTime.date.getTime() %>
+                        <% var h2i = history.stage2.inTime.date.getHours() %>
+                        <% var m2i = history.stage2.inTime.date.getMinutes() %>
+                        <% var s2i = history.stage2.inTime.date.getSeconds() %>
+                        <% var hh2i = (h2i < 10)?'0'+h2i:h2i %>
+                        <% var mm2i = (m2i < 10)?'0'+m2i:m2i %>
+                        <% var ss2i = (s2i < 10)?'0'+s2i:s2i %>
+                        <% var d2i = history.stage2.inTime.date.getDate() %>
+                        <% var month2i = history.stage2.inTime.date.getMonth()+1 %>
+                        <% var yy2i = history.stage2.inTime.date.getFullYear() %>
+                        <% var dd2i = (d2i < 10)?'0'+d2i:d2i %>
+                        <% var mmonth2i = (month2i < 10)?'0'+month2i:month2i %>
+                    <% } %>
+
+                    <% if(history.stage2.outTime.date!=undefined){ %>
+                        <% var rem2o = history.stage2.outTime.date.getTime() %>
+                        <% var h2o = history.stage2.outTime.date.getHours() %>
+                        <% var m2o = history.stage2.outTime.date.getMinutes() %>
+                        <% var s2o = history.stage2.outTime.date.getSeconds() %>
+                        <% var hh2o = (h2o < 10)?'0'+h2o:h2o %>
+                        <% var mm2o = (m2o < 10)?'0'+m2o:m2o %>
+                        <% var ss2o = (s2o < 10)?'0'+s2o:s2o %>
+                        <% var d2o = history.stage2.outTime.date.getDate() %>
+                        <% var month2o = history.stage2.outTime.date.getMonth()+1 %>
+                        <% var yy2o = history.stage2.outTime.date.getFullYear() %>
+                        <% var dd2o = (d2o < 10)?'0'+d2o:d2o %>
+                        <% var mmonth2o = (month2o < 10)?'0'+month2o:month2o %>
+                    <% } %>
+
                     <tr>
                         <th scope="row"><%= count %></th>
-                        <td><%= history.stage1.date.getDate() + "/" + (history.stage1.date.getMonth()+1) + "/" + history.stage1.date.getFullYear() %></td>
-                        <td><%= "T" + token %></td>
-                        <td><%= history.stage1.date.getHours() + ":" + history.stage1.date.getMinutes() + ":" + history.stage1.date.getSeconds() + ":" + history.stage1.date.getMilliseconds() %></td>
+                        <% if(history.stage1.date!=undefined){ %> 
+                            <td><%= dd1 + "-" + mmonth1 + "-" + yy1 %></td>
+                            <td><%= token %></td>
+                            <td><%= hh1 + ":" + mm1 + ":" + ss1 %></td>
+                        <% } else{ %>
+                            <td>Appointment Canceled</td>
+                            <td><%= token %></td>
+                            <td>--:--:--</td>
+                        <% } %>
                         <% if(history.stage4.date!=undefined){ %>
-                            <td><%= history.stage4.date.getHours() + ":" + history.stage4.date.getMinutes() + ":" + history.stage4.date.getSeconds() + ":" + history.stage4.date.getMilliseconds() %> stage4</td>
+                            <td><%= hh4 + ":" + mm4 + ":" + ss4 %></td>
+                            <% var rem = rem4-rem1 %>
+                            <% var remH = Math.floor(rem/(1000*60*60)) %>
+                            <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                            <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                            <% var remH = (remH < 10)?'0'+remH:remH %>
+                            <% var remM = (remM < 10)?'0'+remM:remM %>
+                            <% var remS = (remS < 10)?'0'+remS:remS %>
+                            <td><%= remH + ":" + remM + ":" + remS %></td>
                         <% }else if(history.stage3.date!=undefined){ %>
-                            <td><%= history.stage3.date.getHours() + ":" + history.stage3.date.getMinutes() + ":" + history.stage3.date.getSeconds() + ":" + history.stage3.date.getMilliseconds() %> stage3</td>
+                            <td><%= hh3 + ":" + mm3 + ":" + ss3 %></td>
+                            <% var rem = rem3-rem1 %>
+                            <% var remH = Math.floor(rem/(1000*60*60)) %>
+                            <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                            <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                            <% var remH = (remH < 10)?'0'+remH:remH %>
+                            <% var remM = (remM < 10)?'0'+remM:remM %>
+                            <% var remS = (remS < 10)?'0'+remS:remS %>
+                            <td><%= remH + ":" + remM + ":" + remS %></td>
                         <% }else if(history.stage2.outTime.date!=undefined){ %>
-                            <td><%= history.stage2.outTime.date.getHours() + ":" + history.stage2.outTime.date.getMinutes() + ":" + history.stage2.outTime.date.getSeconds() + ":" + history.stage2.outTime.date.getMilliseconds() %> stage2-out</td>
+                            <td><%= hh2o + ":" + mm2o + ":" + ss2o %></td>
+                            <% var rem = rem2o-rem1 %>
+                            <% var remH = Math.floor(rem/(1000*60*60)) %>
+                            <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                            <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                            <% var remH = (remH < 10)?'0'+remH:remH %>
+                            <% var remM = (remM < 10)?'0'+remM:remM %>
+                            <% var remS = (remS < 10)?'0'+remS:remS %>
+                            <td><%= remH + ":" + remM + ":" + remS %></td>
                         <% }else if(history.stage2.inTime.date!=undefined){ %>
-                            <td><%= history.stage2.inTime.date.getHours() + ":" + history.stage2.inTime.date.getMinutes() + ":" + history.stage2.inTime.date.getSeconds() + ":" + history.stage2.inTime.date.getMilliseconds() %> stage2-in</td>
+                            <td><%= hh2i + ":" + mm2i + ":" + ss2i %></td>
+                            <% var rem = rem2i-rem1 %>
+                            <% var remH = Math.floor(rem/(1000*60*60)) %>
+                            <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                            <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                            <% var remH = (remH < 10)?'0'+remH:remH %>
+                            <% var remM = (remM < 10)?'0'+remM:remM %>
+                            <% var remS = (remS < 10)?'0'+remS:remS %>
+                            <td><%= remH + ":" + remM + ":" + remS %></td>
+                        <% }else if(history.stage1.date!=undefined){ %>
+                            <td><%= hh1 + ":" + mm1 + ":" + ss1 %></td>
+                            <td>00:00:00</td>
                         <% }else{ %>
-                            <td>Register and leave</td>
+                            <td>--:--:--</td>
+                            <td>--:--:--</td>
                         <% } %>
                     </tr>
                 <% } %>
