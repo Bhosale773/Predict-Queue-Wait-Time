@@ -23,7 +23,8 @@ var Patient               = require("./models/patient");
 var RegPatient            = require("./models/regPatient");
 var DecisionDate          = require("./models/date");
 var Appointment           = require("./models/appointment");
-
+var TimeSpanData          = require("./models/timeSpanData");
+var AlgoData              = require("./models/algoData");
 
 // importing routes
 
@@ -143,7 +144,6 @@ HSE.find({"username" : process.env.hseUSERNAME},function(err, hses){
                 username: process.env.hseUSERNAME,
                 password: process.env.hsePASSWORD
             });
-        
             bcrypt.genSalt(10, function(err,  salt){
                 bcrypt.hash(newHSE.password, salt, function(err, hash){
                     if(!err){
@@ -209,8 +209,52 @@ function removeAppointment(){
 
 setInterval(removeAppointment, 60000);
 
+//calculate the algorithm
+function updateAlgoData(){
+    TimeSpanData.find({consultTime : {$ne : null}},function(err,found){
+        var count = 0;
+        var sum = 0;
+        found.forEach(thisOne => {
+            sum = sum + thisOne.consultTime;
+            count++;
+        })
+        AlgoData.findOne({},function(err,myData){
+            console.log("hello");
+            myData.consultAvg[0]=sum/count;
+            myData.save(function(err){});
+            console.log(sum,myData.consultAvg);
+        })
+    })
 
+    TimeSpanData.find({billTime : {$ne : null}},function(err,found){
+        var count = 0;
+        var sum = 0;
+        found.forEach(thisOne => {
+            sum = sum + thisOne.billTime;
+            count++;
+        })
+        AlgoData.findOne({},function(err,myData){
+            myData.billAvg=sum/count;
+            myData.save(function(err){});
+        })
+    })
 
+    TimeSpanData.find({mediTime : {$ne : null}},function(err,found){
+        var count = 0;
+        var sum = 0;
+        found.forEach(thisOne => {
+            sum = sum + thisOne.mediTime;
+            count++;
+        })
+        AlgoData.findOne({},function(err,myData){
+            myData.mediAvg=sum/count;
+            myData.save(function(err){});
+        })
+    })
+
+}
+//this is currently commmented because we donot have right data
+//setInterval(updateAlgoData,20000);
 // set variables such that they can access by all files
 
 app.use(function(req, res, next){
@@ -226,6 +270,7 @@ app.use(function(req, res, next){
 app.use("/patient", patientRoutes);
 app.use("/HSE", hseRoutes);
 app.use("/", indexRoutes);
+
 
 
 // start server

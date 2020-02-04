@@ -21,7 +21,7 @@
     <!-- preet -->
     <br><br><br>
     <p>Total number of Patients ahead : <%=currentUserStatus.consultAhead + currentUserStatus.mediAhead + currentUserStatus.billAhead%></p>
-    <p><strong>Total Estimated wait time : <%=Math.round((currentUserStatus.consultAvg + currentUserStatus.mediAvg + currentUserStatus.billAvg) * 100 / 60) / 100%> mins</strong></p>
+    <p><strong>Total Estimated wait time :<% %> <%=Math.round((currentUserStatus.consultAvg + currentUserStatus.mediAvg + currentUserStatus.billAvg) * 100 / 60) / 100%> mins</strong></p>
     <p>Consultation patients ahead : <%=currentUserStatus.consultAhead %></p>
     <p>Billing patients ahead : <%=currentUserStatus.billAhead %></p>
     <p>Medicine patients ahead : <%=currentUserStatus.mediAhead %></p>
