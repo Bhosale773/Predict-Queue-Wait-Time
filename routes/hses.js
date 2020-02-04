@@ -6,6 +6,8 @@ var Patient               = require("../models/patient");
 var RegPatient            = require("../models/regPatient");
 var DecisionDate          = require("../models/date");
 var Appointment           = require("../models/appointment");
+var TimeSpanData          = require("../models/timeSpanData");
+var timespan              = require("timespan");
 var token_no;
 
 
@@ -109,6 +111,15 @@ router.post("/patient-registration", function(req, res){
                                             }else{
                                                 foundPatient.stage1.date=Date.now();
                                                 foundPatient.stage1.isGone=true;
+                                                Appointment.findOne({"pid": patient._id}, function(err, foundAppointment){
+                                                    if(foundAppointment!=null){
+                                                        Appointment.deleteOne({"_id": foundAppointment._id}, function(err){
+                                                            if(err){
+                                                                console.log(err);
+                                                            }
+                                                        });
+                                                    }
+                                                });
                                                 foundPatient.save(function(err){
                                                     if(err){
                                                         console.log(err);
@@ -135,6 +146,16 @@ router.post("/patient-registration", function(req, res){
                                                 }else{
                                                     foundDate.token+=1;
                                                     foundDate.decisionDate = Date.now();
+                                                    //timespan data inserted..!!
+                                                    TimeSpanData.create({
+                                                        pid:patient._id,
+                                                        name: patient.fname + " " + patient.lname,
+                                                        type : regPatient.reason,   
+                                                    },function(err,dataPatient){
+                                                        if(err){
+                                                            console.log(err);
+                                                        }
+                                                    })
                                                     foundDate.save(function(err){
                                                         return res.redirect("/HSE/home");
                                                     });
@@ -143,6 +164,7 @@ router.post("/patient-registration", function(req, res){
                                         });
                                     }
                                 });
+                                
                             }else{
                                 req.flash("error", "Patient already gone through this stage, Try Again");
                                 return res.redirect("back");
@@ -150,6 +172,7 @@ router.post("/patient-registration", function(req, res){
                         }
                     });                
                 }else if(req.body.stage==2){
+                    var promise1=1,promise2=2;
                     RegPatient.findOne({"pid": patient._id, "stage1.isGone": true}, function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
@@ -166,7 +189,7 @@ router.post("/patient-registration", function(req, res){
                                                 foundPatient.stage2.isActive=true;
                                                 foundPatient.stage2.inTime.isGone=true;
                                                 foundPatient.stage2.inTime.date=Date.now();
-                                                foundPatient.save(function(err){
+                                                promise1=foundPatient.save(function(err){
                                                     if(err){
                                                         console.log(err);
                                                     }
@@ -190,7 +213,7 @@ router.post("/patient-registration", function(req, res){
                                         if(count==0){
                                             foundPatient.stage3.isActive=true;
                                         }      
-                                        foundPatient.save(function(err){
+                                        promise2=foundPatient.save(function(err){
                                             if(err){
                                                 console.log(err);
                                             }
@@ -206,9 +229,20 @@ router.post("/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }
                         }
+                        Promise.all([promise1,promise2])
+                        .then(function(){
+                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                                var ts = timespan.fromDates(foundPatient.stage2.inTime.date,foundPatient.stage2.outTime.date,true);
+                                var sec = ts.totalSeconds();
+                                timeData.consultTime = sec;
+                                timeData.save(function(err){});
+                            });
+                        });
                     });
+                    
                 }else if(req.body.stage==3){
-                    RegPatient.findOne({"pid": patient._id, "stage2.outTime.isGone": true}, function(err, foundPatient){
+                    var promise=1;
+                    RegPatient.findOne({"pid": patient._id, "stage2.outTime.isGone": true},function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
                             return res.redirect("back");
@@ -227,7 +261,7 @@ router.post("/patient-registration", function(req, res){
                                         if(count==0){
                                             foundPatient.stage4.isActive=true;
                                         }      
-                                        foundPatient.save(function(err){
+                                        promise=foundPatient.save(function(err){
                                             if(err){
                                                 console.log(err);
                                             }
@@ -254,8 +288,18 @@ router.post("/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }
                         }
+                        Promise.all([promise])
+                        .then(function(){
+                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                                var ts = timespan.fromDates(foundPatient.stage3.date,foundPatient.stage2.outTime.date,true);
+                                var sec = ts.totalSeconds();
+                                timeData.billTime = sec;
+                                timeData.save(function(err){});
+                            });
+                        });
                     });
                 }else if(req.body.stage==4){
+                    var promise=1;
                     RegPatient.findOne({"pid": patient._id, "stage3.isGone": true}, function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
@@ -284,7 +328,7 @@ router.post("/patient-registration", function(req, res){
                                     foundPatient.stage2.inTime.isGone=false;
                                     foundPatient.stage2.outTime.isGone=false;
                                     foundPatient.stage3.isGone=false;
-                                    foundPatient.save(function(err){
+                                    promise=foundPatient.save(function(err){
                                         if(err){
                                             console.log(err);
                                         }
@@ -306,6 +350,15 @@ router.post("/patient-registration", function(req, res){
                                 }
                             }
                         }
+                        Promise.all([promise])
+                        .then(function(){
+                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                                var ts = timespan.fromDates(foundPatient.stage3.date,foundPatient.stage4.date,true);
+                                var sec = ts.totalSeconds();
+                                timeData.mediTime = sec;
+                                timeData.save(function(err){});
+                            });
+                        });
                     });
                 }
             }
@@ -433,14 +486,15 @@ router.post("/bookingconfirm", function(req, res){
                                         var tArray = t.split(":");
                                         var dArray = d.split("-");
                                         var reqDate = new Date(dArray[0], (Number(dArray[1])-1), dArray[2], tArray[0], tArray[1]).toISOString();
-
+                                        var onlyDay = new Date(dArray[0], (Number(dArray[1])-1), dArray[2]).toISOString();
+                                       
                                         Appointment.create({
                                             pid: patient._id,
                                             name: patient.fname + " " + patient.lname,
                                             date: reqDate,
+                                            onlyDate: onlyDay,
                                             type: req.body.a_type,
                                             token: foundDate.apt_token,
-                                            time : 600
                                         },function(err, appointment){
                                         });
                                         RegPatient.create({
