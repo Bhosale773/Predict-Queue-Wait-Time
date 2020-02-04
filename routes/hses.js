@@ -173,7 +173,7 @@ router.post("/patient-registration", function(req, res){
                     });                
                 }else if(req.body.stage==2){
                     var promise1=1,promise2=2;
-                    RegPatient.findOne({"pid": patient._id, "stage1.isGone": true}, function(err, foundPatient){
+                    RegPatient.findOne({"pid": patient._id, "stage1.isGone": true},async function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
                             return res.redirect("back");
@@ -183,13 +183,13 @@ router.post("/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }else if(foundPatient.stage2.inTime.isGone==false){
                                 RegPatient.countDocuments({"stage2.isActive": true},function(err, count){
-                                    RegPatient.findOne({"stage1.isGone": true, "stage2.inTime.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
+                                    RegPatient.findOne({"stage1.isGone": true, "stage2.inTime.isGone": false}).sort({ _id: 1 }).exec(async function(err, oldestPatient){
                                         if(oldestPatient!=null){
                                             if(count==0 && oldestPatient._id.equals(foundPatient._id)){ 
                                                 foundPatient.stage2.isActive=true;
                                                 foundPatient.stage2.inTime.isGone=true;
                                                 foundPatient.stage2.inTime.date=Date.now();
-                                                promise1=foundPatient.save(function(err){
+                                                promise1= await foundPatient.save(function(err){
                                                     if(err){
                                                         console.log(err);
                                                     }
@@ -209,7 +209,7 @@ router.post("/patient-registration", function(req, res){
                                     foundPatient.stage2.outTime.isGone=true;
                                     foundPatient.stage2.outTime.date=Date.now();
 
-                                    RegPatient.countDocuments({"stage2.outTime.isGone": true, "stage3.isGone": false},function(err, count){
+                                    RegPatient.countDocuments({"stage2.outTime.isGone": true, "stage3.isGone": false}, async function(err, count){
                                         if(count==0){
                                             foundPatient.stage3.isActive=true;
                                         }      
@@ -218,6 +218,15 @@ router.post("/patient-registration", function(req, res){
                                                 console.log(err);
                                             }
                                             return res.redirect("/HSE/home");                         
+                                        });
+                                        Promise.all([promise1,promise2])
+                                        .then(function(){
+                                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                                                var ts = timespan.fromDates(foundPatient.stage2.inTime.date,foundPatient.stage2.outTime.date,true);
+                                                var sec = ts.totalSeconds();
+                                                timeData.consultTime = sec;
+                                                timeData.save(function(err){});
+                                            });
                                         });
                                     });
                                 }else{
@@ -229,15 +238,8 @@ router.post("/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }
                         }
-                        Promise.all([promise1,promise2])
-                        .then(function(){
-                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
-                                var ts = timespan.fromDates(foundPatient.stage2.inTime.date,foundPatient.stage2.outTime.date,true);
-                                var sec = ts.totalSeconds();
-                                timeData.consultTime = sec;
-                                timeData.save(function(err){});
-                            });
-                        });
+                        await setTimeout(function(){},5000);
+                        
                     });
                     
                 }else if(req.body.stage==3){
