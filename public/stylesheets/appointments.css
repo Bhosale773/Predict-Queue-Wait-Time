@@ -2,6 +2,10 @@
     margin: 0px;
 }
 
+#curr_appointments_table table{
+    text-align: center;
+}
+
 #appointment-booking{
     width: 500px;
     margin: auto;

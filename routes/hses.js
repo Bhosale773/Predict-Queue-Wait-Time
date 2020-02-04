@@ -68,6 +68,19 @@ router.get("/patient-list", middleware.isHsePermitted, function(req, res){
 });
 
 
+// route to view paients details
+
+router.get("/:id", middleware.isHsePermitted, function(req, res){
+    RegPatient.findById(req.params.id, function(err, foundRegPatient){
+        Patient.findById(foundRegPatient.pid, function(err, foundPatient){
+            res.render("HSE/patient-details",{patient: foundPatient, regPatient: foundRegPatient});
+        });
+    });
+});
+
+
+
+
 // filter patient data according to date from database
 
 router.post("/filter-patient-list", middleware.isHsePermitted, function(req, res){

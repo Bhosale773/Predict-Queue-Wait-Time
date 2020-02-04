@@ -3,40 +3,193 @@
 <title>Patient List</title>
 <link type="text/css" rel="stylesheet" href="/stylesheets/patient-list.css" />
 
+<section id="patient_list">
+    <form action="/HSE/filter-patient-list" method="POST">
+        <input type="date" name="date" required>
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </form>
 
-<form action="/HSE/filter-patient-list" method="POST">
-    <input type="date" name="date" required>
-    <button type="submit">Search</button>
-</form>
-
-<% var isNewDate = true %>
-
-<% regPatients.forEach(function(patient){ %>
-    <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
-    <% if(patient.visit_type == 'appointment'){ %>
-        <% var token = "A" + token %>
-    <% }else{ %>
-        <% var token = "T" + token %>
-    <% } %>
-    <% var p_date = patient.stage1.date %>
-    <% if(p_date!=null){ %>
-        <% var p_dateD = (p_date.getDate() < 10)?'0'+p_date.getDate():p_date.getDate() %>
-        <% var p_dateM = ((p_date.getMonth()+1) < 10)?'0'+(p_date.getMonth()+1):(p_date.getMonth()+1) %>
-        <% var p_dateY = p_date.getFullYear() %>
-        <% var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD %>
-    <% } %>
-
-    <% if(isNewDate){ %>
-        <br><br>
-        <h5>Patients on date <%= date %></h5>
-        <br>
-        <% isNewDate = false %>
-    <% } %>
-
-    <% if(date == p_dateFull){ %>
-        <div><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name  %></div>
-    <% } %>
-<% }); %>
+    <hr>
+    
+    <h5>Patients on date <span class="sub-head"><%= date %></span>:</h5>
+            
+    <div id="mytable">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Token No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">In Time</th>
+                    <th scope="col">Out Time</th>
+                    <th scope="col">Total Wait Time</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% var count=0 %>
+                <% regPatients.forEach(function(patient){ %>
+                    <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
+                    <% if(patient.visit_type == 'appointment'){ %>
+                        <% var token = "A" + token %>
+                    <% }else{ %>
+                        <% var token = "T" + token %>
+                    <% } %>
+                    <% var p_date = patient.stage1.date %>
+                    <% if(p_date!=null){ %>
+                        <% var p_dateD = (p_date.getDate() < 10)?'0'+p_date.getDate():p_date.getDate() %>
+                        <% var p_dateM = ((p_date.getMonth()+1) < 10)?'0'+(p_date.getMonth()+1):(p_date.getMonth()+1) %>
+                        <% var p_dateY = p_date.getFullYear() %>
+                        <% var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD %>
+                    <% } %>
+    
+                    <% if(patient.stage1.date!=undefined){ %>
+                        <% var rem1 = patient.stage1.date.getTime() %>
+                        <% var h1 = patient.stage1.date.getHours() %>
+                        <% var m1 = patient.stage1.date.getMinutes() %>
+                        <% var s1 = patient.stage1.date.getSeconds() %>
+                        <% var hh1 = (h1 < 10)?'0'+h1:h1 %>
+                        <% var mm1 = (m1 < 10)?'0'+m1:m1 %>
+                        <% var ss1 = (s1 < 10)?'0'+s1:s1 %>
+                        <% var d1 = patient.stage1.date.getDate() %>
+                        <% var month1 = patient.stage1.date.getMonth()+1 %>
+                        <% var yy1 = patient.stage1.date.getFullYear() %>
+                        <% var dd1 = (d1 < 10)?'0'+d1:d1 %>
+                        <% var mmonth1 = (month1 < 10)?'0'+month1:month1 %>
+                    <% } %>
+    
+                    <% if(patient.stage4.date!=undefined){ %>
+                        <% var rem4 = patient.stage4.date.getTime() %>
+                        <% var h4 = patient.stage4.date.getHours() %>
+                        <% var m4 = patient.stage4.date.getMinutes() %>
+                        <% var s4 = patient.stage4.date.getSeconds() %>
+                        <% var hh4 = (h4 < 10)?'0'+h4:h4 %>
+                        <% var mm4 = (m4 < 10)?'0'+m4:m4 %>
+                        <% var ss4 = (s4 < 10)?'0'+s4:s4 %>
+                        <% var d4 = patient.stage4.date.getDate() %>
+                        <% var month4 = patient.stage4.date.getMonth()+1 %>
+                        <% var yy4 = patient.stage4.date.getFullYear() %>
+                        <% var dd4 = (d4 < 10)?'0'+d4:d4 %>
+                        <% var mmonth4 = (month4 < 10)?'0'+month4:month4 %>
+                    <% } %>
+    
+                    <% if(patient.stage3.date!=undefined){ %>
+                        <% var rem3 = patient.stage3.date.getTime() %>
+                        <% var h3 = patient.stage3.date.getHours() %>
+                        <% var m3 = patient.stage3.date.getMinutes() %>
+                        <% var s3 = patient.stage3.date.getSeconds() %>
+                        <% var hh3 = (h3 < 10)?'0'+h3:h3 %>
+                        <% var mm3 = (m3 < 10)?'0'+m3:m3 %>
+                        <% var ss3 = (s3 < 10)?'0'+s3:s3 %>
+                        <% var d3 = patient.stage3.date.getDate() %>
+                        <% var month3 = patient.stage3.date.getMonth()+1 %>
+                        <% var yy3 = patient.stage3.date.getFullYear() %>
+                        <% var dd3 = (d3 < 10)?'0'+d3:d3 %>
+                        <% var mmonth3 = (month3 < 10)?'0'+month3:month3 %>
+                    <% } %>
+    
+                    <% if(patient.stage2.inTime.date!=undefined){ %>
+                        <% var rem2i = patient.stage2.inTime.date.getTime() %>
+                        <% var h2i = patient.stage2.inTime.date.getHours() %>
+                        <% var m2i = patient.stage2.inTime.date.getMinutes() %>
+                        <% var s2i = patient.stage2.inTime.date.getSeconds() %>
+                        <% var hh2i = (h2i < 10)?'0'+h2i:h2i %>
+                        <% var mm2i = (m2i < 10)?'0'+m2i:m2i %>
+                        <% var ss2i = (s2i < 10)?'0'+s2i:s2i %>
+                        <% var d2i = patient.stage2.inTime.date.getDate() %>
+                        <% var month2i = patient.stage2.inTime.date.getMonth()+1 %>
+                        <% var yy2i = patient.stage2.inTime.date.getFullYear() %>
+                        <% var dd2i = (d2i < 10)?'0'+d2i:d2i %>
+                        <% var mmonth2i = (month2i < 10)?'0'+month2i:month2i %>
+                    <% } %>
+    
+                    <% if(patient.stage2.outTime.date!=undefined){ %>
+                        <% var rem2o = patient.stage2.outTime.date.getTime() %>
+                        <% var h2o = patient.stage2.outTime.date.getHours() %>
+                        <% var m2o = patient.stage2.outTime.date.getMinutes() %>
+                        <% var s2o = patient.stage2.outTime.date.getSeconds() %>
+                        <% var hh2o = (h2o < 10)?'0'+h2o:h2o %>
+                        <% var mm2o = (m2o < 10)?'0'+m2o:m2o %>
+                        <% var ss2o = (s2o < 10)?'0'+s2o:s2o %>
+                        <% var d2o = patient.stage2.outTime.date.getDate() %>
+                        <% var month2o = patient.stage2.outTime.date.getMonth()+1 %>
+                        <% var yy2o = patient.stage2.outTime.date.getFullYear() %>
+                        <% var dd2o = (d2o < 10)?'0'+d2o:d2o %>
+                        <% var mmonth2o = (month2o < 10)?'0'+month2o:month2o %>
+                    <% } %>
+    
+                    <% if(date == p_dateFull){ %>
+                        <% count = count+1 %>
+                        <tr>
+                            <th scope="row"><%= count %></th>
+                            <td><%= token %></td>
+                            <td><%= patient.name %></td>
+                            <td><%= patient.visit_type %></td>
+                            <td><%= patient.reason %></td>
+                            <% if(patient.stage1.date!=undefined){ %> 
+                                <td><%= hh1 + ":" + mm1 + ":" + ss1 %></td>
+                            <% } else{ %>
+                                <td>--:--:--</td>
+                            <% } %>
+                            <% if(patient.stage4.date!=undefined){ %>
+                                <td><%= hh4 + ":" + mm4 + ":" + ss4 %></td>
+                                <% var rem = rem4-rem1 %>
+                                <% var remH = Math.floor(rem/(1000*60*60)) %>
+                                <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                                <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                                <% var remH = (remH < 10)?'0'+remH:remH %>
+                                <% var remM = (remM < 10)?'0'+remM:remM %>
+                                <% var remS = (remS < 10)?'0'+remS:remS %>
+                                <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <% }else if(patient.stage3.date!=undefined){ %>
+                                <td><%= hh3 + ":" + mm3 + ":" + ss3 %></td>
+                                <% var rem = rem3-rem1 %>
+                                <% var remH = Math.floor(rem/(1000*60*60)) %>
+                                <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                                <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                                <% var remH = (remH < 10)?'0'+remH:remH %>
+                                <% var remM = (remM < 10)?'0'+remM:remM %>
+                                <% var remS = (remS < 10)?'0'+remS:remS %>
+                                <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <% }else if(patient.stage2.outTime.date!=undefined){ %>
+                                <td><%= hh2o + ":" + mm2o + ":" + ss2o %></td>
+                                <% var rem = rem2o-rem1 %>
+                                <% var remH = Math.floor(rem/(1000*60*60)) %>
+                                <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                                <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                                <% var remH = (remH < 10)?'0'+remH:remH %>
+                                <% var remM = (remM < 10)?'0'+remM:remM %>
+                                <% var remS = (remS < 10)?'0'+remS:remS %>
+                                <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <% }else if(patient.stage2.inTime.date!=undefined){ %>
+                                <td><%= hh2i + ":" + mm2i + ":" + ss2i %></td>
+                                <% var rem = rem2i-rem1 %>
+                                <% var remH = Math.floor(rem/(1000*60*60)) %>
+                                <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+                                <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+                                <% var remH = (remH < 10)?'0'+remH:remH %>
+                                <% var remM = (remM < 10)?'0'+remM:remM %>
+                                <% var remS = (remS < 10)?'0'+remS:remS %>
+                                <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <% }else if(patient.stage1.date!=undefined){ %>
+                                <td><%= hh1 + ":" + mm1 + ":" + ss1 %></td>
+                                <td>00:00:00</td>
+                            <% }else{ %>
+                                <td>--:--:--</td>
+                                <td>--:--:--</td>
+                            <% } %>
+                            <form action="/HSE/<%=patient._id%>" method="GET">
+                                <td><button type="submit" class="btn btn-outline-success">View</button></td>
+                            </form>
+                        </tr>
+                    <% } %>
+                <% }); %>         
+            </tbody>
+        </table>
+    </div>
+</section>
 
 
 <%- include ('../partials/footer') %>

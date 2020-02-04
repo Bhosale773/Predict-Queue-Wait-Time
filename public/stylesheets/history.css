@@ -6,6 +6,7 @@ h1{
 #history{
     max-width: 1000px;
     margin: auto;
+    text-align: center;
 }
 
 @media(max-width: 500px){
