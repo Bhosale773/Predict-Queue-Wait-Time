@@ -9,6 +9,8 @@ h1{
     text-align: center;
 }
 
+/* make responsive */
+
 @media(max-width: 500px){
     #history{
         width: 95%;

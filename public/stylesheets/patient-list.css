@@ -29,3 +29,25 @@
 #mytable{
     text-align: center;
 }
+
+/* make responsive */
+
+@media(max-width: 500px){
+    #patient_list form input{
+        font-size: 1.1rem;
+        width: 200px;
+        margin: 5px;
+        padding-left: 20px;
+        height: 2.1rem;
+    }
+    
+    #patient_list h5{
+        font-size:19px;
+    }
+
+    #mytable{
+        width: 100%;
+        overflow:scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+}
