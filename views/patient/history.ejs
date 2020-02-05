@@ -14,7 +14,7 @@
                 <th scope="col">Token No</th>
                 <th scope="col">In Time</th>
                 <th scope="col">Out Time</th>
-                <th scope="col">Total Wait Time</th>
+                <th scope="col">Total Time</th>
             </tr>
         </thead>
         <tbody>
@@ -124,7 +124,7 @@
                             <% var remH = (remH < 10)?'0'+remH:remH %>
                             <% var remM = (remM < 10)?'0'+remM:remM %>
                             <% var remS = (remS < 10)?'0'+remS:remS %>
-                            <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <td><%= remH + "hrs " + remM + "mins " + remS + "secs"%></td>
                         <% }else if(history.stage3.date!=undefined){ %>
                             <td><%= hh3 + ":" + mm3 + ":" + ss3 %></td>
                             <% var rem = rem3-rem1 %>
@@ -134,7 +134,7 @@
                             <% var remH = (remH < 10)?'0'+remH:remH %>
                             <% var remM = (remM < 10)?'0'+remM:remM %>
                             <% var remS = (remS < 10)?'0'+remS:remS %>
-                            <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <td><%= remH + "hrs " + remM + "mins " + remS + "secs"%></td>
                         <% }else if(history.stage2.outTime.date!=undefined){ %>
                             <td><%= hh2o + ":" + mm2o + ":" + ss2o %></td>
                             <% var rem = rem2o-rem1 %>
@@ -144,7 +144,7 @@
                             <% var remH = (remH < 10)?'0'+remH:remH %>
                             <% var remM = (remM < 10)?'0'+remM:remM %>
                             <% var remS = (remS < 10)?'0'+remS:remS %>
-                            <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <td><%= remH + "hrs " + remM + "mins " + remS + "secs"%></td>
                         <% }else if(history.stage2.inTime.date!=undefined){ %>
                             <td><%= hh2i + ":" + mm2i + ":" + ss2i %></td>
                             <% var rem = rem2i-rem1 %>
@@ -154,13 +154,13 @@
                             <% var remH = (remH < 10)?'0'+remH:remH %>
                             <% var remM = (remM < 10)?'0'+remM:remM %>
                             <% var remS = (remS < 10)?'0'+remS:remS %>
-                            <td><%= remH + ":" + remM + ":" + remS %></td>
+                            <td><%= remH + "hrs " + remM + "mins " + remS + "secs"%></td>
                         <% }else if(history.stage1.date!=undefined){ %>
                             <td><%= hh1 + ":" + mm1 + ":" + ss1 %></td>
-                            <td>00:00:00</td>
+                            <td>00hrs 00mins 00secs</td>
                         <% }else{ %>
                             <td>--:--:--</td>
-                            <td>--:--:--</td>
+                            <td>--hrs --mins --secs</td>
                         <% } %>
                     </tr>
                 <% } %>

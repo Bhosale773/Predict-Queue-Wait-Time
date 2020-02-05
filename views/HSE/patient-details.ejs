@@ -4,6 +4,257 @@
 <link type="text/css" rel="stylesheet" href="/stylesheets/patient-details.css" />
 
 
+<% var token = (regPatient.token < 10)?'00'+regPatient.token:((regPatient.token < 100)?'0'+regPatient.token:regPatient.token) %>
+<% if(regPatient.visit_type == 'appointment'){ %>
+    <% var token = "A" + token %>
+<% }else{ %>
+    <% var token = "T" + token %>
+<% } %>
+
+<% if(regPatient.stage1.date!=undefined){ %>
+    <% var rem1 = regPatient.stage1.date.getTime() %>
+    <% var h1 = regPatient.stage1.date.getHours() %>
+    <% var m1 = regPatient.stage1.date.getMinutes() %>
+    <% var s1 = regPatient.stage1.date.getSeconds() %>
+    <% var hh1 = (h1 < 10)?'0'+h1:h1 %>
+    <% var mm1 = (m1 < 10)?'0'+m1:m1 %>
+    <% var ss1 = (s1 < 10)?'0'+s1:s1 %>
+    <% var d1 = regPatient.stage1.date.getDate() %>
+    <% var month1 = regPatient.stage1.date.getMonth()+1 %>
+    <% var yy1 = regPatient.stage1.date.getFullYear() %>
+    <% var dd1 = (d1 < 10)?'0'+d1:d1 %>
+    <% var mmonth1 = (month1 < 10)?'0'+month1:month1 %>
+<% } %>
+
+<% if(regPatient.stage4.date!=undefined){ %>
+    <% var rem4 = regPatient.stage4.date.getTime() %>
+    <% var h4 = regPatient.stage4.date.getHours() %>
+    <% var m4 = regPatient.stage4.date.getMinutes() %>
+    <% var s4 = regPatient.stage4.date.getSeconds() %>
+    <% var hh4 = (h4 < 10)?'0'+h4:h4 %>
+    <% var mm4 = (m4 < 10)?'0'+m4:m4 %>
+    <% var ss4 = (s4 < 10)?'0'+s4:s4 %>
+    <% var d4 = regPatient.stage4.date.getDate() %>
+    <% var month4 = regPatient.stage4.date.getMonth()+1 %>
+    <% var yy4 = regPatient.stage4.date.getFullYear() %>
+    <% var dd4 = (d4 < 10)?'0'+d4:d4 %>
+    <% var mmonth4 = (month4 < 10)?'0'+month4:month4 %>
+<% } %>
+
+<% if(regPatient.stage3.date!=undefined){ %>
+    <% var rem3 = regPatient.stage3.date.getTime() %>
+    <% var h3 = regPatient.stage3.date.getHours() %>
+    <% var m3 = regPatient.stage3.date.getMinutes() %>
+    <% var s3 = regPatient.stage3.date.getSeconds() %>
+    <% var hh3 = (h3 < 10)?'0'+h3:h3 %>
+    <% var mm3 = (m3 < 10)?'0'+m3:m3 %>
+    <% var ss3 = (s3 < 10)?'0'+s3:s3 %>
+    <% var d3 = regPatient.stage3.date.getDate() %>
+    <% var month3 = regPatient.stage3.date.getMonth()+1 %>
+    <% var yy3 = regPatient.stage3.date.getFullYear() %>
+    <% var dd3 = (d3 < 10)?'0'+d3:d3 %>
+    <% var mmonth3 = (month3 < 10)?'0'+month3:month3 %>
+<% } %>
+
+<% if(regPatient.stage2.inTime.date!=undefined){ %>
+    <% var rem2i = regPatient.stage2.inTime.date.getTime() %>
+    <% var h2i = regPatient.stage2.inTime.date.getHours() %>
+    <% var m2i = regPatient.stage2.inTime.date.getMinutes() %>
+    <% var s2i = regPatient.stage2.inTime.date.getSeconds() %>
+    <% var hh2i = (h2i < 10)?'0'+h2i:h2i %>
+    <% var mm2i = (m2i < 10)?'0'+m2i:m2i %>
+    <% var ss2i = (s2i < 10)?'0'+s2i:s2i %>
+    <% var d2i = regPatient.stage2.inTime.date.getDate() %>
+    <% var month2i = regPatient.stage2.inTime.date.getMonth()+1 %>
+    <% var yy2i = regPatient.stage2.inTime.date.getFullYear() %>
+    <% var dd2i = (d2i < 10)?'0'+d2i:d2i %>
+    <% var mmonth2i = (month2i < 10)?'0'+month2i:month2i %>
+<% } %>
+
+<% if(regPatient.stage2.outTime.date!=undefined){ %>
+    <% var rem2o = regPatient.stage2.outTime.date.getTime() %>
+    <% var h2o = regPatient.stage2.outTime.date.getHours() %>
+    <% var m2o = regPatient.stage2.outTime.date.getMinutes() %>
+    <% var s2o = regPatient.stage2.outTime.date.getSeconds() %>
+    <% var hh2o = (h2o < 10)?'0'+h2o:h2o %>
+    <% var mm2o = (m2o < 10)?'0'+m2o:m2o %>
+    <% var ss2o = (s2o < 10)?'0'+s2o:s2o %>
+    <% var d2o = regPatient.stage2.outTime.date.getDate() %>
+    <% var month2o = regPatient.stage2.outTime.date.getMonth()+1 %>
+    <% var yy2o = regPatient.stage2.outTime.date.getFullYear() %>
+    <% var dd2o = (d2o < 10)?'0'+d2o:d2o %>
+    <% var mmonth2o = (month2o < 10)?'0'+month2o:month2o %>
+<% } %>
+
+
+<h5>Personal Details:</h5>
+<div>Name: <%= patient.fname + " " + patient.lname %></div>
+<div>Age: <%= patient.age %></div>
+<div>Gender: <%= patient.gender %></div>
+
+<br>
+
+<h5>Contact Details:</h5>
+<div>Contact No: <%= patient.contact %></div>
+<div>Email Id: <%= patient.email %></div>
+<div>Address: <%= patient.address %></div>
+
+<br>
+
+<h5>Credentials:</h5>
+<div>Username: <%= patient.username %></div>
+<div>Patient ID: <%= patient._id %></div>
+
+<br>
+
+<h5>Visit Details:</h5>
+<% if(regPatient.stage1.date!=undefined){ %>
+    <div>Date Of Visit: <%= dd1 + "-" + mmonth1 + "-" + yy1 %></div>
+<% } %>
+<div>Registration Id: <%= regPatient._id %></div>
+<div>Token No: <%= token %></div>
+<div>Visit Type: <%= regPatient.visit_type %></div>
+<div>Reason: <%= regPatient.reason %></div>
+
+<br>
+
+<h5>Wait Time Details:</h5>
+
+<div class="py-2 font-weight-bold">Registration Stage:</div>
+<% if(regPatient.stage1.date!=undefined){ %>
+    <div>Registration Time: <%= hh1 + ":" + mm1 + ":" + ss1 %></div>
+<% }else{ %>
+    <div>Registration Time: --:--:--</div>
+<% } %>
+
+<div class="py-2 font-weight-bold">Consultation Stage:</div>
+<% if(regPatient.stage2.inTime.date!=undefined && regPatient.stage2.outTime.date!=undefined){ %>
+    <div>In Time: <%= hh2i + ":" + mm2i + ":" + ss2i %></div>
+<% }else{ %>
+    <div>In Time: --:--:--</div>
+<% } %>
+<% if(regPatient.stage2.outTime.date!=undefined){ %>
+    <div>Out Time: <%= hh2o + ":" + mm2o + ":" + ss2o %></div>
+<% }else{ %>
+    <div>Out Time: --:--:--</div>
+<% } %>
+<% if(regPatient.stage2.outTime.date!=undefined){ %>
+    <% var rem = rem2i-rem1 %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div>Wait Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+<% }else{ %>
+    <div>Wait Time: --hrs --mins --secs </div>
+<% } %>
+<% if(regPatient.stage2.outTime.date!=undefined){ %>
+    <% var rem = rem2o-rem2i %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div>Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+<% }else{ %>
+    <div>Servicing Time: --hrs --mins --secs</div>
+<% } %>
+
+<div class="py-2 font-weight-bold">Billing Stage:</div>
+<% if(regPatient.stage2.outTime.date!=undefined && regPatient.stage3.date!=undefined){ %>
+    <div>In Time: <%= hh2o + ":" + mm2o + ":" + ss2o %></div>
+<% }else{ %>
+    <div>In Time: --:--:--</div>
+<% } %>
+<% if(regPatient.stage3.date!=undefined){ %>
+    <div>Out Time: <%= hh3 + ":" + mm3 + ":" + ss3 %></div>
+<% }else{ %>
+    <div>Out Time: --:--:--</div>
+<% } %>
+<% if(regPatient.stage3.date!=undefined){ %>
+    <% var rem = rem3-rem2o %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div>Wait Time + Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+<% }else{ %>
+    <div>Wait Time + Servicing Time: --hrs --mins --secs</div>
+<% } %>
+
+<div class="py-2 font-weight-bold">Medicine Stage:</div>
+<% if(regPatient.stage3.date!=undefined && regPatient.stage4.date!=undefined){ %>
+    <div>In Time: <%= hh3 + ":" + mm3 + ":" + ss3 %></div>
+<% }else{ %>
+    <div>In Time: --:--:--</div>
+<% } %>
+<% if(regPatient.stage4.date!=undefined){ %>
+    <div>Out Time: <%= hh4 + ":" + mm4 + ":" + ss4 %></div>
+<% }else{ %>
+    <div>Out Time: --:--:--</div>
+<% } %>
+<% if(regPatient.stage4.date!=undefined){ %>
+    <% var rem = rem4-rem3 %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div>Wait Time + Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+<% }else{ %>
+    <div>Wait Time + Servicing Time: --hrs --mins --secs</div>
+<% } %>
+
+<div class="py-2 font-weight-bold">Total Time Spend In Hospital:</div>
+<% if(regPatient.stage4.date!=undefined){ %>
+    <% var rem = rem4-rem1 %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+<% }else if(regPatient.stage3.date!=undefined){ %>
+    <% var rem = rem3-rem1 %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+<% }else if(regPatient.stage2.outTime.date!=undefined){ %>
+    <% var rem = rem2o-rem1 %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+<% }else if(regPatient.stage2.inTime.date!=undefined){ %>
+    <% var rem = rem2i-rem1 %>
+    <% var remH = Math.floor(rem/(1000*60*60)) %>
+    <% var remM = Math.floor(rem/(1000*60)) - remH*60 %>
+    <% var remS = Math.floor(rem/1000) - ((remH*60 + remM)*60) %>
+    <% var remH = (remH < 10)?'0'+remH:remH %>
+    <% var remM = (remM < 10)?'0'+remM:remM %>
+    <% var remS = (remS < 10)?'0'+remS:remS %>
+    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+<% }else if(regPatient.stage1.date!=undefined){ %>
+    <div>00hrs 00mins 00secs</div>
+<% }else{ %>
+    <div>--hrs --mins --secs</div>
+<% } %>
+
+<br>
 
 
 <%- include ('../partials/footer') %>

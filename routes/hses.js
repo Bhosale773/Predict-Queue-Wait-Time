@@ -59,7 +59,7 @@ router.get("/patient-list", middleware.isHsePermitted, function(req, res){
     var p_dateY = p_date.getFullYear();
     var p_dateFull = p_dateY + "-" + p_dateM + "-" + p_dateD;
     
-    RegPatient.find({}, function(err, foundPatients){
+    RegPatient.find({"stage1.isInQueue": false}, function(err, foundPatients){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
             return res.redirect("back");
@@ -86,7 +86,7 @@ router.get("/:id", middleware.isHsePermitted, function(req, res){
 // filter patient data according to date from database
 
 router.post("/filter-patient-list", middleware.isHsePermitted, function(req, res){
-    RegPatient.find({}, function(err, foundPatients){
+    RegPatient.find({"stage1.isInQueue": false}, function(err, foundPatients){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
             return res.redirect("back");
