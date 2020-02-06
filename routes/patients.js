@@ -51,7 +51,7 @@ router.get("/qr-code", middleware.isPatientPermitted, function(req, res){
 
 router.get("/history", middleware.isPatientPermitted, function(req, res){
     if(req.user){
-        RegPatient.find({"pid": req.user._id}, function(err, foundHistory){
+        RegPatient.find({"pid": req.user._id, "stage1.isInQueue": false}, function(err, foundHistory){
             res.render("patient/history", {foundHistory: foundHistory});
         });
     }else{
