@@ -86,57 +86,83 @@
     <% var mmonth2o = (month2o < 10)?'0'+month2o:month2o %>
 <% } %>
 
+<div class="row">
 
-<h5>Personal Details:</h5>
-<div>Name: <%= patient.fname + " " + patient.lname %></div>
-<div>Age: <%= patient.age %></div>
-<div>Gender: <%= patient.gender %></div>
+<div class="col-lg-4">
+<div class="card border border-dark" style="width: 30rem">
+<h5 class="card-header bg-primary">Personal Details:</h5>
+<div class="card-body">
+<p>Name: <%= patient.fname + " " + patient.lname %></p>
+<p>Age: <%= patient.age %></p>
+<p>Gender: <%= patient.gender %></p>
+</div>
+</div>
+</div>
 
+<div class="col-lg-4">
+<div class="card border border-dark" style="width: 30rem">
+<h5 class="card-header bg-primary">Contact Details:</h5>
+<div class="card-body">
+<p>Contact No: <%= patient.contact %></p>
+<p>Email Id: <%= patient.email %></p>
+<p>Address: <%= patient.address %></p>
+</div>
+</div>
+</div>
+</div>
 <br>
+<div class="row">
+<div class="col-lg-4">
+<div class="card border border-dark" style="width: 30rem">
+<h5 class="card-header bg-primary">Credentials:</h5>
+<div class="card-body">
+<p>Username: <%= patient.username %></p>
+<p>Patient ID: <%= patient._id %></p>
+</div>
+</div>
+</div>
 
-<h5>Contact Details:</h5>
-<div>Contact No: <%= patient.contact %></div>
-<div>Email Id: <%= patient.email %></div>
-<div>Address: <%= patient.address %></div>
-
-<br>
-
-<h5>Credentials:</h5>
-<div>Username: <%= patient.username %></div>
-<div>Patient ID: <%= patient._id %></div>
-
-<br>
-
-<h5>Visit Details:</h5>
+<div class="col-lg-4">
+<div class="card border border-dark" style="width: 30rem">
+<h5 class="card-header bg-primary">Visit Details:</h5>
 <% if(regPatient.stage1.date!=undefined){ %>
-    <div>Date Of Visit: <%= dd1 + "-" + mmonth1 + "-" + yy1 %></div>
+    <p>&nbsp;&nbsp;&nbsp;Date Of Visit: <%= dd1 + "-" + mmonth1 + "-" + yy1 %></p>
 <% } %>
-<div>Registration Id: <%= regPatient._id %></div>
-<div>Token No: <%= token %></div>
-<div>Visit Type: <%= regPatient.visit_type %></div>
-<div>Reason: <%= regPatient.reason %></div>
+<p>&nbsp;&nbsp;&nbsp;Registration Id: <%= regPatient._id %></p>
+<p>&nbsp;&nbsp;&nbsp;Token No: <%= token %></p>
+<p>&nbsp;&nbsp;&nbsp;Visit Type: <%= regPatient.visit_type %></p>
+<p>&nbsp;&nbsp;&nbsp; Reason: <%= regPatient.reason %></p>
+</div>
+</div>
+</div>
 
 <br>
-
-<h5>Wait Time Details:</h5>
-
-<div class="py-2 font-weight-bold">Registration Stage:</div>
+<h5 class="card-header bg-primary">Wait Time Details:</h5>
+<br>
+<div class="row">
+<div class="col">
+<div class="card border border-dark" style="width: 15rem">
+<h6 class="card-header bg-primary">Registration Stage:</h6>
 <% if(regPatient.stage1.date!=undefined){ %>
-    <div>Registration Time: <%= hh1 + ":" + mm1 + ":" + ss1 %></div>
+    <p>Registration Time: <%= hh1 + ":" + mm1 + ":" + ss1 %></p>
 <% }else{ %>
     <div>Registration Time: --:--:--</div>
 <% } %>
+</div>
+</div>
 
-<div class="py-2 font-weight-bold">Consultation Stage:</div>
+<div class="col">
+<div class="card border border-dark" style="width: 15rem">
+<h6 class="card-header bg-primary">Consultation Stage:</h6>
 <% if(regPatient.stage2.inTime.date!=undefined && regPatient.stage2.outTime.date!=undefined){ %>
-    <div>In Time: <%= hh2i + ":" + mm2i + ":" + ss2i %></div>
+    <p>In Time: <%= hh2i + ":" + mm2i + ":" + ss2i %></p>
 <% }else{ %>
-    <div>In Time: --:--:--</div>
+    <p>In Time: --:--:--</p>
 <% } %>
 <% if(regPatient.stage2.outTime.date!=undefined){ %>
-    <div>Out Time: <%= hh2o + ":" + mm2o + ":" + ss2o %></div>
+    <p>Out Time: <%= hh2o + ":" + mm2o + ":" + ss2o %></p>
 <% }else{ %>
-    <div>Out Time: --:--:--</div>
+    <p>Out Time: --:--:--</p>
 <% } %>
 <% if(regPatient.stage2.outTime.date!=undefined){ %>
     <% var rem = rem2i-rem1 %>
@@ -146,9 +172,9 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div>Wait Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+    <p>Wait Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></p>
 <% }else{ %>
-    <div>Wait Time: --hrs --mins --secs </div>
+    <p>Wait Time: --hrs --mins --secs </p>
 <% } %>
 <% if(regPatient.stage2.outTime.date!=undefined){ %>
     <% var rem = rem2o-rem2i %>
@@ -162,17 +188,21 @@
 <% }else{ %>
     <div>Servicing Time: --hrs --mins --secs</div>
 <% } %>
+</div>
+</div>
 
-<div class="py-2 font-weight-bold">Billing Stage:</div>
+<div class="col">
+<div class="card border border-dark" style="width: 15rem">
+<h6 class="card-header bg-primary">Billing Stage:</h6>
 <% if(regPatient.stage2.outTime.date!=undefined && regPatient.stage3.date!=undefined){ %>
-    <div>In Time: <%= hh2o + ":" + mm2o + ":" + ss2o %></div>
+    <p>In Time: <%= hh2o + ":" + mm2o + ":" + ss2o %></p>
 <% }else{ %>
-    <div>In Time: --:--:--</div>
+    <p>In Time: --:--:--</p>
 <% } %>
 <% if(regPatient.stage3.date!=undefined){ %>
-    <div>Out Time: <%= hh3 + ":" + mm3 + ":" + ss3 %></div>
+    <p>Out Time: <%= hh3 + ":" + mm3 + ":" + ss3 %></p>
 <% }else{ %>
-    <div>Out Time: --:--:--</div>
+    <p>Out Time: --:--:--</p>
 <% } %>
 <% if(regPatient.stage3.date!=undefined){ %>
     <% var rem = rem3-rem2o %>
@@ -182,21 +212,25 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div>Wait Time + Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+    <p>Wait Time + Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></p>
 <% }else{ %>
-    <div>Wait Time + Servicing Time: --hrs --mins --secs</div>
+    <p>Wait Time + Servicing Time: --hrs --mins --secs</p>
 <% } %>
+</div>
+</div>
 
-<div class="py-2 font-weight-bold">Medicine Stage:</div>
+<div class="col">
+<div class="card border border-dark" style="width: 15rem">
+<h6 class="card-header bg-primary">Medicine Stage:</h6>
 <% if(regPatient.stage3.date!=undefined && regPatient.stage4.date!=undefined){ %>
-    <div>In Time: <%= hh3 + ":" + mm3 + ":" + ss3 %></div>
+    <p>In Time: <%= hh3 + ":" + mm3 + ":" + ss3 %></p>
 <% }else{ %>
-    <div>In Time: --:--:--</div>
+    <p>In Time: --:--:--</p>
 <% } %>
 <% if(regPatient.stage4.date!=undefined){ %>
-    <div>Out Time: <%= hh4 + ":" + mm4 + ":" + ss4 %></div>
+    <p>Out Time: <%= hh4 + ":" + mm4 + ":" + ss4 %></p>
 <% }else{ %>
-    <div>Out Time: --:--:--</div>
+    <p>Out Time: --:--:--</p>
 <% } %>
 <% if(regPatient.stage4.date!=undefined){ %>
     <% var rem = rem4-rem3 %>
@@ -206,12 +240,16 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div>Wait Time + Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></div>
+    <p>Wait Time + Servicing Time: <%= remH + "hrs " + remM + "mins " + remS + "secs"%></p>
 <% }else{ %>
-    <div>Wait Time + Servicing Time: --hrs --mins --secs</div>
+    <p>Wait Time + Servicing Time: --hrs --mins --secs</p>
 <% } %>
+</div>
+</div>
 
-<div class="py-2 font-weight-bold">Total Time Spend In Hospital:</div>
+<div class="col">
+<div class="card border border-dark" style="width: 15rem">
+<h6 class="card-header bg-primary">Total Time Spend In Hospital:</h6>
 <% if(regPatient.stage4.date!=undefined){ %>
     <% var rem = rem4-rem1 %>
     <% var remH = Math.floor(rem/(1000*60*60)) %>
@@ -220,7 +258,7 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+    <p><%= remH + "hrs " + remM + "mins " + remS + "secs" %></p>
 <% }else if(regPatient.stage3.date!=undefined){ %>
     <% var rem = rem3-rem1 %>
     <% var remH = Math.floor(rem/(1000*60*60)) %>
@@ -229,7 +267,7 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+    <p><%= remH + "hrs " + remM + "mins " + remS + "secs" %></p>
 <% }else if(regPatient.stage2.outTime.date!=undefined){ %>
     <% var rem = rem2o-rem1 %>
     <% var remH = Math.floor(rem/(1000*60*60)) %>
@@ -238,7 +276,7 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+    <p><%= remH + "hrs " + remM + "mins " + remS + "secs" %></p>
 <% }else if(regPatient.stage2.inTime.date!=undefined){ %>
     <% var rem = rem2i-rem1 %>
     <% var remH = Math.floor(rem/(1000*60*60)) %>
@@ -247,12 +285,15 @@
     <% var remH = (remH < 10)?'0'+remH:remH %>
     <% var remM = (remM < 10)?'0'+remM:remM %>
     <% var remS = (remS < 10)?'0'+remS:remS %>
-    <div><%= remH + "hrs " + remM + "mins " + remS + "secs" %></div>
+    <p><%= remH + "hrs " + remM + "mins " + remS + "secs" %></p>
 <% }else if(regPatient.stage1.date!=undefined){ %>
-    <div>00hrs 00mins 00secs</div>
+    <p>00hrs 00mins 00secs</p>
 <% }else{ %>
-    <div>--hrs --mins --secs</div>
+    <p>--hrs --mins --secs</p>
 <% } %>
+</div>
+</div>
+</div>
 
 <br>
 
