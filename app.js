@@ -3,6 +3,7 @@
 var express               = require("express");
 var app                   = express();
 var fs                    = require('fs')
+var path                  = require('path');
 var https                 = require('https')
 var mongoose              = require("mongoose");
 var bodyParser            = require("body-parser");
@@ -25,6 +26,18 @@ var DecisionDate          = require("./models/date");
 var Appointment           = require("./models/appointment");
 var TimeSpanData          = require("./models/timeSpanData");
 var AlgoData              = require("./models/algoData");
+
+
+// importing svm models
+
+var model0                = require("./svmModels/model0");  // consultation stage - reason0
+var model1                = require("./svmModels/model1");  // consultation stage - reason1
+var model2                = require("./svmModels/model2");  // consultation stage - reason2
+var model3                = require("./svmModels/model3");  // consultation stage - reason3
+var model4                = require("./svmModels/model4");  // consultation stage - reason4
+var model5                = require("./svmModels/model5");  // billing stage
+var model6                = require("./svmModels/model6");  // medicine stage
+
 
 // importing routes
 
@@ -161,6 +174,98 @@ HSE.find({"username" : process.env.hseUSERNAME},function(err, hses){
 });
 
 
+// initialize algodata details
+
+AlgoData.find({},function(err, algoDatas){
+    if(err){
+        console.log(err);
+    }else{
+        if(algoDatas.length==0){
+            AlgoData.create({key : 1},function(err,f){});
+        }
+    }
+});
+
+
+// read data from training data file
+
+let data = fs.readFileSync(
+    path.join(__dirname, './dataset/training-data.txt'),
+    'utf-8'
+);
+data = data.split('\n').map((line) => line.split(' ').filter((el) => el));
+data0=[];
+data1=[];
+data2=[];
+data3=[];
+data4=[];
+data5=[];
+data6=[];
+data.forEach(function(d){
+    if(d[5]=='5:2' && d[6]=='6:0\r'){
+        data0.push(d);
+    }
+    if(d[5]=='5:2' && d[6]=='6:1\r'){
+        data1.push(d);
+    }
+    if(d[5]=='5:2' && d[6]=='6:2\r'){
+        data2.push(d);
+    }
+    if(d[5]=='5:2' && d[6]=='6:3\r'){
+        data3.push(d);
+    }
+    if(d[5]=='5:2' && d[6]=='6:4\r'){
+        data4.push(d);
+    }
+    if(d[5]=='5:3'){
+        data5.push(d);
+    }
+    if(d[5]=='5:4'){
+        data6.push(d);
+    }
+});
+
+var labels0 = data0.map((line) => +line.splice(0, 1)[0]);
+var features0 = data0.map((line) => line.map((el) => +el.split(':')[1]));
+var labels1 = data1.map((line) => +line.splice(0, 1)[0]);
+var features1 = data1.map((line) => line.map((el) => +el.split(':')[1]));
+var labels2 = data2.map((line) => +line.splice(0, 1)[0]);
+var features2 = data2.map((line) => line.map((el) => +el.split(':')[1]));
+var labels3 = data3.map((line) => +line.splice(0, 1)[0]);
+var features3 = data3.map((line) => line.map((el) => +el.split(':')[1]));
+var labels4 = data4.map((line) => +line.splice(0, 1)[0]);
+var features4 = data4.map((line) => line.map((el) => +el.split(':')[1]));
+var labels5 = data5.map((line) => +line.splice(0, 1)[0]);
+var features5 = data5.map((line) => line.map((el) => +el.split(':')[1]));
+var labels6 = data6.map((line) => +line.splice(0, 1)[0]);
+var features6 = data6.map((line) => line.map((el) => +el.split(':')[1]));
+
+
+// train the models with respective data
+
+if(features0.length!=0 && labels0.length!=0){
+    model0.train(features0, labels0);
+}
+if(features1.length!=0 && labels1.length!=0){
+    model1.train(features1, labels1);
+}
+if(features2.length!=0 && labels2.length!=0){
+    model2.train(features2, labels2);
+}
+if(features3.length!=0 && labels3.length!=0){
+    model3.train(features3, labels3);
+}
+if(features4.length!=0 && labels4.length!=0){
+    model4.train(features4, labels4);
+}
+if(features5.length!=0 && labels5.length!=0){
+    model5.train(features5, labels5);
+}
+if(features6.length!=0 && labels6.length!=0){
+    model6.train(features6, labels6);
+}
+
+
 // function to detect date change and hence set token to 1
 
 function decideDate(){
@@ -209,52 +314,7 @@ function removeAppointment(){
 
 setInterval(removeAppointment, 60000);
 
-//calculate the algorithm
-function updateAlgoData(){
-    TimeSpanData.find({consultTime : {$ne : null}},function(err,found){
-        var count = 0;
-        var sum = 0;
-        found.forEach(thisOne => {
-            sum = sum + thisOne.consultTime;
-            count++;
-        })
-        AlgoData.findOne({},function(err,myData){
-            console.log("hello");
-            myData.consultAvg[0]=sum/count;
-            myData.save(function(err){});
-            console.log(sum,myData.consultAvg);
-        })
-    })
 
-    TimeSpanData.find({billTime : {$ne : null}},function(err,found){
-        var count = 0;
-        var sum = 0;
-        found.forEach(thisOne => {
-            sum = sum + thisOne.billTime;
-            count++;
-        })
-        AlgoData.findOne({},function(err,myData){
-            myData.billAvg=sum/count;
-            myData.save(function(err){});
-        })
-    })
-
-    TimeSpanData.find({mediTime : {$ne : null}},function(err,found){
-        var count = 0;
-        var sum = 0;
-        found.forEach(thisOne => {
-            sum = sum + thisOne.mediTime;
-            count++;
-        })
-        AlgoData.findOne({},function(err,myData){
-            myData.mediAvg=sum/count;
-            myData.save(function(err){});
-        })
-    })
-
-}
-//this is currently commmented because we donot have right data
-//setInterval(updateAlgoData,20000);
 // set variables such that they can access by all files
 
 app.use(function(req, res, next){
@@ -272,7 +332,6 @@ app.use("/HSE", hseRoutes);
 app.use("/", indexRoutes);
 
 
-
 // start server
 
 https.createServer({
@@ -281,3 +340,124 @@ https.createServer({
 }, app).listen(process.env.PORT || 1000, function () {
     console.log('Server Started and it is listening on port 1000! Go to https://localhost:1000/');
 });
+
+
+
+
+
+
+//calculate the algorithm
+// function updateAlgoData(){
+//     TimeSpanData.find({type: 0, consultTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.consultTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 myData.consultAvg[0]=sum/count;
+//                 myData.save(function(err){});
+//                 console.log(sum,myData.consultAvg);
+//             });
+//         }
+//     });
+
+//     TimeSpanData.find({type: 1, consultTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.consultTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 myData.consultAvg[1]=sum/count;
+//                 myData.save(function(err){});
+//                 console.log(sum,myData.consultAvg);
+//             });
+//         }
+//     });
+
+//     TimeSpanData.find({type: 2, consultTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.consultTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 myData.consultAvg[2]=sum/count;
+//                 myData.save(function(err){});
+//                 console.log(sum,myData.consultAvg);
+//             });
+//         }
+//     });
+
+//     TimeSpanData.find({type: 3, consultTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.consultTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 console.log("hello");
+//                 myData.consultAvg[3]=sum/count;
+//                 myData.save(function(err){});
+//                 console.log(sum,myData.consultAvg);
+//             });
+//         }
+//     });
+
+//     TimeSpanData.find({type: 4, consultTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.consultTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 myData.consultAvg[4]=sum/count;
+//                 myData.save(function(err){});
+//                 console.log(sum,myData.consultAvg);
+//             });
+//         }
+//     });
+
+//     TimeSpanData.find({billTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.billTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 myData.billAvg=sum/count;
+//                 myData.save(function(err){});
+//             });
+//         }
+//     });
+
+//     TimeSpanData.find({mediTime : {$ne : null}},function(err,found){
+//         var count = 0;
+//         var sum = 0;
+//         if(found.length!=0){
+//             found.forEach(thisOne => {
+//                 sum = sum + thisOne.mediTime;
+//                 count++;
+//             });
+//             AlgoData.findOne({},function(err,myData){
+//                 myData.mediAvg=sum/count;
+//                 myData.save(function(err){});
+//             });
+//         }
+//     });
+// }
+//this is currently commmented because we donot have right data
+//setInterval(updateAlgoData,20000);

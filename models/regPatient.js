@@ -24,11 +24,13 @@ var RegPatientSchema = new mongoose.Schema({
     },
     stage3: {
         isActive: {type: Boolean, default: false},
+        activeDate: {type: Date, default: null},
         date: {type: Date, default: null},
         isGone: {type: Boolean, default: false}
     },
     stage4: {
         isActive: {type: Boolean, default: false},
+        activeDate: {type: Date, default: null},
         date: {type: Date, default: null},
         isGone: {type: Boolean, default: false}
     }

@@ -109,7 +109,7 @@
           <% }else{ %>
             <% var token = "T" + token %>
           <% } %>
-          <li id=<%= patient._id %> class="li1 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#consultation-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+          <li class="li1 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i id=<%= patient._id %> onclick="getConfirmationModal2(this.id)" class="far fa-trash-alt"></i> </span></li>
         <% } %>
         <% if(patient.stage2.inTime.isGone==true && patient.stage2.outTime.isGone==false){ %>
           <% count=count+1 %>
@@ -119,7 +119,7 @@
           <% }else{ %>
             <% var token = "T" + token %>
           <% } %>
-          <li id=<%= patient._id %> class="li2 list-li active-list-item list-group-item"><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#consultation-ul .li2').id)" class="far fa-trash-alt"></i> </span><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
+          <li class="li2 list-li active-list-item list-group-item"><span class="trash-btn"><i id=<%= patient._id %> onclick="getConfirmationModal2(this.id)" class="far fa-trash-alt"></i> </span><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %></li>
         <% } %>
       <% }); %>
 
@@ -178,9 +178,9 @@
             <% var token = "T" + token %>
           <% } %>
           <% if(patient.stage3.isActive==true){ %>
-            <li id=<%= patient._id %> class="li1 list-li active-list-item list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#billing-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+            <li class="li1 list-li active-list-item list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i id=<%= patient._id %> onclick="getConfirmationModal2(this.id)" class="far fa-trash-alt"></i> </span></li>
           <% }else{ %>
-            <li id=<%= patient._id %> class="li2 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#billing-ul .li2').id)" class="far fa-trash-alt"></i> </span></li>
+            <li class="li2 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i id=<%= patient._id %> onclick="getConfirmationModal2(this.id)" class="far fa-trash-alt"></i> </span></li>
             <% } %>
         <% } %>
       <% }); %>
@@ -205,9 +205,9 @@
             <% var token = "T" + token %>
           <% } %>
           <% if(patient.stage4.isActive==true){ %>
-            <li id=<%= patient._id %> class="li1 list-li active-list-item list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#medicine-ul .li1').id)" class="far fa-trash-alt"></i> </span></li>
+            <li class="li1 list-li active-list-item list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i id=<%= patient._id %> onclick="getConfirmationModal2(this.id)" class="far fa-trash-alt"></i> </span></li>
           <% }else{ %>
-            <li id=<%= patient._id %> class="li2 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i onclick="getConfirmationModal2(document.querySelector('#medicine-ul .li2').id)" class="far fa-trash-alt"></i> </span></li>
+            <li class="li2 list-li list-group-item"><%= token %> &nbsp;&nbsp;:&nbsp;&nbsp; <%= patient.name %><span class="trash-btn"><i id=<%= patient._id %> onclick="getConfirmationModal2(this.id)" class="far fa-trash-alt"></i> </span></li>
           <% } %>
         <% } %>
       <% }); %>

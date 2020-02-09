@@ -1,13 +1,21 @@
 var express               = require("express");
 var router                = express.Router();
-var middleware            = require("../middleware");
+var timespan              = require("timespan");
 var passport              = require("passport");
+var middleware            = require("../middleware");
 var Patient               = require("../models/patient");
 var RegPatient            = require("../models/regPatient");
 var DecisionDate          = require("../models/date");
 var Appointment           = require("../models/appointment");
 var TimeSpanData          = require("../models/timeSpanData");
-var timespan              = require("timespan");
+var AlgoData              = require("../models/algoData");
+var model0                = require("../svmModels/model0");
+var model1                = require("../svmModels/model1");
+var model2                = require("../svmModels/model2");
+var model3                = require("../svmModels/model3");
+var model4                = require("../svmModels/model4");
+var model5                = require("../svmModels/model5");
+var model6                = require("../svmModels/model6");
 var token_no;
 
 
@@ -137,7 +145,45 @@ router.post("/patient-registration", function(req, res){
                                                     if(err){
                                                         console.log(err);
                                                     }
-                                                    return res.redirect("/HSE/home");
+                                                    RegPatient.countDocuments({"stage1.isInQueue" : true, "stage2.outTime.isGone" : false, "stage1.date" : {$ne : null}}, function(err,count){
+                                                        AlgoData.findOne({},function(err, foundData){
+                                                            if(foundData!=null){
+                                                                var date = new Date();
+                                                                var day = date.getDay();
+                                                                var hrs = date.getHours();
+                                                                var mins = date.getMinutes();
+                                                                var no_of_patients = count;
+                                                                var stage = 2;
+                                                                if(foundPatient.reason == 0){
+                                                                    var reason = 0;
+                                                                    foundData.consultAvg.set(0, Math.round(model0.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.save(function(err){});
+                                                                }
+                                                                if(foundPatient.reason == 1){
+                                                                    var reason = 1;
+                                                                    foundData.consultAvg.set(1, Math.round(model1.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.save(function(err){});
+                                                                }
+                                                                if(foundPatient.reason == 2){
+                                                                    var reason = 2;
+                                                                    foundData.consultAvg.set(2, Math.round(model2.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.save(function(err){});
+                                                                }
+                                                                if(foundPatient.reason == 3){
+                                                                    var reason = 3;
+                                                                    foundData.consultAvg.set(3, Math.round(model3.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.save(function(err){});
+                                                                }
+                                                                if(foundPatient.reason == 4){
+                                                                    var reason = 4;
+                                                                    foundData.consultAvg.set(4, Math.round(model4.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.save(function(err){});
+                                                                }
+                                                                console.log([day, hrs, mins, no_of_patients, stage, reason]);
+                                                            }
+                                                            return res.redirect("/HSE/home");
+                                                        });
+                                                    });
                                                 });
                                             }
                                         });
@@ -160,17 +206,42 @@ router.post("/patient-registration", function(req, res){
                                                     foundDate.token+=1;
                                                     foundDate.decisionDate = Date.now();
                                                     //timespan data inserted..!!
-                                                    TimeSpanData.create({
-                                                        pid:patient._id,
-                                                        name: patient.fname + " " + patient.lname,
-                                                        type : regPatient.reason,   
-                                                    },function(err,dataPatient){
-                                                        if(err){
-                                                            console.log(err);
-                                                        }
-                                                    })
-                                                    foundDate.save(function(err){
-                                                        return res.redirect("/HSE/home");
+                                                    // TimeSpanData.create({
+                                                    //     pid: regPatient._id,
+                                                    //     name: patient.fname + " " + patient.lname,
+                                                    //     type : regPatient.reason,   
+                                                    // },function(err,dataPatient){
+                                                    //     if(err){
+                                                    //         console.log(err);
+                                                    //     }
+                                                    // });
+                                                    RegPatient.countDocuments({"stage1.isInQueue" : true, "stage2.outTime.isGone" : false, "stage1.date" : {$ne : null}}, function(err,count){
+                                                        AlgoData.findOne({},function(err, foundData){
+                                                            if(foundData!=null){
+                                                                var date = new Date();
+                                                                var day = date.getDay();
+                                                                var hrs = date.getHours();
+                                                                var mins = date.getMinutes();
+                                                                var no_of_patients = count;
+                                                                var stage = 2;
+                                                                if(regPatient.reason == 0){
+                                                                    var reason = 0;
+                                                                    foundData.consultAvg.set(0, Math.round(model0.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    console.log(foundData.consultAvg[0]+ " " + [day, hrs, mins, no_of_patients, stage, reason]);
+                                                                    foundData.save(function(err){
+                                                                        if(err){
+                                                                            console.log(err);
+                                                                        }else{
+                                                                            console.log(foundData);
+                                                                        }
+                                                                    });
+                                                                }
+                
+                                                            }
+                                                            foundDate.save(function(err){
+                                                                return res.redirect("/HSE/home");
+                                                            });
+                                                        });
                                                     });
                                                 }
                                             });
@@ -185,7 +256,6 @@ router.post("/patient-registration", function(req, res){
                         }
                     });                
                 }else if(req.body.stage==2){
-                    var promise1=1,promise2=2;
                     RegPatient.findOne({"pid": patient._id, "stage1.isGone": true},async function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
@@ -202,7 +272,7 @@ router.post("/patient-registration", function(req, res){
                                                 foundPatient.stage2.isActive=true;
                                                 foundPatient.stage2.inTime.isGone=true;
                                                 foundPatient.stage2.inTime.date=Date.now();
-                                                promise1= await foundPatient.save(function(err){
+                                                foundPatient.save(function(err){
                                                     if(err){
                                                         console.log(err);
                                                     }
@@ -226,21 +296,35 @@ router.post("/patient-registration", function(req, res){
                                         if(count==0){
                                             foundPatient.stage3.isActive=true;
                                         }      
-                                        promise2=foundPatient.save(function(err){
+                                        foundPatient.save(function(err){
                                             if(err){
                                                 console.log(err);
                                             }
-                                            return res.redirect("/HSE/home");                         
-                                        });
-                                        Promise.all([promise1,promise2])
-                                        .then(function(){
-                                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
-                                                var ts = timespan.fromDates(foundPatient.stage2.inTime.date,foundPatient.stage2.outTime.date,true);
-                                                var sec = ts.totalSeconds();
-                                                timeData.consultTime = sec;
-                                                timeData.save(function(err){});
+                                            AlgoData.findOne({},function(err, foundData){
+                                                if(foundData!=null){
+                                                    var date = new Date();
+                                                    var day = date.getDay();
+                                                    var hrs = date.getHours();
+                                                    var mins = date.getMinutes();
+                                                    var no_of_patients = count;
+                                                    var stage = 3;
+                                                    var reason = foundPatient.reason;
+                                                    foundData.billAvg = Math.round(model5.predictOne([day, hrs, mins, no_of_patients, stage, reason]));
+                                                    console.log(foundData.billAvg+ " " + [day, hrs, mins, no_of_patients, stage, reason]);
+                                                    foundData.save(function(err){});
+                                                }
+                                                return res.redirect("/HSE/home");                         
                                             });
                                         });
+                                        // Promise.all([promise1,promise2])
+                                        // .then(function(){
+                                        //     TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                                        //         var ts = timespan.fromDates(foundPatient.stage2.inTime.date,foundPatient.stage2.outTime.date,true);
+                                        //         var sec = ts.totalSeconds();
+                                        //         timeData.consultTime = sec;
+                                        //         timeData.save(function(err){});
+                                        //     });
+                                        // });
                                     });
                                 }else{
                                     req.flash("error", "There is patient ahead.");
@@ -251,12 +335,9 @@ router.post("/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }
                         }
-                        await setTimeout(function(){},5000);
-                        
                     });
                     
                 }else if(req.body.stage==3){
-                    var promise=1;
                     RegPatient.findOne({"pid": patient._id, "stage2.outTime.isGone": true},function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
@@ -276,20 +357,35 @@ router.post("/patient-registration", function(req, res){
                                         if(count==0){
                                             foundPatient.stage4.isActive=true;
                                         }      
-                                        promise=foundPatient.save(function(err){
+                                        foundPatient.save(function(err){
                                             if(err){
                                                 console.log(err);
                                             }
                                             RegPatient.findOne({"stage2.outTime.isGone": true, "stage3.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
                                                 if(oldestPatient!=null){
                                                     oldestPatient.stage3.isActive=true;
+                                                    oldestPatient.stage3.activeDate=Date.now();
                                                     oldestPatient.save(function(err){
                                                         if(err){
                                                             console.log(err);
                                                         }
                                                     });
                                                 }
-                                                return res.redirect("/HSE/home");
+                                                AlgoData.findOne({},function(err, foundData){
+                                                    if(foundData!=null){
+                                                        var date = new Date();
+                                                        var day = date.getDay();
+                                                        var hrs = date.getHours();
+                                                        var mins = date.getMinutes();
+                                                        var no_of_patients = count;
+                                                        var stage = 4;
+                                                        var reason = foundPatient.reason;
+                                                        foundData.mediAvg = Math.round(model6.predictOne([day, hrs, mins, no_of_patients, stage, reason]));
+                                                        console.log(foundData.mediAvg+ " " + [day, hrs, mins, no_of_patients, stage, reason]);
+                                                        foundData.save(function(err){});
+                                                    }
+                                                    return res.redirect("/HSE/home");                         
+                                                });
                                             });
                                         });
                                     });
@@ -303,18 +399,17 @@ router.post("/patient-registration", function(req, res){
                                 return res.redirect("back");
                             }
                         }
-                        Promise.all([promise])
-                        .then(function(){
-                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
-                                var ts = timespan.fromDates(foundPatient.stage3.date,foundPatient.stage2.outTime.date,true);
-                                var sec = ts.totalSeconds();
-                                timeData.billTime = sec;
-                                timeData.save(function(err){});
-                            });
-                        });
+                        // Promise.all([promise])
+                        // .then(function(){
+                        //     TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                        //         var ts = timespan.fromDates(foundPatient.stage3.date, foundPatient.stage3.activeDate,true);
+                        //         var sec = ts.totalSeconds();
+                        //         timeData.billTime = sec;
+                        //         timeData.save(function(err){});
+                        //     });
+                        // });
                     });
                 }else if(req.body.stage==4){
-                    var promise=1;
                     RegPatient.findOne({"pid": patient._id, "stage3.isGone": true}, function(err, foundPatient){
                         if(err){
                             req.flash("error", "Something Went Wrong, Try Again.");
@@ -343,13 +438,14 @@ router.post("/patient-registration", function(req, res){
                                     foundPatient.stage2.inTime.isGone=false;
                                     foundPatient.stage2.outTime.isGone=false;
                                     foundPatient.stage3.isGone=false;
-                                    promise=foundPatient.save(function(err){
+                                    foundPatient.save(function(err){
                                         if(err){
                                             console.log(err);
                                         }
                                         RegPatient.findOne({"stage3.isGone": true, "stage4.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
                                             if(oldestPatient!=null){
                                                 oldestPatient.stage4.isActive=true;
+                                                oldestPatient.stage4.activeDate=Date.now();
                                                 oldestPatient.save(function(err){
                                                     if(err){
                                                         console.log(err);
@@ -365,15 +461,15 @@ router.post("/patient-registration", function(req, res){
                                 }
                             }
                         }
-                        Promise.all([promise])
-                        .then(function(){
-                            TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
-                                var ts = timespan.fromDates(foundPatient.stage3.date,foundPatient.stage4.date,true);
-                                var sec = ts.totalSeconds();
-                                timeData.mediTime = sec;
-                                timeData.save(function(err){});
-                            });
-                        });
+                        // Promise.all([promise])
+                        // .then(function(){
+                        //     TimeSpanData.findOne({pid:foundPatient.pid},function(err,timeData){
+                        //         var ts = timespan.fromDates(foundPatient.stage4.activeDate, foundPatient.stage4.date,true);
+                        //         var sec = ts.totalSeconds();
+                        //         timeData.mediTime = sec;
+                        //         timeData.save(function(err){});
+                        //     });
+                        // });
                     });
                 }
             }
