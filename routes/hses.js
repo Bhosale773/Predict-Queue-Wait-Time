@@ -156,27 +156,27 @@ router.post("/patient-registration", function(req, res){
                                                                 var stage = 2;
                                                                 if(foundPatient.reason == 0){
                                                                     var reason = 0;
-                                                                    foundData.consultAvg.set(0, Math.round(model0.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.consultAvg.set(0, Math.round(100*model0.predictOne([day, hrs, stage, reason])));
                                                                     foundData.save(function(err){});
                                                                 }
                                                                 if(foundPatient.reason == 1){
                                                                     var reason = 1;
-                                                                    foundData.consultAvg.set(1, Math.round(model1.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.consultAvg.set(1, Math.round(100*model1.predictOne([day, hrs, stage, reason])));
                                                                     foundData.save(function(err){});
                                                                 }
                                                                 if(foundPatient.reason == 2){
                                                                     var reason = 2;
-                                                                    foundData.consultAvg.set(2, Math.round(model2.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.consultAvg.set(2, Math.round(100*model2.predictOne([day, hrs, stage, reason])));
                                                                     foundData.save(function(err){});
                                                                 }
                                                                 if(foundPatient.reason == 3){
                                                                     var reason = 3;
-                                                                    foundData.consultAvg.set(3, Math.round(model3.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.consultAvg.set(3, Math.round(100*model3.predictOne([day, hrs, stage, reason])));
                                                                     foundData.save(function(err){});
                                                                 }
                                                                 if(foundPatient.reason == 4){
                                                                     var reason = 4;
-                                                                    foundData.consultAvg.set(4, Math.round(model4.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.consultAvg.set(4, Math.round(100*model4.predictOne([day, hrs, stage, reason])));
                                                                     foundData.save(function(err){});
                                                                 }
                                                                 console.log([day, hrs, mins, no_of_patients, stage, reason]);
@@ -226,7 +226,7 @@ router.post("/patient-registration", function(req, res){
                                                                 var stage = 2;
                                                                 if(regPatient.reason == 0){
                                                                     var reason = 0;
-                                                                    foundData.consultAvg.set(0, Math.round(model0.predictOne([day, hrs, mins, no_of_patients, stage, reason])));
+                                                                    foundData.consultAvg.set(0, Math.round(100*model0.predictOne([day, hrs, stage, reason])));
                                                                     console.log(foundData.consultAvg[0]+ " " + [day, hrs, mins, no_of_patients, stage, reason]);
                                                                     foundData.save(function(err){
                                                                         if(err){
@@ -295,6 +295,7 @@ router.post("/patient-registration", function(req, res){
                                     RegPatient.countDocuments({"stage2.outTime.isGone": true, "stage3.isGone": false}, async function(err, count){
                                         if(count==0){
                                             foundPatient.stage3.isActive=true;
+                                            foundPatient.stage3.activeDate=Date.now();
                                         }      
                                         foundPatient.save(function(err){
                                             if(err){
@@ -309,7 +310,7 @@ router.post("/patient-registration", function(req, res){
                                                     var no_of_patients = count;
                                                     var stage = 3;
                                                     var reason = foundPatient.reason;
-                                                    foundData.billAvg = Math.round(model5.predictOne([day, hrs, mins, no_of_patients, stage, reason]));
+                                                    foundData.billAvg = Math.round(100*model5.predictOne([day, hrs, stage, reason]));
                                                     console.log(foundData.billAvg+ " " + [day, hrs, mins, no_of_patients, stage, reason]);
                                                     foundData.save(function(err){});
                                                 }
@@ -356,6 +357,7 @@ router.post("/patient-registration", function(req, res){
                                     RegPatient.countDocuments({"stage3.isGone": true, "stage4.isGone": false},function(err, count){
                                         if(count==0){
                                             foundPatient.stage4.isActive=true;
+                                            foundPatient.stage4.activeDate=Date.now();
                                         }      
                                         foundPatient.save(function(err){
                                             if(err){
@@ -380,7 +382,7 @@ router.post("/patient-registration", function(req, res){
                                                         var no_of_patients = count;
                                                         var stage = 4;
                                                         var reason = foundPatient.reason;
-                                                        foundData.mediAvg = Math.round(model6.predictOne([day, hrs, mins, no_of_patients, stage, reason]));
+                                                        foundData.mediAvg = Math.round(100*model6.predictOne([day, hrs, stage, reason]));
                                                         console.log(foundData.mediAvg+ " " + [day, hrs, mins, no_of_patients, stage, reason]);
                                                         foundData.save(function(err){});
                                                     }
@@ -510,6 +512,7 @@ router.post("/remove-patient-from-queue", function(req, res){
                 RegPatient.findOne({"stage2.outTime.isGone": true, "stage3.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
                     if(oldestPatient!=null){
                         oldestPatient.stage3.isActive=true;
+                        oldestPatient.stage3.activeDate=Date.now();
                         oldestPatient.save(function(err){
                             if(err){
                                 console.log(err);
@@ -536,6 +539,7 @@ router.post("/remove-patient-from-queue", function(req, res){
                 RegPatient.findOne({"stage3.isGone": true, "stage4.isGone": false}).sort({ _id: 1 }).exec(function(err, oldestPatient){
                     if(oldestPatient!=null){
                         oldestPatient.stage4.isActive=true;
+                        oldestPatient.stage4.activeDate=Date.now();
                         oldestPatient.save(function(err){
                             if(err){
                                 console.log(err);

@@ -29,9 +29,9 @@ function calculate(patient, patientStatus){
             currentUserStatus.consultAhead = 0;
             currentUserStatus.mediAhead = 0;
             currentUserStatus.billAhead = 0;
-            currentUserStatus.consultAvg = 0;
-            currentUserStatus.billAvg = 0;
-            currentUserStatus.mediAvg = 0;
+            currentUserStatus.consultWait = 0;
+            currentUserStatus.billWait = 0;
+            currentUserStatus.mediWait = 0;
     
             var wait=0;
             var count=0;
@@ -108,16 +108,16 @@ function calculate(patient, patientStatus){
                                         wait = 60;
                                 }
                                 currentUserStatus.consultAhead = count;
-                                currentUserStatus.consultAvg = wait + aptWait;
+                                currentUserStatus.consultWait = wait + aptWait;
                                 console.log(wait,aptWait,count,aptCount);
 
                                 RegPatient.countDocuments({"stage1.isInQueue" : true, "stage2.outTime.isGone" : true , "stage3.isGone" : false, "_id":{$lt : patientStatus._id}},function(err,count1){
                                     currentUserStatus.billAhead= count1;
-                                    currentUserStatus.billAvg = count1 * algoData.billAvg;
+                                    currentUserStatus.billWait = count1 * algoData.billAvg;
 
                                     RegPatient.countDocuments({"stage1.isInQueue" : true, "stage3.isGone" : true, "stage4.isGone" : false, "_id":{$lt : patientStatus._id}},function(err,count2){
                                         currentUserStatus.mediAhead= count2;
-                                        currentUserStatus.mediAvg = count2 * algoData.mediAvg;
+                                        currentUserStatus.mediWait = count2 * algoData.mediAvg;
         
                                         if(currentUserStatus.registrationTime != null){
                                             currentUserStatus.registrationTime = currentUserStatus.registrationTime.toString();
