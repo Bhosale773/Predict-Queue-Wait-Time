@@ -73,7 +73,7 @@
       <% var count=0 %>
       <% regPatients.forEach(function(patient){ %>
         <% if(patient.stage1.date != undefined){ %>
-          <% if(patient.stage1.date.getDate()==(new Date()).getDate()){ %>
+          <% if(patient.stage1.date.getDate()==(new Date()).getDate() && patient.stage1.date.getMonth()==(new Date()).getMonth() && patient.stage1.date.getFullYear()==(new Date()).getFullYear()){ %>
             <% count=count+1 %>
             <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
             <% if(patient.visit_type == 'appointment'){ %>

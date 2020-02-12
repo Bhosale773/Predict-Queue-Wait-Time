@@ -26,12 +26,34 @@ function calculate(patient, patientStatus){
             currentUserStatus.billingOutTime = patientStatus.stage3.date;
             currentUserStatus.medicineInTime = patientStatus.stage4.activeDate;
             currentUserStatus.medicineOutTime = patientStatus.stage4.date;
+            currentUserStatus.queue_consultation = false;
+            currentUserStatus.queue_billing = false;
+            currentUserStatus.queue_medicine = false;
+            currentUserStatus.queue_consultation_isActive = false;
+            currentUserStatus.queue_billing_isActive = false;
+            currentUserStatus.queue_medicine_isActive = false;
             currentUserStatus.consultAhead = 0;
             currentUserStatus.mediAhead = 0;
             currentUserStatus.billAhead = 0;
             currentUserStatus.consultWait = 0;
             currentUserStatus.billWait = 0;
             currentUserStatus.mediWait = 0;
+
+            if(patientStatus.stage2.outTime.isGone==false){
+                currentUserStatus.queue_consultation = true;
+            }else if(patientStatus.stage3.isGone==false){
+                currentUserStatus.queue_billing = true;
+            }else if(patientStatus.stage4.isGone==false){
+                currentUserStatus.queue_medicine = true;
+            }
+
+            if(patientStatus.stage2.isActive==true){
+                currentUserStatus.queue_consultation_isActive = true;
+            }else if(patientStatus.stage3.isActive==true){
+                currentUserStatus.queue_billing_isActive = true;
+            }else if(patientStatus.stage4.isActive==true){
+                currentUserStatus.queue_medicine_isActive = true;
+            }
     
             var wait=0;
             var count=0;
@@ -104,9 +126,9 @@ function calculate(patient, patientStatus){
                                         wait = wait - algoData.consultAvg[foundOne.reason];
                                     }
                                 }
-                                if(wait<60){
-                                        wait = 60;
-                                }
+                                // if(wait<60){
+                                //         wait = 60;
+                                // }
                                 currentUserStatus.consultAhead = count;
                                 currentUserStatus.consultWait = wait + aptWait;
                                 console.log(wait,aptWait,count,aptCount);
@@ -119,39 +141,39 @@ function calculate(patient, patientStatus){
                                         currentUserStatus.mediAhead= count2;
                                         currentUserStatus.mediWait = count2 * algoData.mediAvg;
         
-                                        if(currentUserStatus.registrationTime != null){
-                                            currentUserStatus.registrationTime = currentUserStatus.registrationTime.toString();
-                                        }else{
-                                            currentUserStatus.registrationTime = "Not Available";
-                                        }
+                                        // if(currentUserStatus.registrationTime != null){
+                                        //     currentUserStatus.registrationTime = currentUserStatus.registrationTime.toString();
+                                        // }else{
+                                        //     currentUserStatus.registrationTime = "Not Available";
+                                        // }
                                 
-                                        if(currentUserStatus.consultationInTime != null){
-                                            currentUserStatus.consultationInTime = currentUserStatus.consultationInTime.toString();
-                                        }else{
-                                            currentUserStatus.consultationInTime = "Not Available";
-                                        }
+                                        // if(currentUserStatus.consultationInTime != null){
+                                        //     currentUserStatus.consultationInTime = currentUserStatus.consultationInTime.toString();
+                                        // }else{
+                                        //     currentUserStatus.consultationInTime = "Not Available";
+                                        // }
                                 
-                                        if(currentUserStatus.consultationOutTime != null){
-                                            currentUserStatus.consultationOutTime = currentUserStatus.consultationOutTime.toString();
-                                            currentUserStatus.billingInTime = currentUserStatus.billingInTime.toString();
-                                        }else{
-                                            currentUserStatus.consultationOutTime = "Not Available";
-                                            currentUserStatus.billingInTime = "Not Available";
-                                        }
+                                        // if(currentUserStatus.consultationOutTime != null){
+                                        //     currentUserStatus.consultationOutTime = currentUserStatus.consultationOutTime.toString();
+                                        //     currentUserStatus.billingInTime = currentUserStatus.billingInTime.toString();
+                                        // }else{
+                                        //     currentUserStatus.consultationOutTime = "Not Available";
+                                        //     currentUserStatus.billingInTime = "Not Available";
+                                        // }
                                 
-                                        if(currentUserStatus.billingOutTime != null){
-                                            currentUserStatus.billingOutTime = currentUserStatus.billingOutTime.toString();
-                                            currentUserStatus.medicineInTime = currentUserStatus.medicineInTime.toString();
-                                        }else{
-                                            currentUserStatus.billingOutTime = "Not Available";
-                                            currentUserStatus.medicineInTime = "Not Available";
-                                        }
+                                        // if(currentUserStatus.billingOutTime != null){
+                                        //     currentUserStatus.billingOutTime = currentUserStatus.billingOutTime.toString();
+                                        //     currentUserStatus.medicineInTime = currentUserStatus.medicineInTime.toString();
+                                        // }else{
+                                        //     currentUserStatus.billingOutTime = "Not Available";
+                                        //     currentUserStatus.medicineInTime = "Not Available";
+                                        // }
                                 
-                                        if(currentUserStatus.medicineOutTime != null){
-                                            currentUserStatus.medicineOutTime = currentUserStatus.medicineOutTime.toString();
-                                        }else{
-                                            currentUserStatus.medicineOutTime = "Not Available";
-                                        }
+                                        // if(currentUserStatus.medicineOutTime != null){
+                                        //     currentUserStatus.medicineOutTime = currentUserStatus.medicineOutTime.toString();
+                                        // }else{
+                                        //     currentUserStatus.medicineOutTime = "Not Available";
+                                        // }
                                     });
                                 });
                             });

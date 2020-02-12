@@ -1,0 +1,104 @@
+#dashboard{
+    font-family:verdana;
+    margin-bottom: 20px;
+}
+
+#dashboard .head-name{
+    font-size: 2rem;
+    font-weight: 500;
+    color: #30336B;
+    margin-top: 40px;
+}
+
+#dashboard .status{
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #47535E;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#dashboard .time-block{
+    margin: 17px;
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.02);
+}
+
+#dashboard .col-lg-4{
+    max-width: 30% !important;
+}
+
+#dashboard .intro1{
+    font-size: 1rem;
+}
+
+#dashboard .intro2{
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: gray;
+    text-align: center;
+}
+
+#dashboard .intro3{
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: rgb(28, 160, 28);
+    text-align: center;
+}
+
+#dashboard .intro5{
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: orangered;
+    text-align: center;
+}
+
+#dashboard .intro4{
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgb(46, 42, 42);
+}
+
+
+/* add responsiveness */
+
+@media (max-width: 500px){
+    #dashboard .head-name{
+        font-size: 1.8rem;
+        margin-top: 0px;
+    }
+    
+    #dashboard .status{
+        font-size: 0.9rem;
+    }
+
+    #dashboard .status:last-child{
+        font-size: 1rem;
+    }
+
+    #dashboard .col-lg-4{
+        max-width: 90% !important;
+    }
+
+    #dashboard .time-block{
+        padding: 15px;
+    }
+
+    #dashboard .intro2{
+        margin-bottom: 5px;
+    }
+    
+    #dashboard .intro3{
+        font-size: 2.5rem;
+    }
+    
+    #dashboard .intro5{
+        font-size: 2.5rem;
+    }
+}
