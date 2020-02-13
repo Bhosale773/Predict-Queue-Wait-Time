@@ -224,7 +224,9 @@ function calculate(patient, patientStatus){
 
         }else{
 
-            currentUserStatus.name = patient.fname+" "+patient.lname;
+            if(patient!=null){
+                currentUserStatus.name = patient.fname+" "+patient.lname;
+            }
             currentUserStatus.isInQueue = false;
             currentUserStatus.consultAhead = 0;
             currentUserStatus.mediAhead = 0;

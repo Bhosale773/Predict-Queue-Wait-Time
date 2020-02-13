@@ -26,7 +26,14 @@
                     <button class="btn btn-primary" type="submit">Book</button>
                 </div>
             </form>
-        </div>        
+            <% var aptTime = Date.now() + data.consultWait*1000 + data.mediWait*1000 + data.billWait*1000 %>
+            <% var aptTime = new Date(aptTime) %>
+            <% if(aptTime.getHours() < 22 && aptTime.getHours() >= 9){ %>
+                <div class="time-info">Today's Appointments are Available After : <%= aptTime.getHours() + ":" + aptTime.getMinutes() %></div>
+            <% }else{ %>
+                <div class="time-info">Appointment is not Available</div>
+            <% } %>
+        </div>
     </div>
     <div class="col-lg-6">
         <div id="curr_appointments_table">

@@ -24,7 +24,7 @@ router.post("/login",passport.authenticate("patient", {
 router.get("/dashboard", middleware.isPatientPermitted, function(req, res){
     if(req.user){
         RegPatient.findOne({"pid": req.user._id, "stage1.isGone": true}, function(err, foundStatus){
-            currentUserStatus = calculate(req.user, foundStatus);
+            var currentUserStatus = calculate(req.user, foundStatus);
             res.render("patient/dashboard", {currentUserStatus: currentUserStatus});
         });
     }else{

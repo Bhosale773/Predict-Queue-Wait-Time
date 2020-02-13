@@ -16,6 +16,7 @@ var model3                = require("../svmModels/model3");
 var model4                = require("../svmModels/model4");
 var model5                = require("../svmModels/model5");
 var model6                = require("../svmModels/model6");
+var calculate             = require("../calculations");
 var token_no;
 
 
@@ -47,12 +48,13 @@ router.get("/home", middleware.isHsePermitted, function(req, res){
 // route to form for booking apointments
 
 router.get("/book-appointments", middleware.isHsePermitted, function(req, res){
+    var data = calculate(null, null);
     Appointment.find({}, function(err, foundAppointments){
         if(err){
             req.flash("error", "Something Went Wrong, Try Again.");
             return res.redirect("back");
         }else{
-            res.render("HSE/appointments", {appointments: foundAppointments});
+            res.render("HSE/appointments", {appointments: foundAppointments, data: data});
         }
     });
 });

@@ -27,6 +27,14 @@
     background-color: rgba(0,0,0,0.02);
 }
 
+#appointment-booking .time-info{
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #47535E;
+    margin: 10px;
+    margin-left: 20px;
+}
+
 #appointment-booking input, #appointment-booking select{
     font-size: 1.2rem;
     font-weight: 500;
