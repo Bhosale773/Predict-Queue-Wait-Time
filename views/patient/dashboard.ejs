@@ -7,125 +7,162 @@
 
     <div class="container">
         <% if(currentUserStatus!=null){ %>
-            <% var token = (currentUserStatus.token < 10)?'00'+currentUserStatus.token:((currentUserStatus.token < 100)?'0'+currentUserStatus.token:currentUserStatus.token) %>
-            <% if(currentUserStatus.visit_type == 'appointment'){ %>
-                <% var token = "A" + token %>
-            <% }else{ %>
-                <% var token = "T" + token %>
-            <% } %>
-            <h4 class="head-name"><%= token %> : <%= currentUserStatus.name %></h4>
-            <hr>
-            
-            <div class="status">
-                <% if(currentUserStatus.registrationTime!=null){ %>
-                    <div>Registration Time : <%= currentUserStatus.registrationTime.toString() %></div>
+            <% if(currentUserStatus.isInQueue == true){ %>
+
+                <% var token = (currentUserStatus.token < 10)?'00'+currentUserStatus.token:((currentUserStatus.token < 100)?'0'+currentUserStatus.token:currentUserStatus.token) %>
+                <% if(currentUserStatus.visit_type == 'appointment'){ %>
+                    <% var token = "A" + token %>
+                <% }else{ %>
+                    <% var token = "T" + token %>
                 <% } %>
-            </div>
-        
-            <div class="row">
-                <div class="time-block col-lg-4">
-                    <% if(currentUserStatus.queue_consultation==true){ %>
-                        <% if(currentUserStatus.queue_consultation_isActive==true){ %>
-                            <div class="intro1">Consultation Queue:</div>
-                            <hr>
-                            <div class="intro2">Postion In Queue</div>
-                            <div class="intro3">IN SERVICE</div>
-                            <div class="intro2">Estimated Wait Time</div>
-                            <div class="intro3">--.-- <span class="intro4">Mins</span></div>
-                        <% }else{ %>
-                            <div class="intro1">Consultation Queue:</div>
-                            <hr>
-                            <div class="intro2">Postion In Queue</div>
-                            <div class="intro3"><%= currentUserStatus.consultAhead+1 %></div>
-                            <div class="intro2">Estimated Wait Time</div>
-                            <div class="intro3"><%= Math.floor(currentUserStatus.consultWait / 60)+"."+Math.floor(currentUserStatus.consultWait % 60) %> <span class="intro4">Mins</span> %></div>
-                        <% } %>
-                    <% }else{ %>
-                        <div class="intro1">Consultation Queue:</div>
-                        <hr>
-                        <div class="intro2">Postion In Queue</div>
-                        <div class="intro5">LEAVED</div>
-                        <div class="intro2">Estimated Wait Time</div>
-                        <div class="intro5">--.-- <span class="intro4">Mins</span></div>
+                <h4 class="head-name"><%= token %> : <%= currentUserStatus.name %></h4>
+                <hr>
+                
+                <div class="status">
+                    <% if(currentUserStatus.registrationTime!=null){ %>
+                        <div>Registration Time : <%= currentUserStatus.registrationTime.toString() %></div>
                     <% } %>
                 </div>
             
-                <div class="time-block col-lg-4">
-                    <% if(currentUserStatus.queue_billing==true){ %>
-                        <% if(currentUserStatus.queue_billing_isActive==true){ %>
+                <div class="row">
+                    <div class="time-block col-lg-4">
+                        <% if(currentUserStatus.queue_consultation==true){ %>
+                            <% if(currentUserStatus.queue_consultation_isActive==true){ %>
+                                <div class="intro1">Consultation Queue:</div>
+                                <hr>
+                                <div class="intro2">Position In Queue</div>
+                                <div class="intro3">IN SERVICE</div>
+                                <div class="intro2">Estimated Wait Time</div>
+                                <div class="intro3"><%= Math.floor(currentUserStatus.consultWait / 60)+"."+Math.floor(currentUserStatus.consultWait % 60) %> <span class="intro4">Mins</span></div>
+                            <% }else{ %>
+                                <div class="intro1">Consultation Queue:</div>
+                                <hr>
+                                <div class="intro2">Position In Queue</div>
+                                <div class="intro3"><%= currentUserStatus.consultAhead+1 %></div>
+                                <div class="intro2">Estimated Wait Time</div>
+                                <div class="intro3"><%= Math.floor(currentUserStatus.consultWait / 60)+"."+Math.floor(currentUserStatus.consultWait % 60) %> <span class="intro4">Mins</span> %></div>
+                            <% } %>
+                        <% }else{ %>
+                            <div class="intro1">Consultation Queue:</div>
+                            <hr>
+                            <div class="intro2">Position In Queue</div>
+                            <div class="intro5">LEAVED</div>
+                            <div class="intro2">Estimated Wait Time</div>
+                            <div class="intro5">--.-- <span class="intro4">Mins</span></div>
+                        <% } %>
+                    </div>
+                
+                    <div class="time-block col-lg-4">
+                        <% if(currentUserStatus.queue_billing==true){ %>
+                            <% if(currentUserStatus.queue_billing_isActive==true){ %>
+                                <div class="intro1">Billing Queue:</div>
+                                <hr>
+                                <div class="intro2">Position In Queue</div>
+                                <div class="intro3">IN SERVICE</div>
+                                <div class="intro2">Estimated Wait Time</div>
+                                <div class="intro3"><%= Math.floor((currentUserStatus.billWait) / 60)+"."+Math.floor(currentUserStatus.billWait % 60) %> <span class="intro4">Mins</span></div>
+                            <% }else{ %>
+                                <div class="intro1">Billing Queue:</div>
+                                <hr>
+                                <div class="intro2">Position In Queue</div>
+                                <div class="intro3"><%= currentUserStatus.billAhead+1 %></div>
+                                <div class="intro2">Estimated Wait Time</div>
+                                <div class="intro3"><%= Math.floor((currentUserStatus.billWait) / 60)+"."+Math.floor(currentUserStatus.billWait % 60) %> <span class="intro4">Mins</span> %></div>
+                            <% } %>
+                        <% }else if(currentUserStatus.queue_medicine==true){ %>
                             <div class="intro1">Billing Queue:</div>
                             <hr>
-                            <div class="intro2">Postion In Queue</div>
-                            <div class="intro3">IN SERVICE</div>
+                            <div class="intro2">Position In Queue</div>
+                            <div class="intro5">LEAVED</div>
                             <div class="intro2">Estimated Wait Time</div>
-                            <div class="intro3">--.-- <span class="intro4">Mins</span></div>
+                            <div class="intro5">--.-- Mins</div>
                         <% }else{ %>
                             <div class="intro1">Billing Queue:</div>
                             <hr>
-                            <div class="intro2">Postion In Queue</div>
-                            <div class="intro3"><%= currentUserStatus.billAhead+1 %></div>
+                            <div class="intro2">Total Patients In Queue</div>
+                            <div class="intro5"><%= currentUserStatus.billAhead %></div>
                             <div class="intro2">Estimated Wait Time</div>
-                            <div class="intro3"><%= Math.floor((currentUserStatus.billWait) / 60)+"."+Math.floor(currentUserStatus.billWait % 60) %> <span class="intro4">Mins</span> %></div>
+                            <div class="intro5"><%= Math.floor((currentUserStatus.billWait) / 60)+"."+Math.floor(currentUserStatus.billWait % 60) %> <span class="intro4">Mins</span> %></div>
                         <% } %>
-                    <% }else if(currentUserStatus.queue_medicine==true){ %>
-                        <div class="intro1">Billing Queue:</div>
+                    </div>
+                
+                    <div class="time-block col-lg-4">
+                        <% if(currentUserStatus.queue_medicine==true){ %>
+                            <% if(currentUserStatus.queue_medicine_isActive==true){ %>
+                                <div class="intro1">Medicine Queue:</div>
+                                <hr>
+                                <div class="intro2">Position In Queue</div>
+                                <div class="intro3">IN SERVICE</div>
+                                <div class="intro2">Estimated Wait Time</div>
+                                <div class="intro3"><%= Math.floor((currentUserStatus.mediWait) / 60)+"."+Math.floor(currentUserStatus.mediWait % 60) %> <span class="intro4">Mins</span></div>
+                            <% }else{ %>
+                                <div class="intro1">Medicine Queue:</div>
+                                <hr>
+                                <div class="intro2">Position In Queue</div>
+                                <div class="intro3"><%= currentUserStatus.mediAhead+1 %></div>
+                                <div class="intro2">Estimated Wait Time</div>
+                                <div class="intro3"><%= Math.floor((currentUserStatus.mediWait) / 60)+"."+Math.floor(currentUserStatus.mediWait % 60) %> <span class="intro4">Mins</span> %></div>
+                            <% } %>
+                        <% }else{ %>
+                            <div class="intro1">Medicine Queue:</div>
+                            <hr>
+                            <div class="intro2">Total Patients In Queue</div>
+                            <div class="intro5"><%= currentUserStatus.mediAhead %></div>
+                            <div class="intro2">Estimated Wait Time</div>
+                            <div class="intro5"><%= Math.floor((currentUserStatus.mediWait) / 60)+"."+Math.floor(currentUserStatus.mediWait % 60) %> <span class="intro4">Mins</span> %></div>
+                        <% } %>
+                    </div>
+                </div>
+    
+                <div class="status">
+                    <div>Total Estimated Wait Time In Hospital : <strong><%= Math.floor((currentUserStatus.consultWait + currentUserStatus.mediWait + currentUserStatus.billWait) / 60) + "." + Math.floor((currentUserStatus.consultWait + currentUserStatus.mediWait + currentUserStatus.billWait) % 60) %> </strong>Mins</div>
+                </div>
+            <% }else if(currentUserStatus.isInQueue == false){ %>
+
+                <h4 class="head-name"><%= currentUserStatus.name %></h4>
+                <hr>
+                
+                <div class="status">
+                    <div>You Are Not In Hospital Now</div>
+                </div>
+            
+                <div class="row">
+                    <div class="time-block col-lg-4">
+                        <div class="intro1">Consultation Queue:</div>
                         <hr>
-                        <div class="intro2">Postion In Queue</div>
-                        <div class="intro5">LEAVED</div>
+                        <div class="intro2">Total Patients In Queue</div>
+                        <div class="intro5"><%= currentUserStatus.consultAhead %></div>
                         <div class="intro2">Estimated Wait Time</div>
-                        <div class="intro5">--.-- Mins</div>
-                    <% }else{ %>
+                        <div class="intro5"><%= Math.floor((currentUserStatus.consultWait) / 60)+"."+Math.floor(currentUserStatus.consultWait % 60) %> <span class="intro4">Mins</span> %></div>
+                    </div>
+                
+                    <div class="time-block col-lg-4">
                         <div class="intro1">Billing Queue:</div>
                         <hr>
                         <div class="intro2">Total Patients In Queue</div>
                         <div class="intro5"><%= currentUserStatus.billAhead %></div>
                         <div class="intro2">Estimated Wait Time</div>
                         <div class="intro5"><%= Math.floor((currentUserStatus.billWait) / 60)+"."+Math.floor(currentUserStatus.billWait % 60) %> <span class="intro4">Mins</span> %></div>
-                    <% } %>
-                </div>
-            
-                <div class="time-block col-lg-4">
-                    <% if(currentUserStatus.queue_medicine==true){ %>
-                        <% if(currentUserStatus.queue_medicine_isActive==true){ %>
-                            <div class="intro1">Medicine Queue:</div>
-                            <hr>
-                            <div class="intro2">Postion In Queue</div>
-                            <div class="intro3">IN SERVICE</div>
-                            <div class="intro2">Estimated Wait Time</div>
-                            <div class="intro3">--.-- <span class="intro4">Mins</span></div>
-                        <% }else{ %>
-                            <div class="intro1">Medicine Queue:</div>
-                            <hr>
-                            <div class="intro2">Postion In Queue</div>
-                            <div class="intro3"><%= currentUserStatus.mediAhead+1 %></div>
-                            <div class="intro2">Estimated Wait Time</div>
-                            <div class="intro3"><%= Math.floor((currentUserStatus.mediWait) / 60)+"."+Math.floor(currentUserStatus.mediWait % 60) %> <span class="intro4">Mins</span> %></div>
-                        <% } %>
-                    <% }else{ %>
+                    </div>
+                
+                    <div class="time-block col-lg-4">
                         <div class="intro1">Medicine Queue:</div>
                         <hr>
                         <div class="intro2">Total Patients In Queue</div>
                         <div class="intro5"><%= currentUserStatus.mediAhead %></div>
                         <div class="intro2">Estimated Wait Time</div>
                         <div class="intro5"><%= Math.floor((currentUserStatus.mediWait) / 60)+"."+Math.floor(currentUserStatus.mediWait % 60) %> <span class="intro4">Mins</span> %></div>
-                    <% } %>
+                    </div>
                 </div>
-            </div>
+    
+                <div class="status">
+                    <div>Total Estimated Wait Time In Hospital : <strong><%= Math.floor((currentUserStatus.consultWait + currentUserStatus.mediWait + currentUserStatus.billWait) / 60) + "." + Math.floor((currentUserStatus.consultWait + currentUserStatus.mediWait + currentUserStatus.billWait) % 60) %> </strong>Mins</div>
+                </div>
 
-            <div class="status">
-                <div>Total Estimated Wait Time In Hospital : <strong><%= Math.floor((currentUserStatus.consultWait + currentUserStatus.mediWait + currentUserStatus.billWait) / 60) + "." + Math.floor((currentUserStatus.consultWait + currentUserStatus.mediWait + currentUserStatus.billWait) % 60) %> </strong>Mins</div>
-            </div>
+            <% } %>
                         
-            
-            <!-- <p>Registration Time : <%= currentUserStatus.registrationTime %></p>
-            <p>Consultation Queue In Time : <%= currentUserStatus.consultationInTime %></p>
-            <p>Consultation Queue Out Time : <%= currentUserStatus.consultationOutTime %></p>
-            <p>Billing Queue Out Time : <%= currentUserStatus.billingInTime %></p>
-            <p>Billing Queue Out Time : <%= currentUserStatus.billingOutTime %></p>
-            <p>Medicine Queue Out Time : <%= currentUserStatus.medicineInTime %></p>
-            <p>Medicine Queue Out Time : <%= currentUserStatus.medicineOutTime %></p> -->
         <% }else{ %>
-            <p>Patient is not in hospital now</p>
+            <p>PATIENT IS NOT IN HOSPITAL NOW</p>
         <% } %>
     </div>
 </div>
