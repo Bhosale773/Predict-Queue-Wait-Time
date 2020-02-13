@@ -1,0 +1,25 @@
+canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#data-analysis .row, #data-analysis .col{
+    margin: 0px;
+    padding: 0px;
+}
+
+#data-analysis .table{
+    max-width: 400px;
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+}
+
+#data-analysis #myChart{
+    max-width: 90%;
+    text-align: center;
+    margin: auto;
+    margin-top: 50px;
+}
+

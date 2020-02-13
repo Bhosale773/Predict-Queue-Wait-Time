@@ -193,14 +193,17 @@ let data = fs.readFileSync(
     path.join(__dirname, './dataset/training-data.txt'),
     'utf-8'
 );
+
 data = data.split('\n').map((line) => line.split(' ').filter((el) => el));
-data0=[];
-data1=[];
-data2=[];
-data3=[];
-data4=[];
-data5=[];
-data6=[];
+
+var data0=[];
+var data1=[];
+var data2=[];
+var data3=[];
+var data4=[];
+var data5=[];
+var data6=[];
+
 data.forEach(function(d){
     if(d[3]=='3:0.2' && d[4]=='4:0.0\r'){
         data0.push(d);
@@ -264,6 +267,107 @@ if(features5.length!=0 && labels5.length!=0){
 if(features6.length!=0 && labels6.length!=0){
     model6.train(features6, labels6);
 }
+
+
+
+
+
+
+
+
+
+
+
+app.get("/data-analysis", function(req, res){
+    
+    let tdata = fs.readFileSync(
+        path.join(__dirname, './dataset/testing-data.txt'),
+        'utf-8'
+    );
+    
+    tdata = tdata.split('\n').map((line) => line.split(' ').filter((el) => el));
+    
+    var tdata0=[];
+    var tdata1=[];
+    var tdata2=[];
+    var tdata3=[];
+    var tdata4=[];
+    var tdata5=[];
+    var tdata6=[];
+    
+    
+    tdata.forEach(function(d){
+        if(d[3]=='3:0.2' && d[4]=='4:0.0\r'){
+            tdata0.push(d);
+        }
+        if(d[3]=='3:0.2' && d[4]=='4:0.1\r'){
+            tdata1.push(d);
+        }
+        if(d[3]=='3:0.2' && d[4]=='4:0.2\r'){
+            tdata2.push(d);
+        }
+        if(d[3]=='3:0.2' && d[4]=='4:0.3\r'){
+            tdata3.push(d);
+        }
+        if(d[3]=='3:0.2' && d[4]=='4:0.4\r'){
+            tdata4.push(d);
+        }
+        if(d[3]=='3:0.3'){
+            tdata5.push(d);
+        }
+        if(d[3]=='3:0.4'){
+            tdata6.push(d);
+        }
+    });
+    
+    
+    var tlabels0 = tdata0.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures0 = tdata0.map((line) => line.map((el) => +el.split(':')[1]));
+    var tlabels1 = tdata1.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures1 = tdata1.map((line) => line.map((el) => +el.split(':')[1]));
+    var tlabels2 = tdata2.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures2 = tdata2.map((line) => line.map((el) => +el.split(':')[1]));
+    var tlabels3 = tdata3.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures3 = tdata3.map((line) => line.map((el) => +el.split(':')[1]));
+    var tlabels4 = tdata4.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures4 = tdata4.map((line) => line.map((el) => +el.split(':')[1]));
+    var tlabels5 = tdata5.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures5 = tdata5.map((line) => line.map((el) => +el.split(':')[1]));
+    var tlabels6 = tdata6.map((line) => +line.splice(0, 1)[0]);
+    var tfeatures6 = tdata6.map((line) => line.map((el) => +el.split(':')[1]));
+    
+    var output1=[];
+    output1.push(model0.predict(tfeatures0));
+    output1.push(model1.predict(tfeatures1));
+    output1.push(model2.predict(tfeatures2));
+    output1.push(model3.predict(tfeatures3));
+    output1.push(model4.predict(tfeatures4));
+    output1.push(model5.predict(tfeatures5));
+    output1.push(model6.predict(tfeatures6));
+    
+    var output2=[];
+    output2.push(tlabels0);
+    output2.push(tlabels1);
+    output2.push(tlabels2);
+    output2.push(tlabels3);
+    output2.push(tlabels4);
+    output2.push(tlabels5);
+    output2.push(tlabels6);
+
+    res.render("data-analysis.ejs",{predict: output1, expect: output2});
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // function to detect date change and hence set token to 1

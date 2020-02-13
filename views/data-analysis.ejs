@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Data Analysis</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link type="text/css" rel="stylesheet" href="/stylesheets/data-analysis.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    </head>
+    <body>
+        <div id="data-analysis">
+            <div class="row">
+                <div class="col col-lg-8">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="col col-lg-4">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <!-- <th scope="col">#</th> -->
+                                <th scope="col">#</th>
+                                <th scope="col">Expected Time (Mins)</th>
+                                <th scope="col">Predicted Time (Mins)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% var cnt=1 %>
+                            <% for(var i=0; i<expect.length; i++){ %>
+                                <% for(var j=0; j<expect[i].length; j++){ %>
+                                    <tr>
+                                        <td><%= cnt %></td>
+                                        <td><%= Math.floor(expect[i][j]*100/60) + "." + Math.round(expect[i][j]*100)%60 %></td> 
+                                        <td><%= Math.floor(predict[i][j]*100/60) + "." + Math.round(predict[i][j]*100)%60 %></td> 
+                                    </tr>
+                                    <% cnt=cnt+1 %>
+                                <% } %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+
+
+    <script>
+        var predict = <%-JSON.stringify(predict) %>;
+        var expect = <%-JSON.stringify(expect) %>;
+
+        var PredictedData = [];
+        var ExpectedData = [];
+
+        for(var i=0; i<expect.length; i++){
+            for(var j=0; j<expect[i].length; j+=100){
+                var a = Number(Math.floor(expect[i][j]*100/60) + "." + Math.round(expect[i][j]*100)%60);
+                var b = Number(Math.floor(predict[i][j]*100/60) + "." + Math.round(predict[i][j]*100)%60);
+                ExpectedData.push(a);
+                PredictedData.push(b);
+            }
+        }
+
+        var lab=[];
+        for(var i=0; i<2000; i+=100){
+            lab.push(i);
+        }
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: lab,
+                datasets: [{
+                    label: 'Expected Time (Mins)',
+                    // backgroundColor: 'rgb(255, 255, 255)',
+                    borderColor: 'rgb(0, 0, 255)',
+                    data: ExpectedData
+                },
+                {
+                    label: 'Predicted Time (Mins)',
+                    // backgroundColor: 'rgb(255, 255, 255)',
+                    borderColor: 'rgb(255, 0, 0)',
+                    data: PredictedData
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                responsive: true,
+				title: {
+					display: true,
+					text: 'Data Simulation Line Chart'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'No of Patients'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Time in Minutes'
+						}
+					}]
+				}
+            }
+        });
+    </script>
+</html>
+
