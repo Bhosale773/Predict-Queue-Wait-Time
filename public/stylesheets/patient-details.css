@@ -1,5 +1,37 @@
 .row{
-    
-    margin-left: 50px;
-    margin-top: 35px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.detail-box{
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.02);
+    height: 230px;
+    line-height: 1;
+}
+
+.detail-box h5{
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: darkslategray;
+    margin-bottom: 20px;
+}
+
+.detail-line{
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: darkslategray;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 10px;
+    padding-left: 20px;
+    max-width: 98%;
+    margin: 20px auto;
+}
+
+.detail-box:hover{
+    transition: 0.2s all ease-in-out;
+    transform: scale(1.05, 1.05);
 }

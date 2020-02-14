@@ -54,8 +54,8 @@ var curr_date;
 // database connection url
 
 mongoose.set('useCreateIndex', true);
-mongoose.connect("mongodb://localhost:27017/pqt_db",{useNewUrlParser:true, useUnifiedTopology: true});
-// mongoose.connect(process.env.DATABASEURL, {useNewUrlParser:true, useUnifiedTopology: true});
+// mongoose.connect("mongodb://localhost:27017/pqt_db",{useNewUrlParser:true, useUnifiedTopology: true});
+mongoose.connect(process.env.DATABASEURL, {useNewUrlParser:true, useUnifiedTopology: true});
 mongoose.set('useFindAndModify', false);
 
 
