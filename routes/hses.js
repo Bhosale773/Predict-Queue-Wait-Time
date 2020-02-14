@@ -54,7 +54,9 @@ router.get("/book-appointments", middleware.isHsePermitted, function(req, res){
             req.flash("error", "Something Went Wrong, Try Again.");
             return res.redirect("back");
         }else{
-            res.render("HSE/appointments", {appointments: foundAppointments, data: data});
+            setTimeout(function(){
+                res.render("HSE/appointments", {appointments: foundAppointments, data: data});
+            },1000); 
         }
     });
 });

@@ -25,7 +25,9 @@ router.get("/dashboard", middleware.isPatientPermitted, function(req, res){
     if(req.user){
         RegPatient.findOne({"pid": req.user._id, "stage1.isGone": true}, function(err, foundStatus){
             var currentUserStatus = calculate(req.user, foundStatus);
-            res.render("patient/dashboard", {currentUserStatus: currentUserStatus});
+            setTimeout(function(){
+                res.render("patient/dashboard", {currentUserStatus: currentUserStatus});
+            },1000); 
         });
     }else{
         res.render("patient/dashboard", {currentUserStatus: null});

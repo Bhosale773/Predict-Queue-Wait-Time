@@ -131,9 +131,9 @@ function calculate(patient, patientStatus){
                                         }
                                     }
                                 }
-                                if(wait<10){
+                                if(wait<60 && count!=0){
                                     if(patientStatus.stage2.outTime.isGone==false){
-                                        wait = 10;
+                                        wait = 60;
                                     }
                                 }
                                 currentUserStatus.consultAhead = count;
@@ -168,7 +168,7 @@ function calculate(patient, patientStatus){
                                             }
 
                                             if(waitB<10){
-                                                if(patientStatus.stage3.isGone==false){
+                                                if(patientStatus.stage3.isGone==false && count1!=0){
                                                     waitB = 10;
                                                 }
                                             }
@@ -204,7 +204,7 @@ function calculate(patient, patientStatus){
                                                         }
 
                                                         if(waitM<10){
-                                                            if(patientStatus.stage4.isGone==false){
+                                                            if(patientStatus.stage4.isGone==false && count2!=0){
                                                                 waitM = 10;
                                                             }
                                                         }
@@ -305,8 +305,8 @@ function calculate(patient, patientStatus){
                                         wait = wait - algoData.consultAvg[foundOne.reason];
                                     }
                                 }
-                                if(wait<10){
-                                        wait = 10;
+                                if(wait<60 && count!=0){
+                                    wait = 60;
                                 }
                                 currentUserStatus.consultAhead = count;
                                 currentUserStatus.consultWait = wait + aptWait;
@@ -335,7 +335,7 @@ function calculate(patient, patientStatus){
                                                 }
                                             }
 
-                                            if(waitB<10){
+                                            if(waitB<10 && count1!=0){
                                                 waitB = 10;
                                             }
 
@@ -365,7 +365,7 @@ function calculate(patient, patientStatus){
                                                             }
                                                         }
 
-                                                        if(waitM<10){
+                                                        if(waitM<10 && count2!=0){
                                                             waitM = 10;
                                                         }
 

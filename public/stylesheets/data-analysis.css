@@ -10,10 +10,14 @@ canvas{
 }
 
 #data-analysis .table{
+    display: block;
     max-width: 400px;
     text-align: center;
     margin: auto;
     margin-top: 10px;
+    max-height: 740px;
+    overflow:scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 #data-analysis #myChart{
@@ -23,3 +27,16 @@ canvas{
     margin-top: 50px;
 }
 
+#data-analysis .head{
+    font-size: 2rem;
+    color: darkslategray;
+    margin-top: 20px;
+    margin-left: 100px;
+}
+
+#data-analysis .accuracy{
+    font-size: 2.5rem;
+    color: darkmagenta;
+    margin-top: 20px;
+    margin-left: 100px;
+}
