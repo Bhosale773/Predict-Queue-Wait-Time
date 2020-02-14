@@ -4,7 +4,7 @@
   "description": "Web application to predict wait time of each and every patient in multistage queue at hospital",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "PQT10",

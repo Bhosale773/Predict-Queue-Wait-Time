@@ -438,10 +438,14 @@ app.use("/", indexRoutes);
 
 // start server
 
-https.createServer({
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.cert')
-}, app).listen(process.env.PORT || 1000, function () {
+// https.createServer({
+//     key: fs.readFileSync('server.key'),
+//     cert: fs.readFileSync('server.cert')
+// }, app).listen(process.env.PORT || 1000, function () {
+//     console.log('Server Started and it is listening on port 1000! Go to https://localhost:1000/');
+// });
+
+app.listen(process.env.PORT || 1000, function (){
     console.log('Server Started and it is listening on port 1000! Go to https://localhost:1000/');
 });
 
