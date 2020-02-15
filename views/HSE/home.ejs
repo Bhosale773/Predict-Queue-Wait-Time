@@ -78,6 +78,8 @@
             <% var token = (patient.token < 10)?'00'+patient.token:((patient.token < 100)?'0'+patient.token:patient.token) %>
             <% if(patient.visit_type == 'appointment'){ %>
               <% var token = "A" + token %>
+            <% }else if(patient.visit_type == 'emergency'){ %>
+              <% var token = "E" + token %>
             <% }else{ %>
               <% var token = "T" + token %>
             <% } %>

@@ -18,7 +18,9 @@ var model5                = require("../svmModels/model5");
 var model6                = require("../svmModels/model6");
 var calculate             = require("../calculations");
 var token_no;
+var dotenv                = require("dotenv");
 
+dotenv.config();
 
 // route to login hse
 
@@ -128,7 +130,15 @@ router.post("/patient-registration", function(req, res){
                         }else{
                             if(foundPatients.length==0){
                                 Appointment.findOne({"pid":req.body.pid}, function(err, foundAppointment){
-                                    if(foundAppointment!=null){
+                                    if(req.body.pid==process.env.EMERGENCY){
+                                        RegPatient.findOne({"pid":req.body.pid,"stage1.isInQueue":true},function(err,emergency){
+                                            emergency.stage1.date=Date.now();
+                                            emergency.stage1.isGone=true;
+                                            emergency.save(function(err){});
+                                            return res.redirect("/HSE/home");
+                                        })
+                                    }
+                                    else if(foundAppointment!=null){
                                         RegPatient.findOne({"pid": patient._id, "stage1.isInQueue": true}, function(err, foundPatient){
                                             if(foundPatient==null){
                                                 req.flash("error", "Appointment does not exist");
@@ -436,14 +446,32 @@ router.post("/patient-registration", function(req, res){
                                             });
                                         }
                                     });
+                                    if(foundPatient.visit_type=="emergency"){
+                                        foundPatient.stage1.isInQueue=true;
+                                        foundPatient.stage1.date=null;
+                                        foundPatient.stage1.isGone=false;
+                                        foundPatient.stage2.inTime.date=null;
+                                        foundPatient.stage2.inTime.isGone=false;
+                                        foundPatient.stage2.outTime.date=null;
+                                        foundPatient.stage2.outTime.isGone=false;
+                                        foundPatient.stage2.isActive=false;
+                                        foundPatient.stage3.isActive=false;
+                                        foundPatient.stage3.activeDate=null;
+                                        foundPatient.stage3.date=null;
+                                        foundPatient.stage4.isActive=false;
+                                        foundPatient.stage4.activeDate=null;
+                                        foundPatient.stage4.date=null;
 
-                                    foundPatient.stage4.date=Date.now();
-                                    foundPatient.stage4.isActive=false;
-                                    foundPatient.stage1.isInQueue=false;
-                                    foundPatient.stage1.isGone=false;
-                                    foundPatient.stage2.inTime.isGone=false;
-                                    foundPatient.stage2.outTime.isGone=false;
-                                    foundPatient.stage3.isGone=false;
+                                    }
+                                    else{
+                                        foundPatient.stage4.date=Date.now();
+                                        foundPatient.stage4.isActive=false;
+                                        foundPatient.stage1.isInQueue=false;
+                                        foundPatient.stage1.isGone=false;
+                                        foundPatient.stage2.inTime.isGone=false;
+                                        foundPatient.stage2.outTime.isGone=false;
+                                        foundPatient.stage3.isGone=false;
+                                    }
                                     foundPatient.save(function(err){
                                         if(err){
                                             console.log(err);
@@ -500,15 +528,33 @@ router.post("/remove-patient-from-queue", function(req, res){
         });
 
         if(patient.stage3.isActive==true){
-            patient.stage1.isInQueue=false;
-            patient.stage1.isGone=false;
-            patient.stage2.isActive=false;
-            patient.stage2.inTime.isGone=false;
-            patient.stage2.outTime.isGone=false;
-            patient.stage3.isActive=false;
-            patient.stage3.isGone=false;
-            patient.stage4.isActive=false;
-            patient.stage4.isGone=false;
+            if(patient.visit_type=="emergency"){
+                patient.stage1.isInQueue=true;
+                patient.stage1.date=null;
+                patient.stage1.isGone=false;
+                patient.stage2.inTime.date=null;
+                patient.stage2.inTime.isGone=false;
+                patient.stage2.outTime.date=null;
+                patient.stage2.outTime.isGone=false;
+                patient.stage2.isActive=false;
+                patient.stage3.isActive=false;
+                patient.stage3.activeDate=null;
+                patient.stage3.date=null;
+                patient.stage4.isActive=false;
+                patient.stage4.activeDate=null;
+                patient.stage4.date=null;
+            }
+            else{
+                patient.stage1.isInQueue=false;
+                patient.stage1.isGone=false;
+                patient.stage2.isActive=false;
+                patient.stage2.inTime.isGone=false;
+                patient.stage2.outTime.isGone=false;
+                patient.stage3.isActive=false;
+                patient.stage3.isGone=false;
+                patient.stage4.isActive=false;
+                patient.stage4.isGone=false;
+            }
             patient.save(function(err){
                 if(err){
                     console.log(err);
@@ -527,15 +573,33 @@ router.post("/remove-patient-from-queue", function(req, res){
                 });
             });
         }else if(patient.stage4.isActive==true){
-            patient.stage1.isInQueue=false;
-            patient.stage1.isGone=false;
-            patient.stage2.isActive=false;
-            patient.stage2.inTime.isGone=false;
-            patient.stage2.outTime.isGone=false;
-            patient.stage3.isActive=false;
-            patient.stage3.isGone=false;
-            patient.stage4.isActive=false;
-            patient.stage4.isGone=false;
+            if(patient.visit_type=="emergency"){
+                patient.stage1.isInQueue=true;
+                patient.stage1.date=null;
+                patient.stage1.isGone=false;
+                patient.stage2.inTime.date=null;
+                patient.stage2.inTime.isGone=false;
+                patient.stage2.outTime.date=null;
+                patient.stage2.outTime.isGone=false;
+                patient.stage2.isActive=false;
+                patient.stage3.isActive=false;
+                patient.stage3.activeDate=null;
+                patient.stage3.date=null;
+                patient.stage4.isActive=false;
+                patient.stage4.activeDate=null;
+                patient.stage4.date=null;
+            }
+            else{
+                patient.stage1.isInQueue=false;
+                patient.stage1.isGone=false;
+                patient.stage2.isActive=false;
+                patient.stage2.inTime.isGone=false;
+                patient.stage2.outTime.isGone=false;
+                patient.stage3.isActive=false;
+                patient.stage3.isGone=false;
+                patient.stage4.isActive=false;
+                patient.stage4.isGone=false;
+            }
             patient.save(function(err){
                 if(err){
                     console.log(err);
@@ -555,15 +619,33 @@ router.post("/remove-patient-from-queue", function(req, res){
                 });
             });
         }else{
-            patient.stage1.isInQueue=false;
-            patient.stage1.isGone=false;
-            patient.stage2.isActive=false;
-            patient.stage2.inTime.isGone=false;
-            patient.stage2.outTime.isGone=false;
-            patient.stage3.isActive=false;
-            patient.stage3.isGone=false;
-            patient.stage4.isActive=false;
-            patient.stage4.isGone=false;
+            if(patient.visit_type=="emergency"){
+                patient.stage1.isInQueue=true;
+                patient.stage1.date=null;
+                patient.stage1.isGone=false;
+                patient.stage2.inTime.date=null;
+                patient.stage2.inTime.isGone=false;
+                patient.stage2.outTime.date=null;
+                patient.stage2.outTime.isGone=false;
+                patient.stage2.isActive=false;
+                patient.stage3.isActive=false;
+                patient.stage3.activeDate=null;
+                patient.stage3.date=null;
+                patient.stage4.isActive=false;
+                patient.stage4.activeDate=null;
+                patient.stage4.date=null;
+            }
+            else{
+                patient.stage1.isInQueue=false;
+                patient.stage1.isGone=false;
+                patient.stage2.isActive=false;
+                patient.stage2.inTime.isGone=false;
+                patient.stage2.outTime.isGone=false;
+                patient.stage3.isActive=false;
+                patient.stage3.isGone=false;
+                patient.stage4.isActive=false;
+                patient.stage4.isGone=false;
+            }
             patient.save(function(err){
                 if(err){
                     console.log(err);
